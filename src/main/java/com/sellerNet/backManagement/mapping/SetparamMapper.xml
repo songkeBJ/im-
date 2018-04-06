@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sellerNet.backManagement.dao.impl.SetparamMapperImpl" >
+  <resultMap id="BaseResultMap" type="com.sellerNet.backManagement.entity.Setparam" >
+    <id column="u_id" property="uId" jdbcType="BIGINT" />
+    <result column="u_id" property="uId" jdbcType="BIGINT" />
+    <result column="addFriendFlag" property="addfriendflag" jdbcType="VARCHAR" />
+    <result column="pushPhoneBook" property="pushphonebook" jdbcType="VARCHAR" />
+    <result column="allowTenPhoto" property="allowtenphoto" jdbcType="VARCHAR" />
+    <result column="phoneFind" property="phonefind" jdbcType="VARCHAR" />
+    <result column="weixinFind" property="weixinfind" jdbcType="VARCHAR" />
+    <result column="groupChatAdd" property="groupchatadd" jdbcType="VARCHAR" />
+    <result column="qqFind" property="qqfind" jdbcType="VARCHAR" />
+    <result column="erweiAdd" property="erweiadd" jdbcType="VARCHAR" />
+    <result column="cardAdd" property="cardadd" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    u_id, addFriendFlag, pushPhoneBook, allowTenPhoto, phoneFind, weixinFind, groupChatAdd, 
+    qqFind, erweiAdd, cardAdd
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from bao_set_param
+    where u_id = #{uId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from bao_set_param
+    where u_id = #{uId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.sellerNet.backManagement.entity.Setparam" >
+    insert into bao_set_param (u_id, addFriendFlag, pushPhoneBook, 
+      allowTenPhoto, phoneFind, weixinFind, 
+      groupChatAdd, qqFind, erweiAdd, 
+      cardAdd)
+    values (#{uId,jdbcType=BIGINT}, #{addfriendflag,jdbcType=VARCHAR}, #{pushphonebook,jdbcType=VARCHAR}, 
+      #{allowtenphoto,jdbcType=VARCHAR}, #{phonefind,jdbcType=VARCHAR}, #{weixinfind,jdbcType=VARCHAR}, 
+      #{groupchatadd,jdbcType=VARCHAR}, #{qqfind,jdbcType=VARCHAR}, #{erweiadd,jdbcType=VARCHAR}, 
+      #{cardadd,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.sellerNet.backManagement.entity.Setparam" >
+    insert into bao_set_param
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="uId != null" >
+        u_id,
+      </if>
+      <if test="addfriendflag != null" >
+        addFriendFlag,
+      </if>
+      <if test="pushphonebook != null" >
+        pushPhoneBook,
+      </if>
+      <if test="allowtenphoto != null" >
+        allowTenPhoto,
+      </if>
+      <if test="phonefind != null" >
+        phoneFind,
+      </if>
+      <if test="weixinfind != null" >
+        weixinFind,
+      </if>
+      <if test="groupchatadd != null" >
+        groupChatAdd,
+      </if>
+      <if test="qqfind != null" >
+        qqFind,
+      </if>
+      <if test="erweiadd != null" >
+        erweiAdd,
+      </if>
+      <if test="cardadd != null" >
+        cardAdd,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="uId != null" >
+        #{uId,jdbcType=BIGINT},
+      </if>
+      <if test="addfriendflag != null" >
+        #{addfriendflag,jdbcType=VARCHAR},
+      </if>
+      <if test="pushphonebook != null" >
+        #{pushphonebook,jdbcType=VARCHAR},
+      </if>
+      <if test="allowtenphoto != null" >
+        #{allowtenphoto,jdbcType=VARCHAR},
+      </if>
+      <if test="phonefind != null" >
+        #{phonefind,jdbcType=VARCHAR},
+      </if>
+      <if test="weixinfind != null" >
+        #{weixinfind,jdbcType=VARCHAR},
+      </if>
+      <if test="groupchatadd != null" >
+        #{groupchatadd,jdbcType=VARCHAR},
+      </if>
+      <if test="qqfind != null" >
+        #{qqfind,jdbcType=VARCHAR},
+      </if>
+      <if test="erweiadd != null" >
+        #{erweiadd,jdbcType=VARCHAR},
+      </if>
+      <if test="cardadd != null" >
+        #{cardadd,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sellerNet.backManagement.entity.Setparam" >
+    update bao_set_param
+    <set >
+      <if test="addfriendflag != null" >
+        addFriendFlag = #{addfriendflag,jdbcType=VARCHAR},
+      </if>
+      <if test="pushphonebook != null" >
+        pushPhoneBook = #{pushphonebook,jdbcType=VARCHAR},
+      </if>
+      <if test="allowtenphoto != null" >
+        allowTenPhoto = #{allowtenphoto,jdbcType=VARCHAR},
+      </if>
+      <if test="phonefind != null" >
+        phoneFind = #{phonefind,jdbcType=VARCHAR},
+      </if>
+      <if test="weixinfind != null" >
+        weixinFind = #{weixinfind,jdbcType=VARCHAR},
+      </if>
+      <if test="groupchatadd != null" >
+        groupChatAdd = #{groupchatadd,jdbcType=VARCHAR},
+      </if>
+      <if test="qqfind != null" >
+        qqFind = #{qqfind,jdbcType=VARCHAR},
+      </if>
+      <if test="erweiadd != null" >
+        erweiAdd = #{erweiadd,jdbcType=VARCHAR},
+      </if>
+      <if test="cardadd != null" >
+        cardAdd = #{cardadd,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where u_id = #{uId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sellerNet.backManagement.entity.Setparam" >
+    update bao_set_param
+    set addFriendFlag = #{addfriendflag,jdbcType=VARCHAR},
+      pushPhoneBook = #{pushphonebook,jdbcType=VARCHAR},
+      allowTenPhoto = #{allowtenphoto,jdbcType=VARCHAR},
+      phoneFind = #{phonefind,jdbcType=VARCHAR},
+      weixinFind = #{weixinfind,jdbcType=VARCHAR},
+      groupChatAdd = #{groupchatadd,jdbcType=VARCHAR},
+      qqFind = #{qqfind,jdbcType=VARCHAR},
+      erweiAdd = #{erweiadd,jdbcType=VARCHAR},
+      cardAdd = #{cardadd,jdbcType=VARCHAR}
+    where u_id = #{uId,jdbcType=BIGINT}
+  </update>
+</mapper>

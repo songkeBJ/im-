@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sellerNet.backManagement.dao.impl.UserCashMapperImpl" >
+  <resultMap id="userCashMap" type="com.sellerNet.backManagement.entity.UserCash" >
+    <id column="cash_id" property="cashId" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="money" property="money" jdbcType="VARCHAR" />
+    <result column="realmoney" property="realmoney" jdbcType="VARCHAR" />
+    <result column="addtime" property="addtime"/>
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="account" property="account" jdbcType="VARCHAR" />
+    <result column="bank_name" property="bankName" jdbcType="VARCHAR" />
+    <result column="bank_num" property="bankNum" jdbcType="VARCHAR" />
+    <result column="bank_branch" property="bankBranch" jdbcType="VARCHAR" />
+    <result column="bank_realname" property="bankRealname" jdbcType="VARCHAR" />
+    <result column="weixin_account" property="weixinAccount" jdbcType="VARCHAR" />
+    <result column="zfb_account" property="zfbAccount" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <!-- 新增app端用户 -->  
+    <insert id="insert" parameterType="com.sellerNet.backManagement.entity.UserCash">  
+        insert into bao_users_cash(user_id,money,realmoney,addtime,status,account,bank_name,bank_num,bank_branch,bank_realname,weixin_account,zfb_account) values(#{userId,jdbcType=INTEGER},#{money,jdbcType=VARCHAR},#{realmoney,jdbcType=VARCHAR},#{addtime},
+        					#{status,jdbcType=INTEGER},#{account,jdbcType=VARCHAR},#{bankName,jdbcType=VARCHAR},#{bankNum,jdbcType=VARCHAR},#{bankBranch,jdbcType=VARCHAR},#{bankRealname,jdbcType=VARCHAR},#{weixinAccount,jdbcType=VARCHAR},#{zfbAccount,jdbcType=VARCHAR})  
+   </insert> 
+  <select id="selectPk" resultMap="userCashMap" parameterType="java.lang.Integer" >
+    select * from bao_users_cash
+    where cash_id = #{cashId,jdbcType=INTEGER}
+  </select>
+  <!-- 查询（参数）   -->
+   <select id="selectParam" parameterType="java.util.Map" resultMap="userCashMap">  
+        SELECT c.*,bu.nickname as userName,bu.mobile as phone from bao_users_cash  c left join bao_users bu on bu.user_id =c.user_id
+        where 1=1
+        <if test="userId != null">
+        and c.user_id=#{userId}
+        </if>
+        <if test="startTime != null and endTime != null">
+         and c.addtime between #{startTime} and #{endTime}
+        </if>
+          <if test="userName != null">
+         and bu.nickname =#{userName} 
+        </if>
+          <if test="phoneNumber != null">
+           and bu.mobile =#{phoneNumber}  
+        </if>
+        <if test="status != null">
+         and c.status =  #{status}
+        </if>
+        order by c.addtime desc
+       <if test="start != null">
+	        limit
+	        #{start},
+	        </if>
+	        <if test="end != null">
+	        #{end}
+	        </if>
+        
+        <if test="orderColumn != null">  
+           <!--  order by ${orderColumn}   -->
+            <if test="orderTurn != null">  
+              <!--   ${orderTurn}   -->
+            </if>  
+       </if>  
+   </select> 
+      <select id="countParam" parameterType="java.util.Map" resultType="int">  
+        SELECT count(*) from bao_users_cash  c   where 1=1
+           <if test="startTime != null">
+         and c.addtime between #{startTime} and #{endTime}
+        </if>
+        <if test="status != null">
+         and c.status =  #{status}
+        </if>
+   </select> 
+   
+    <!-- 更新对象  -->
+   <update id="update" parameterType="com.sellerNet.backManagement.entity.UserCash">  
+      update bao_users_cash   
+      <set>  
+      <if test="status != null">status=#{status,jdbcType=INTEGER},</if> 
+       <if test="reason != null">reason=#{reason,jdbcType=VARCHAR},</if> 
+      </set>  
+      <where>  
+        <if test="cashId != null">  
+            cash_id = #{cashId,jdbcType=INTEGER}
+        </if>  
+      </where>  
+   </update>
+   <!-- 一级 -->
+   <select id="dayCount"  resultType="int" parameterType="java.util.Map">  
+      select SUM(money) from bao_users_cash t1 
+      WHERE  t1.status=1
+      AND to_days(t1.ADDTIME) = to_days(now())   
+  </select> 
+  <!-- 二级 -->
+   <select id="monthCount"  resultType="int" parameterType="java.util.Map">  
+      select SUM(money) from bao_users_cash t1  
+      WHERE  t1.status=1
+      AND DATE_FORMAT(t1.ADDTIME, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )
+  </select> 
+  <!-- 三级 -->
+   <select id="allCount"  resultType="int" parameterType="java.util.Map">  
+        select SUM(money) from bao_users_cash t1
+        WHERE  t1.status=1  
+  </select> 
+   <!--手续费 一级 -->
+   <select id="dayPoundageCount"  resultType="int" parameterType="java.util.Map">  
+      select SUM(poundage) from bao_users_cash t1 
+      WHERE  t1.status=1
+      AND to_days(t1.ADDTIME) = to_days(now())   
+  </select> 
+  <!-- 手续费二级 -->
+   <select id="monthPoundageCount"  resultType="int" parameterType="java.util.Map">  
+      select SUM(poundage) from bao_users_cash t1  
+      WHERE  t1.status=1
+      AND DATE_FORMAT(t1.ADDTIME, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )  
+  </select> 
+  <!-- 手续费三级 -->
+   <select id="allPoundageCount"  resultType="int" parameterType="java.util.Map">  
+        select SUM(poundage) from bao_users_cash t1
+        WHERE  t1.status=1  
+  </select> 
+   <!-- 按月份统计提现金额 -->
+   <select id="countByMonth"  resultType="java.util.HashMap" parameterType="java.util.Map">  
+      SELECT SUM(money) con,DATE_FORMAT(ADDTIME,'%Y-%m') AS tm FROM bao_users_cash t1  
+      WHERE  t1.status=1 
+      GROUP BY DATE_FORMAT(ADDTIME,'%Y-%m')
+  </select> 
+   <!-- 按月份统计提现手续费 -->
+   <select id="countCashPoundageByMonth"  resultType="java.util.HashMap" parameterType="java.util.Map">  
+      SELECT SUM(poundage) con,DATE_FORMAT(ADDTIME,'%Y-%m') AS tm FROM bao_users_cash t1  
+      WHERE  t1.status=1 
+      GROUP BY DATE_FORMAT(ADDTIME,'%Y-%m')
+  </select> 
+   
+</mapper>

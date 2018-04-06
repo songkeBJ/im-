@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper      
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"      
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sellerNet.backManagement.dao.impl.im.ImRequestMapperImpl">
+	<resultMap  id="requestResult" type="com.sellerNet.backManagement.entity.im.ImRequest">
+		<id     property="id" column="id"  jdbcType="INTEGER" />  
+      	<result property="status" column="status" jdbcType="VARCHAR"  />
+		<result property="message" column="message" jdbcType="VARCHAR"  />
+		<result property="targetId" column="targetId" jdbcType="INTEGER" />
+		<result property="requestType" column="requestType" jdbcType="VARCHAR" />
+		<result property="auditedBy" column="auditedBy" jdbcType="INTEGER" />
+		<result property="groupId" column="groupId" jdbcType="INTEGER" />
+		
+		<result property="createdTime" column="createdTime" />
+		<result property="creator" column="creator" jdbcType="INTEGER" />
+		<result property="isLocked" column="isLocked" jdbcType="TINYINT" />
+		<result property="lastModifiedTime" column="lastModifiedTime"   />
+		<result property="lastModifier" column="lastModifier" jdbcType="INTEGER" />
+		<result property="pay" column="pay" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<resultMap type="com.sellerNet.backManagement.dto.im.ImRequestDTO" id="requestDto">
+		<id     property="id" column="id"  jdbcType="INTEGER" />  
+		<result property="createdTime" column="createdTime" jdbcType="DATE" />
+      	<result property="status" column="status" jdbcType="VARCHAR"  />
+		<result property="userId" column="creator" jdbcType="INTEGER"  />
+		<result property="message" column="message" jdbcType="VARCHAR" />
+		<result property="nickname" column="nickname" jdbcType="VARCHAR" />
+		<result property="avatar" column="face" jdbcType="VARCHAR" />
+		<result property="requestType" column="requestType" jdbcType="VARCHAR" />
+		<result property="auditedBy" column="auditedBy" jdbcType="INTEGER" />
+		<result property="targetId" column="targetId" jdbcType="INTEGER" />
+	</resultMap>
+	
+	<!-- 新增Request实体类 -->  
+    <insert id="insert" parameterType="com.sellerNet.backManagement.entity.im.ImRequest">  
+        insert into bao_im_request(status,message,targetId,requestType,auditedBy,groupId,createdTime,creator,isLocked,lastModifiedTime,lastModifier,pay,remark,lableName) values(#{status,jdbcType=VARCHAR},#{message,jdbcType=VARCHAR},#{targetId,jdbcType=INTEGER},#{requestType,jdbcType=VARCHAR}
+        					,#{auditedBy,jdbcType=INTEGER},#{groupId,jdbcType=INTEGER},#{createdTime},#{creator,jdbcType=INTEGER},#{isLocked,jdbcType=TINYINT},#{lastModifiedTime},#{lastModifier,jdbcType=INTEGER},#{pay,jdbcType=VARCHAR},#{remark,jdbcType=VARCHAR},#{lableName,jdbcType=VARCHAR}) 
+   		<selectKey resultType="long" order="AFTER" keyProperty="id">
+   			SELECT LAST_INSERT_ID();
+   		</selectKey>
+   </insert> 
+    
+    <!-- 根据id查询用户 --> 
+   <select id="selectPk"  parameterType="Long" resultMap="requestResult">
+       select * from bao_im_request  where id = #{id}
+   </select>
+   
+    <!-- 根据id查询用户 --> 
+   <select id="selectRequest"  parameterType="Long" resultMap="requestResult">
+       SELECT * from bao_im_request where groupId=#{groupId} and status="ACCEPTED"
+   </select>
+   
+	<!-- 新增Request实体类 并返回该主键ID-->  
+    <insert id="byIdInsert" parameterType="com.sellerNet.backManagement.entity.im.ImRequest" >  
+        insert into bao_im_request(status,message,targetId,requestType,auditedBy,groupId,createdTime,creator,isLocked,lastModifiedTime,lastModifier,pay) values(#{status,jdbcType=VARCHAR},#{message,jdbcType=VARCHAR},#{targetId,jdbcType=INTEGER},#{requestType,jdbcType=VARCHAR}
+        					,#{auditedBy,jdbcType=INTEGER},#{groupId,jdbcType=INTEGER},#{createdTime,jdbcType=DATE},#{creator,jdbcType=INTEGER},#{isLocked,jdbcType=TINYINT},#{lastModifiedTime,jdbcType=DATE},#{lastModifier,jdbcType=INTEGER},#{pay,jdbcType=VARCHAR})
+       <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id"> 
+			SELECT LAST_INSERT_ID() 
+	   </selectKey> 			
+     </insert>  
+   <!-- 查询我的所有请求,包括:
+        1 请求添加我的
+        2 邀请我加入群的
+        3 申请加入我管理的群的-->
+   <select id="findAllRequests" parameterType="java.util.Map" resultMap="requestDto" >  
+   		SELECT i.id,i.createdTime,i.status,i.creator,i.message,u.nickname,u.face,i.requestType,i.auditedBy,i.targetId
+            FROM bao_im_request i,bao_users u 
+            WHERE ((i.creator=#{creator} OR i.auditedBy=#{creator}) 
+            OR (i.requestType='GROUP_APPLY' AND EXISTS (SELECT gr.id FROM bao_im_group gr,bao_im_group_member gm
+            WHERE gr.id=i.targetId AND gm.userId=#{creator}
+            AND gm.groupId=gr.id AND ( gm.role='OWNER' OR gm.role='ADMIN' ) 
+            AND gm.isLocked=0)))
+            AND u.user_id=i.creator
+            AND i.status != 'EXPIRED'  AND i.status != 'SAYHELLO'  AND i.isLocked=0  ORDER BY i.id DESC 	LIMIT #{start},#{end}	
+   </select> 
+   
+   <!-- 寻找用户加群请求 --> 
+   <select id="findNotHandledGroupRequests"  parameterType="java.util.Map"  resultMap="requestResult">
+       SELECT * FROM bao_im_request i WHERE i.targetId=#{groupId} AND i.creator=#{userId} AND i.requestType='GROUP_APPLY' AND i.status='NOT_HANDLED' AND i.isLocked=0
+   </select> 
+     <delete id="deleteBatch">  
+        delete from bao_platform_user where id in   
+        <trim prefix="(" suffix=")" suffixOverrides=",">  
+            <foreach collection="list" item="pk" separator=",">  
+                #{pk}  
+            </foreach>  
+        </trim>  
+   </delete>  
+   
+   
+   <!-- 删除打招呼用户请求） -->
+    <update id="delHistoryRequests" parameterType="java.util.Map" >  
+      update  bao_im_request set isLocked = '1' where 1=1 
+      	<if test="userId != null">  
+            and targetId = #{userId,jdbcType=INTEGER} 
+        </if>
+        <if test="requestType != null">  
+             and  requestType = #{requestType,jdbcType=VARCHAR}  
+        </if> 
+   </update>  
+   <!-- 获取打招呼列表） -->
+    <select id="selHistoryRequests" parameterType="java.util.Map"  resultMap="requestResult" >  
+      select * from bao_im_request where status = #{status} 
+      	<if test="userId != null">  
+            and targetId = #{userId,jdbcType=INTEGER} 
+        </if>
+        order by id desc 
+   </select>  
+   
+      <!-- 获取打招呼列表） -->
+    <select id="SayHelloRequests" parameterType="java.util.Map"  resultMap="requestDto" >  
+    	 SELECT i.id,i.createdTime,i.status,i.creator,i.message,u.nickname,u.face,i.requestType,i.auditedBy,i.targetId
+            FROM bao_im_request i,bao_users u 
+            WHERE (i.auditedBy=#{creator}) and (u.user_id =i.auditedBy)
+            AND i.status != 'EXPIRED' AND i.status = 'SAYHELLO'  AND i.isLocked=0  ORDER BY i.id DESC	LIMIT #{start},#{end}	
+   </select>  
+   
+       <update id="clearHistoryRequests" parameterType="java.util.Map">  
+      UPDATE bao_im_request m 
+      <set>
+      	 m.status = 'EXPIRED',
+      	 <if test="modifier != null">m.lastModifier=#{modifier,jdbcType=INTEGER},</if>
+      	 <if test="lastModifiedTime != null">m.lastModifiedTime=#{modifiedAt,jdbcType=DATE}</if>
+      </set>
+      
+      <where>
+      	<if test="userId != null">  
+            m.creator = #{userId,jdbcType=INTEGER} 
+        </if>
+        <if test="targetId != null">  
+            and  m.targetId = #{targetId,jdbcType=INTEGER}
+        </if>  
+        <if test="requestType != null">  
+             and  m.requestType = #{requestType,jdbcType=VARCHAR}  
+        </if> 
+        	  and  m.isLocked=0 
+      </where>
+   </update>  
+   
+   <!-- 更新对象  -->
+   <update id="update" parameterType="com.sellerNet.backManagement.entity.im.ImRequest">  
+      update bao_im_request   
+      <set>  
+      <if test="status != null">status=#{status,jdbcType=VARCHAR},</if>  
+      <if test="message != null">message=#{message,jdbcType=VARCHAR},</if>
+      <if test="targetId != null">targetId=#{targetId,jdbcType=INTEGER},</if> 
+      <if test="requestType != null">requestType=#{requestType,jdbcType=VARCHAR},</if> 
+      <if test="auditedBy != null">auditedBy=#{auditedBy,jdbcType=INTEGER},</if> 
+      <if test="groupId != null">groupId=#{groupId,jdbcType=INTEGER},</if> 
+      <if test="createdTime != null">createdTime=#{createdTime},</if> 
+      <if test="creator != null">creator=#{creator,jdbcType=INTEGER},</if> 
+      <if test="isLocked != null">isLocked=#{isLocked,jdbcType=VARCHAR},</if> 
+      <if test="lastModifiedTime != null">lastModifiedTime=#{lastModifiedTime},</if>
+      <if test="lastModifier != null">lastModifier=#{lastModifier,jdbcType=INTEGER},</if> 
+      <if test="pay == 'xxx'">pay=null,</if> 
+      </set>  
+      <where>  
+        <if test="id != null">  
+            id = #{id,jdbcType=INTEGER}
+        </if>  
+      </where>  
+   </update>  
+   
+   
+   <!-- 寻找用户加群请求 --> 
+   <select id="findAcceptedOrNoHandledFriendRequest"  parameterType="java.util.Map"  resultMap="requestResult">
+      SELECT * FROM bao_im_request i 
+      <where>
+      	<if test="targetId != null">  
+            i.targetId = #{targetId,jdbcType=INTEGER} 
+        </if>
+        <if test="userId != null">  
+            and i.creator = #{userId,jdbcType=INTEGER} 
+        </if>
+         	AND i.requestType='FRIEND_APPLY'
+            AND (i.status='NOT_HANDLED' OR i.status='ACCEPTED')
+          <!--   AND i.isLocked=0 -->
+      </where>
+   </select> 
+   
+   <!-- 批量插入   -->
+   <insert id="insertBatch" parameterType="arraylist">  
+        insert into bao_im_request(status,message,targetId,requestType,friendsGroupId,auditedBy,groupId,createdTime,creator,isLocked,lastModifiedTime,lastModifier)   
+        <!-- collection可以是List对于list,数组对于array,Map对应ids  --> 
+        <foreach collection="list" item="request"  index="index" separator="union all">  
+        	select #{request.status,jdbcType=VARCHAR},
+        	#{request.message,jdbcType=VARCHAR},
+        	#{request.targetId,jdbcType=INTEGER},
+         	#{request.requestType,jdbcType=VARCHAR},
+         	#{request.auditedBy,jdbcType=INTEGER},
+			#{request.groupId,jdbcType=INTEGER},
+			#{request.createdTime},
+			#{request.creator,jdbcType=INTEGER},
+			#{request.isLocked,jdbcType=TINYINT},
+			#{request.lastModifiedTime},
+			#{request.lastModifier,jdbcType=INTEGER} 
+			from dual  
+        </foreach>  
+   </insert>
+   
+      <!-- 寻找用户加群请求 --> 
+   <select id="countAllAdd"  parameterType="java.util.Map"  resultType="int">
+     select count(*) from bao_im_request where targetId =#{userId} 
+     	and requestType ='FRIEND_APPLY' and status !='EXPIRED' 
+   </select> 
+   
+   
+         <!-- 寻找用户加群请求 --> 
+   <select id="countBydis"  parameterType="java.util.Map"  resultType="String">
+     select count(*) from bao_im_request t1 
+      <if test="type == 1">
+      	left join bao_appusers t2 on t2.userId =t1.targetId 
+       </if> 
+       <if test="type == 2">
+      	left join bao_appusers t2 on t2.userId =t1.creator 
+       </if> 
+	where 1=1 
+	  <if test="day != null">
+    and  to_days(t1.createdTime) = to_days(now()) 
+       </if>
+        <if test="month != null">
+    and DATE_SUB(CURDATE(), INTERVAL 30 DAY) &lt;= date(t1.createdTime) 
+       </if>
+		 <if test="disList != null">
+	      			and t2.districtId is not null and 
+      			<foreach collection="disList"  item="ulist"  open="(" separator="or" close=")" index="index">
+      				 t2.districtId  LIKE CONCAT(CONCAT('%', #{ulist}), '%') 
+      			</foreach>
+	      </if> 
+   </select> 
+   
+   
+    <select id="countParam" parameterType="java.util.Map" resultType="int">  
+      SELECT count(*) from bao_im_request where creator=#{creator} and auditedBy=#{auditedBy} and pay is not null and status='EXPIRED' 
+       <if test="orderColumn != null">  
+            order by ${orderColumn}  
+            <if test="orderTurn != null">  
+                ${orderTurn}  
+            </if>  
+       </if>  
+  </select> 
+  
+   <!-- 查询（参数）   -->
+   <select id="selectParam" parameterType="java.util.Map" resultMap="requestResult">  
+        SELECT * from bao_im_request where creator=#{creator} and targetId=#{targetId} and pay is not null and status='EXPIRED' 
+        <if test="isLocked != null">  
+      and   isLocked =0 
+         </if>  
+  		<if test="orderColumn != null">  
+            order by ${orderColumn}  
+            <if test="orderTurn != null">  
+                ${orderTurn}  
+            </if>  
+       </if>  
+   </select> 
+   
+     <select id="findOutTimeAccept" resultMap="requestResult">
+		SELECT * FROM bao_im_request where (status='PAY_ADD' or status='SAYHELLO') and pay is not null and 
+		TIMESTAMPDIFF(HOUR,createdTime,NOW()) &gt;=24 and isLocked=0  
+	</select>
+</mapper>

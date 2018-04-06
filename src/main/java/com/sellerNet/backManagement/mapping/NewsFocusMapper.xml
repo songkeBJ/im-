@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>      
+<!DOCTYPE mapper      
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"      
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+<mapper namespace="com.sellerNet.backManagement.dao.impl.NewsFocusMapperImpl">  
+      
+     <!-- 关注资讯 -->
+     <insert id="insert" parameterType="java.util.Map"  >  
+         insert into bao_news_focus (userId,focusId) values(#{userId},#{focusId})
+   </insert>  
+     
+   <!--取消关注-->
+     <delete id="delete"  parameterType="java.util.Map" >  
+     	delete from bao_news_focus where id=#{id}
+   </delete>  
+   <!-- 获取关注用户id -->
+     <select id="getFocusUserId" parameterType="java.util.Map"  resultType="java.util.Map">  
+     	select * from bao_news_focus where newsId=#{newsId}
+   </select>  
+   <!-- 根据用户id和被关注用户id获取关注情况 -->
+     <select id="getByUserIdAndFoucsId" parameterType="java.util.Map"  resultType="java.util.Map">  
+     	select * from bao_news_focus where userId=#{userId} and focusId =#{focusId}
+   </select>  
+   <!-- 根据用户id获取关注列表 -->
+     <select id="getFocusList" parameterType="java.util.Map"  resultType="java.util.Map">  
+     	select * from bao_news_focus where userId=#{userId} limit #{start},#{end}
+   </select>  
+   <!-- 根据该用户被关注次数 -->
+     <select id="getFocusCount" parameterType="Long"  resultType="Long">  
+     	select count(focusId) from bao_news_focus where focusId=#{focusId}
+   </select>  
+</mapper>   

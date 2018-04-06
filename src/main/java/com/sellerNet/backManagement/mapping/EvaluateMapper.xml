@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>      
+<!DOCTYPE mapper      
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"      
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sellerNet.backManagement.dao.impl.EvaluateMapperImpl">
+
+	<!-- 结果集 -->
+	<resultMap id="evaResult" type="com.sellerNet.backManagement.entity.Evaluate">
+		<id property="id" column="id" jdbcType="INTEGER" />
+		<result property="objectId" column="objectId" jdbcType="INTEGER" />
+		<result property="userId" column="userId" jdbcType="INTEGER" />
+		<result property="likeOn" column="likeOn" jdbcType="TINYINT" />
+		<result property="content" column="content" jdbcType="VARCHAR" />
+		<result property="createdTime" column="createdTime" />
+		<result property="creator" column="creator" jdbcType="INTEGER" />
+		<result property="isLocked" column="isLocked" jdbcType="TINYINT" />
+		<result property="lastModifiedTime" column="lastModifiedTime" />
+		<result property="lastModifier" column="lastModifier" jdbcType="INTEGER" />
+		<result property="parentId" column="parentId" jdbcType="INTEGER" />
+	</resultMap>
+	<!-- 结果集 -->
+	<resultMap id="evaNewsOutResult" type="com.sellerNet.backManagement.entity.EvaluateNewsOut">
+		<id     property="evaluateId" column="id"   />  
+      	<result property="avatar" column="avatar"   />
+		<result property="nickName" column="nickName"   />
+		<result property="content" column="content" />
+		<result property="backTime" column="backTime" />
+		<result property="isLikeTime" column="isLikeTime"  />
+		<result property="createdTime" column="createdTime"  />
+	</resultMap>
+	<!-- 获取单个资讯评论-->
+	<select id="getOutById" parameterType="java.util.Map"
+		resultMap="evaNewsOutResult">
+		select t1.*,t2.nickname,t2.face avatar
+		from bao_app_evaluate t1
+		LEFT OUTER JOIN bao_users t2 on t1.creator=t2.user_id
+		where t1.id=#{id}
+		and category=#{category}
+	</select>
+	<!-- 获取资讯评论和回复个数和点赞个数 -->
+	<select id="getNewsEvaluates" parameterType="java.util.Map"
+		resultMap="evaNewsOutResult">
+		select t1.*,t2.nickname,t2.face avatar
+		from bao_app_evaluate t1
+		LEFT OUTER JOIN bao_users t2 on t1.creator=t2.user_id
+		where t1.objectId=#{objectId}
+		and parentId=#{parentId}
+		and category='NEWS'
+	</select>
+	<!-- 获取资讯评论回复详情 -->
+	<select id="getByParentIdAndCategory" parameterType="java.util.Map"
+		resultMap="evaNewsOutResult">
+		SELECT t1.*,t2.nickname,t2.face avatar
+		FROM bao_app_evaluate t1
+		LEFT OUTER JOIN bao_users t2 ON t1.creator=t2.user_id 
+		WHERE t1.parentId=#{parentId}
+		AND t1.category=#{category}
+	</select>
+	<!-- 获取评论点赞个数 -->
+	<select id="getNewsEvaluatesIslikeTime" parameterType="java.util.Map"
+		resultMap="evaNewsOutResult">
+		select count(*) isLikeTime
+		from bao_islike
+		where exprienceId=#{objectId} 
+		and category=#{category}
+		and isLike=1
+	</select>
+	<!-- 获取资讯回复个数 -->
+	<select id="getNewsEvaluatesBackTime" parameterType="java.util.Map"
+		resultMap="evaNewsOutResult">
+		select count(*) backTime
+		from bao_app_evaluate
+		where parentId=#{objectId} 
+		and category='NEWS'
+	</select>
+
+	<!-- 新增evaluate实体类 -->
+	<insert id="insert" parameterType="com.sellerNet.backManagement.entity.Evaluate">
+		insert into
+		bao_app_evaluate(objectId,userId,likeOn,content,createdTime,creator,isLocked,lastModifiedTime,lastModifier,parentId,category)
+		values(#{objectId,jdbcType=INTEGER},#{userId,jdbcType=INTEGER},#{likeOn,jdbcType=TINYINT},#{content,jdbcType=VARCHAR},#{createdTime},#{creator,jdbcType=INTEGER},#{isLocked,jdbcType=TINYINT},#{lastModifiedTime},#{lastModifier,jdbcType=INTEGER},#{parentId,jdbcType=INTEGER},#{category})
+		<selectKey resultType="long" order="AFTER" keyProperty="id">
+			SELECT LAST_INSERT_ID();
+		</selectKey>
+	</insert>
+
+	<!-- 根据id查询评论 -->
+	<select id="selectPk" parameterType="Long" resultMap="evaResult">
+		select * from bao_app_evaluate where id = #{id}
+	</select>
+
+	<!-- 根据id查询用户 -->
+	<select id="getByObjectIdAndCategory" parameterType="java.util.Map"
+		resultMap="evaResult">
+		select * from bao_app_evaluate
+		<where>
+			<if test="objectId != null"> and objectId=#{objectId,jdbcType=INTEGER}</if>
+			<if test="category != null"> and category=#{category}</if>
+
+			<if test="parentId != null">
+				and
+				parentId=#{parentId,jdbcType=INTEGER}
+			</if>
+		</where>
+	</select>
+
+	<!-- 更新对象 -->
+	<update id="update" parameterType="com.sellerNet.backManagement.entity.Evaluate">
+		update bao_app_evaluate
+		<set>
+			<if test="userId != null">userId=#{userId,jdbcType=INTEGER},</if>
+			<if test="like != null">like=#{like,jdbcType=TINYINT},</if>
+			<if test="content != null">content=#{content,jdbcType=VARCHAR},</if>
+			<if test="createdTime != null">created_time=#{createdTime},</if>
+			<if test="creator != null">creator=#{creator,jdbcType=INTEGER},</if>
+			<if test="isLocked != null">isLocked=#{isLocked,jdbcType=VARCHAR},</if>
+			<if test="lastModifiedTime != null">lastModifiedTime=#{lastModifiedTime},</if>
+			<if test="lastModifier != null">lastModifier=#{lastModifier,jdbcType=INTEGER},</if>
+		</set>
+		<where>
+			<if test="id != null">
+				and id = #{id,jdbcType=INTEGER}
+			</if>
+		</where>
+	</update>
+	<!-- 根据主键删除 -->
+	<delete id="delete" parameterType="Long">
+		delete from bao_app_evaluate where id = #{id}
+	</delete>
+</mapper>   

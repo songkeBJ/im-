@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>      
+<!DOCTYPE mapper      
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"      
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+<mapper namespace="com.sellerNet.backManagement.dao.impl.SearchMapperImpl">  
+    <!-- 添加搜索记录 -->
+    <insert id="insertSearch" parameterType="java.util.Map">
+    	insert into bao_search (userId,name,searchTime) values(#{userId},#{name},1)
+    </insert>
+    <!-- 添加热搜记录 -->
+    <insert id="insertHotSearch" parameterType="java.util.Map">
+    	insert into bao_search_hot (name,searchTime) values(#{name},1)
+    </insert>
+    <!-- 修改热搜记录 -->
+    <update id="updateHotSearch" parameterType="java.util.Map">
+    	update bao_search_hot
+    	set searchTime=searchTime+1
+    	where name=#{name}
+    </update>
+    <!-- 修改搜索记录 -->
+    <update id="updateSearch" parameterType="java.util.Map">
+    	update bao_search
+    	<set>
+	    	<if test="userId != null">
+		    	userId=#{userId},
+	    	</if>
+	    	<if test="name != null">
+		    	name=#{name},
+	    	</if>
+	    	<if test="searchTime != null">
+		    	searchTime=searchTime+1,
+	    	</if>
+    	</set> 
+    	where id=#{id}
+    </update>
+    <!-- 查询热门搜索 -->
+    <select id="selectHotSearch" parameterType="java.util.Map" resultType="java.util.Map">
+    	select name,searchTime from bao_search_hot
+    	order by searchTime desc
+    	limit 0,4
+    </select>
+    <!-- 查询某个用户的搜索历史 -->
+    <select id="selectSearchByUserId" parameterType="java.util.Map" resultType="java.util.Map">
+    	select * from bao_search where userId=#{userId}
+    </select>
+    <!-- 根据关键字查热搜 -->
+    <select id="selectHotSearchByName" parameterType="java.util.Map" resultType="java.util.Map">
+    	select * from bao_search_hot where name=#{name}
+    </select>
+    <!-- 根据userId和name查询某个用户的搜索记录 -->
+    <select id="selectSearchByUserIdAndName" parameterType="java.util.Map" resultType="java.util.Map">
+    	select * from bao_search where userId=#{userId} and name=#{name}
+    </select>
+    <!-- 删除某个用户的搜索历史 -->
+    <delete id="deleteSearchBatch" >
+    	delete from bao_search where id in   
+        <trim prefix="(" suffix=")" suffixOverrides=",">  
+            <foreach collection="list" item="pk" separator=",">  
+                #{pk}  
+            </foreach>  
+        </trim>  
+    </delete>
+</mapper>   

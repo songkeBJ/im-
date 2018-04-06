@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sellerNet.backManagement.dao.impl.SetMapperImpl" >
+  <resultMap id="BaseResultMap" type="com.sellerNet.backManagement.entity.Set" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="flag" property="flag" jdbcType="VARCHAR" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, flag, content
+  </sql>
+  <select id="selectPk" parameterType="Long" resultMap="BaseResultMap">
+  	select * from bao_set where id=#{id}
+  </select>
+  <update id="update" parameterType="com.sellerNet.backManagement.entity.Set">
+  	update bao_set set content = #{content} where id=#{id}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from bao_set
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  
+  <select id="selectBySet" resultMap="BaseResultMap" parameterType="com.sellerNet.backManagement.entity.Set" >
+    select 
+    <include refid="Base_Column_List" />
+    from bao_set 
+    where flag = #{flag}
+    
+    </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from bao_set
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.sellerNet.backManagement.entity.Set" >
+    insert into bao_set (id, flag, content
+      )
+    values (#{id,jdbcType=BIGINT}, #{flag,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.sellerNet.backManagement.entity.Set" >
+    insert into bao_set
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="flag != null" >
+        flag,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="flag != null" >
+        #{flag,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sellerNet.backManagement.entity.Set" >
+    update bao_set
+    <set >
+      <if test="flag != null" >
+        flag = #{flag,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sellerNet.backManagement.entity.Set" >
+    update bao_set
+    set flag = #{flag,jdbcType=VARCHAR},
+      content = #{content,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

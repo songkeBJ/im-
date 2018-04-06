@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sellerNet.backManagement.dao.impl.CityMapperImpl">
+	<resultMap id="cityMap" type="com.sellerNet.backManagement.entity.City">
+		<id column="city_id" property="cityId" jdbcType="SMALLINT" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="pinyin" property="pinyin" jdbcType="VARCHAR" />
+		<result column="is_open" property="isOpen" jdbcType="BIT" />
+		<result column="lng" property="lng" jdbcType="VARCHAR" />
+		<result column="lat" property="lat" jdbcType="VARCHAR" />
+		<result column="theme" property="theme" jdbcType="VARCHAR" />
+		<result column="orderby" property="orderby" jdbcType="TINYINT" />
+		<result column="first_letter" property="firstLetter" jdbcType="CHAR" />
+	</resultMap>
+
+	<resultMap id="newCityMap" type="com.sellerNet.backManagement.dto.CitysDto">
+		<result column="code" property="code" jdbcType="VARCHAR" />
+		<result column="value" property="value" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<select id="selectPk" resultMap="cityMap" parameterType="java.lang.Short">
+		select * from bao_city
+		where city_id = #{cityId,jdbcType=SMALLINT}
+	</select>
+	<select id="select" resultMap="cityMap">
+		select * from bao_city
+	</select>
+
+	<select id="selectNew" parameterType="java.lang.Integer"
+		resultMap="newCityMap">
+		select id as code,value from area where parentId=#{code}
+	</select>
+</mapper>

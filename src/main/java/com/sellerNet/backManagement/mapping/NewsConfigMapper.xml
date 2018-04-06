@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>      
+<!DOCTYPE mapper      
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"      
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+<mapper namespace="com.sellerNet.backManagement.dao.impl.NewsConfigMapperImpl">  
+      
+   <!-- 结果集 -->     
+   <resultMap id="newsConfigResult" type="com.sellerNet.backManagement.entity.NewsConfig">   
+   		<id     property="id" column="id"   />  
+		<result property="lookEnd" column="lookEnd" />
+		<result property="lookTime" column="lookTime"  />
+		<result property="lastModifiedTime" column="lastModifiedTime"  />
+		<result property="lastModifier" column="lastModifier"  />
+   </resultMap>  
+     
+     
+   <!-- 新增实体类 -->  
+    <select id="selectPk"  parameterType="Long" resultMap="newsConfigResult">  
+        select * from bao_news_config where id=1
+   </select>  
+   
+   <!-- 更新对象  -->
+   <update id="update" parameterType="com.sellerNet.backManagement.entity.NewsConfig">  
+      update bao_news_config   
+      <set>  
+      <if test="lookEnd != null">lookEnd=#{lookEnd},</if> 
+      <if test="lookTime != null">lookTime=#{lookTime},</if> 
+      <if test="lastModifiedTime != null">lastModifiedTime=#{lastModifiedTime},</if>
+      <if test="lastModifier != null">lastModifier=#{lastModifier}</if> 
+      </set>  
+      <where>  
+        <if test="id != null">  
+            id = #{id}
+        </if>
+        <if test="pcUserId != null">  
+           and pcUserId = #{pcUserId}
+        </if> 
+      </where>  
+   </update>  
+   
+   
+</mapper>   

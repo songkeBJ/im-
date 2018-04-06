@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>      
+<!DOCTYPE mapper      
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"      
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+<mapper namespace="com.sellerNet.backManagement.dao.impl.NewsComplainMapperImpl">  
+      
+   <!-- 获取一条资讯投诉总次数 -->
+   <select id="countByNewsId"  resultType="Long" parameterType="Long">  
+      SELECT count(*) FROM bao_news_complain where newsId=#{newsId}  
+  </select> 
+  <!-- 添加一条投诉 -->
+  <insert id="insert" parameterType="java.util.Map">
+  	insert into bao_news_complain (newsId,type) values(#{newsId},#{type})
+  </insert>
+  <!-- 统计一条资讯每种类型投诉的总数 -->
+  <select id="countByNewsIdAndType" parameterType="Long" resultType="java.util.Map">
+  	select type,count(type) num FROM bao_news_complain
+  	where newsId=#{newsId}
+  	group by type
+  </select>
+   <!-- 根据资讯id查询所有投诉 --> 
+   <select id="selectByNewsId"  parameterType="Long" resultType="java.util.Map">
+       select * from bao_news_complain  where newsId = #{newsId}
+   </select> 
+   <!-- 删除投诉 --> 
+   <delete id="delete"  parameterType="Long" >
+       delete from bao_news_complain  where id = #{id}
+   </delete> 
+   
+</mapper>   

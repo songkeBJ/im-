@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>      
+<!DOCTYPE mapper      
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"      
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+<mapper namespace="com.sellerNet.backManagement.dao.impl.AuthVideoMapperImpl">  
+    
+    
+   <!-- 新增红包 -->  
+    <insert id="insert" parameterType="java.util.Map">  
+        insert into bao_auth_video(category,objectId) values(#{category},#{objectId})  
+   		<selectKey resultType="Long" order="AFTER" keyProperty="id">
+   			SELECT LAST_INSERT_ID();
+   		</selectKey>
+   </insert> 
+   <!-- 获取状态 --> 
+   <select id="selectPk"  parameterType="java.util.Map" resultType="java.util.Map">
+       select * from bao_auth_video  where category =#{category} and objectId=#{objectId}
+   </select> 
+   <!-- 更新对象  -->
+   <update id="update" parameterType="java.util.Map">  
+      update bao_auth_video   
+      <set>  
+      <if test="status != null">status=#{status}</if>
+      </set>  
+      <where>  
+        <if test="id != null">  
+            id = #{id}
+        </if>
+      </where>  
+   </update> 
+</mapper>   

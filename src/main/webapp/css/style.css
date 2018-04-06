@@ -1,0 +1,174 @@
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,button,textarea,p,blockquote,th,td {
+	margin: 0 auto;
+	padding: 0;
+}
+
+body {
+	color: #555;
+	font-size: 14px;
+	font-family: Microsoft YaHei, Verdana, Arial, Helvetica, sans-serif;
+}
+
+img {
+	border: none;
+	padding: 0;
+	margin: 0 auto;
+}
+
+
+/* css common */
+
+.clearfix:after {
+	content: ".";
+	display: block;
+	height: 0;
+	clear: both;
+	visibility: hidden;
+}
+
+.clearfix {
+	*zoom: 1;
+}
+
+.app-down {
+	position: relative;
+	width: 100%;
+	min-height: 100%;
+	box-sizing: border-box;
+	background: url(../images/cw_bg.jpg) center center no-repeat;
+	background-size: 100% 100%;
+}
+
+.app-down-sec {}
+
+.app-down-img {
+	width: 100%;
+	padding: 4% 0 2%;
+	text-align: center;
+}
+
+.app-down-img img {
+	display: block;
+	width: 56%;
+	margin: 0px auto;
+}
+
+.app-down-btn {
+	width: 100%;
+	text-align: center;
+}
+
+.app-down-btn>img {
+	display: inline-block;
+	width: 75%;
+	margin: 3% auto;
+}
+
+.app-down-btn a {
+	display: inline-block;
+	width: 75%;
+	margin: 3% auto;
+}
+
+.app-down-btn a img {
+	display: block;
+	width: 100%;
+}
+
+#app-down-mask {
+	display: none;
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	background: #000;
+	opacity: 0.7;
+}
+
+#app-mask-content {
+	display: none;
+}
+#app-mask-content p {
+	color: #FFFFFF;
+	font-size: 0.35rem;
+}
+
+#app-mask-content p:nth-child(1) {
+	position: absolute;
+	top: 3.5rem;
+	left: 0.4rem;
+}
+#app-mask-content p:nth-child(2) {
+	position: absolute;
+	top: 4.5rem;
+	left: 0.4rem;
+}
+
+#app-mask-content p:nth-child(1) span,
+#app-mask-content p:nth-child(2) span {
+	display: inline-block;
+	width: 0.45rem;
+	height: 0.45rem;
+	border-radius: 50%;
+	background: #fb4500;
+	text-align: center;
+	line-height: 0.45rem;
+	color: #FFFFFF;
+	vertical-align: middle;
+}
+#app-mask-content p:nth-child(1) img {
+	width: 0.7rem;
+	height: 0.5rem;
+	vertical-align: middle;
+}
+#app-mask-content p:nth-child(2) img {
+	vertical-align: middle;
+}
+
+#app-mask-content .arrows {
+	position: absolute;
+	right: 0.3rem;
+	top: 2rem;
+}
+#app-mask-content .error {
+	position: absolute;
+	left: 0.4rem;
+	top: 1.8rem;
+	width: 0.4rem;
+	height: 0.4rem;
+}
+
+.heng40 {
+	position: relative;
+	display: block;
+	width: 100%;
+	height: 40px;
+}
+
+.head {
+	position: fixed;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 40px;
+	background: #fd7812;
+	color: #fff;
+	font-size: 18px;
+	line-height: 40px;
+	text-align: center;
+	z-index: 999999;
+}
+
+.head-l {
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 40px;
+	height: 40px;
+	z-index: 2;
+}
+
+.head-l img {
+	display: block;
+}

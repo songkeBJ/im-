@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sellerNet.backManagement.dao.impl.UserRelationMapperImpl" >
+  <resultMap id="aMap" type="com.sellerNet.backManagement.entity.UserRelation" >
+    <id column="id" property="id" jdbcType="TINYINT" />
+    <result column="userId" property="userId" jdbcType="TINYINT" />
+    <result column="beUserId" property="beUserId" jdbcType="TINYINT" />
+     <result column="type" property="type" jdbcType="TINYINT" />
+    <result column="images" property="images" jdbcType="VARCHAR" />
+     <result column="reason" property="reason" jdbcType="VARCHAR" />
+     <result column="otherReason" property="otherReason" jdbcType="VARCHAR" />
+     <result column="status" property="status" jdbcType="TINYINT" />
+      <result property="createdTime" column="createdTime" />
+  </resultMap>
+  
+   <resultMap id="rMap" type="com.sellerNet.backManagement.dto.UserRelationDto" >
+    <result column="userId" property="userId" jdbcType="TINYINT" />
+    <result column="nickName" property="nickName" jdbcType="VARCHAR" />
+     <result column="userPhone" property="userPhone" jdbcType="VARCHAR" />
+    <result column="beUserId" property="beUserId" jdbcType="TINYINT" />
+     <result column="beNickName" property="beNickName" jdbcType="VARCHAR" />
+     <result column="beUserPhone" property="beUserPhone" jdbcType="VARCHAR" />
+     <result column="status" property="status" jdbcType="TINYINT" />
+      <result column="type" property="type" jdbcType="TINYINT" />
+        <result column="createdTime" property="createdTime" />
+  </resultMap>
+  
+  <insert id="insert" parameterType="com.sellerNet.backManagement.entity.UserRelation" >
+    insert into bao_user_relation (userId, beUserId,type,images,reason,otherReason,status,createdTime)
+    values (#{userId}, #{beUserId}, #{type}, #{images}, #{reason}, #{otherReason}, #{status}, #{createdTime})
+    <selectKey resultType="long" order="AFTER" keyProperty="id">
+   			SELECT LAST_INSERT_ID();
+   		</selectKey>
+  </insert>
+  
+   <!-- 更新对象  -->
+   <update id="update" parameterType="com.sellerNet.backManagement.entity.UserRelation">  
+      update bao_user_relation   
+      <set>  
+      <if test="status != null">status=#{status},</if>  
+      </set>  
+      <where>  
+        <if test="id != null">  
+            id = #{id}
+        </if>  
+      </where>  
+   </update>  
+   
+    <delete id="delete" parameterType="Long">  
+        delete from bao_user_relation where id = #{id}  
+   </delete>  
+     
+  
+  <select id="selectPk" resultMap="aMap" parameterType="java.lang.Long" >
+    select  *
+    from bao_user_relation
+    where id = #{id}
+  </select>
+  
+   <select id="select"   resultMap="aMap">
+       select * from bao_user_relation  
+   </select> 
+  
+     <select id="selectParam" parameterType="java.util.Map" resultMap="rMap">  
+        SELECT t1.user_id as userId,t1.nickname as userName,t1.mobile as userPhone,
+        t2.user_id as beUserId,t2.nickname as beUserName,t2.mobile as beUserPhone,bur.type,bur.status,bur.createdTime   
+        from bao_user_relation bur 
+        	left join bao_users t1 on t1.user_id=bur.userId  
+        	left join bao_users t2 on t2.user_id=bur.beUserId  
+        where  1=1
+         <if test="userId != null">and bur.userId=#{userId}</if>
+         <if test="beUserId != null">and bur.beUserId=#{beUserId}</if>
+         <if test="type != null">and bur.type=#{type}</if>
+         <if test="status != null">and bur.status=#{status}</if>
+         order by bur.id desc 
+         <if test="start != null">
+        limit
+        #{start},
+        </if>
+        <if test="end != null">
+        #{end}
+        </if>
+       <if test="orderColumn != null">  
+            order by ${orderColumn}  
+            <if test="orderTurn != null">  
+                ${orderTurn}  
+            </if>  
+       </if>  
+   </select> 
+   
+   <select id="selectCCParam" parameterType="java.util.Map" resultMap="rMap">  
+        SELECT t1.user_id as userId,t1.nickname as nickName,t1.mobile as userPhone,
+        t2.user_id as beUserId,t2.nickname as beNickName,t2.mobile as beUserPhone,bur.type,bur.status,bur.images,bur.reason,bur.otherReason,bur.id,bur.createdTime from bao_user_relation bur 
+        	left join bao_users t1 on t1.user_id=bur.userId  
+        	left join bao_users t2 on t2.user_id=bur.beUserId  
+        where  1=1
+         <if test="userId != null">and bur.userId=#{userId}</if>
+         <if test="beUserId != null">and bur.beUserId=#{beUserId}</if>
+         <if test="type != null">and bur.type=#{type}</if>
+         <if test="status != null">and bur.status=#{status}</if>
+          <if test="userName != null">and t1.nickname=#{userName}</if>
+         <if test="userName2 != null">and t2.nickname=#{userName2}</if>
+         <if test="phoneNumber != null">and t1.mobile=#{phoneNumber}</if>
+         <if test="phoneNumber2 != null">and t2.mobile=#{phoneNumber2}</if>
+         order by bur.id desc 
+         <if test="start != null">
+        limit
+        #{start},
+        </if>
+        <if test="end != null">
+        #{end}
+        </if>
+       <if test="orderColumn != null">  
+            order by ${orderColumn}  
+            <if test="orderTurn != null">  
+                ${orderTurn}  
+            </if>  
+       </if>  
+   </select> 
+   
+    <select id="countParam" parameterType="java.util.Map" resultType="int">  
+        SELECT count(*) from bao_user_relation 
+        where  1=1
+         <if test="userId != null">and userId=#{userId}</if>
+         <if test="beUserId != null">and beUserId=#{beUserId}</if>
+         <if test="type != null">and type=#{type}</if>
+         <if test="status != null">and status=#{status}</if>
+         <if test="start != null">
+        limit
+        #{start},
+        </if>
+        <if test="end != null">
+        #{end}
+        </if>
+       <if test="orderColumn != null">  
+            order by ${orderColumn}  
+            <if test="orderTurn != null">  
+                ${orderTurn}  
+            </if>  
+       </if>  
+   </select> 
+   
+</mapper>

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>      
+<!DOCTYPE mapper      
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"      
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+<mapper namespace="com.sellerNet.backManagement.dao.impl.MobileUserMapperImpl">  
+      
+   <!-- 结果集 -->     
+   <resultMap id="mobileResult" type="com.sellerNet.backManagement.entity.MobileUser">   
+   		<id     property="id" column="mu_id"  jdbcType="INTEGER" />  
+      	<result property="userId" column="mu_u_id" jdbcType="INTEGER"  />
+		<result property="longitud" column="mu_longitud" jdbcType="DOUBLE"  />
+		<result property="latitude" column="mu_latitude" jdbcType="DOUBLE"  />
+		<result property="type" column="type" jdbcType="VARCHAR"  />
+		<result property="sex" column="sex" jdbcType="INTEGER"  />
+		
+		<result property="createdTime" column="createdTime" />
+		<result property="creator" column="creator" jdbcType="INTEGER" />
+		<result property="isLocked" column="isLocked" jdbcType="TINYINT" />
+		<result property="lastModifiedTime" column="lastModifiedTime"  />
+		<result property="lastModifier" column="lastModifier" jdbcType="INTEGER" />
+   </resultMap>  
+     
+   <!-- 新增Code实体类 -->  
+    <insert id="insert" parameterType="com.sellerNet.backManagement.entity.MobileUser">  
+        insert into bao_mobile_user(mu_u_id,mu_longitud,mu_latitude,type,sex,createdTime,creator,isLocked,lastModifiedTime,lastModifier) values(#{userId,jdbcType=INTEGER},#{longitud,jdbcType=DOUBLE},#{latitude,jdbcType=DOUBLE},#{type,jdbcType=VARCHAR},#{sex,jdbcType=INTEGER},#{createdTime},#{creator,jdbcType=INTEGER},#{isLocked,jdbcType=TINYINT},#{lastModifiedTime},#{lastModifier,jdbcType=INTEGER})  
+   </insert>  
+   
+   <!-- 查询（参数）   -->
+   <select id="selectParam" parameterType="java.util.Map" resultMap="mobileResult">  
+   	    select * from bao_mobile_user m,bao_users u
+        where m.mu_latitude != 0  
+        and m.mu_longitud &gt; #{left_lat} 
+        and m.mu_longitud &lt; #{right_lat}
+        and m.mu_latitude &gt; #{down_lon} 
+        and m.mu_latitude &lt; #{top_lon} 
+        and m.mu_u_id != #{uid} 
+        and m.mu_u_id =u.user_id
+        <if test="sex != null">
+        and m.sex = #{sex} 
+        </if>
+        <if test="userId != null">
+         and m.creator !=#{userId} 
+        </if>
+        order by ACOS(SIN((#{lat} * 3.1415) / 180 ) * SIN((m.mu_latitude * 3.1415) / 180 )  
+        +COS((#{lat} * 3.1415) / 180 ) * COS((m.mu_latitude * 3.1415) / 180 )  
+        *COS((#{lon} * 3.1415) / 180 - (m.mu_longitud * 3.1415) / 180 ) )  
+        * 6380 asc limit #{start},#{end}
+   </select> 
+   
+   <!-- 查询（参数）   -->
+   <select id="radarUsers" parameterType="java.util.Map" resultMap="mobileResult">  
+   	    SELECT u.user_id as mu_u_id from bao_users u 
+   	    WHERE u.user_id IN (
+   	    SELECT m.mu_u_id 
+   	    from bao_mobile_user m 
+   	    WHERE m.mu_latitude != 0 
+   	    and m.mu_longitud &gt; #{left_lat} 
+        and m.mu_longitud &lt; #{right_lat}
+        and m.mu_latitude &gt; #{down_lon} 
+        and m.mu_latitude &lt; #{top_lon} 
+   	    and m.type=3 and m.mu_u_id!=#{uid}) 
+   </select> 
+   
+   <!-- 查询（参数）   -->
+   <select id="getNearpeople" parameterType="java.util.Map" resultMap="mobileResult">  
+		select * from bao_mobile_user m ,bao_users u  
+		where  m.mu_u_id=u.user_id 
+		and  m.mu_u_id != #{userId} 
+		and u.bshop =0    
+		and m.type=2
+		order by createdTime desc
+   </select> 
+   
+   <!-- 查询（参数）   -->
+   <select id="getNearStroe" parameterType="java.util.Map" resultMap="mobileResult">  
+   	    select * from bao_mobile_user m ,bao_users u  
+		where  m.mu_u_id=u.user_id 
+		and  m.mu_u_id != #{userId} 
+		and u.bshop !=0    
+		and m.type=2 
+		order by createdTime desc
+   </select> 
+   
+   <!-- 根据参数删除   -->
+   <delete id="deleteParam" parameterType="java.util.Map">  
+        delete from bao_mobile_user  
+        <where>  
+            <if test="userId != null">mu_u_id = #{userId}</if>  
+        </where>  
+   </delete> 
+   
+   <!-- 更新对象  -->
+   <update id="update" parameterType="com.sellerNet.backManagement.entity.MobileUser">  
+      update bao_mobile_user   
+      <set>  
+      <if test="userId != null">mu_u_id=#{userId,jdbcType=INTEGER},</if>  
+      <if test="longitud != null">mu_longitud=#{longitud,jdbcType=DOUBLE},</if>
+      <if test="latitude != null">mu_latitude=#{latitude,jdbcType=DOUBLE},</if>
+      <if test="type != null">type=#{type,jdbcType=VARCHAR},</if>
+      <if test="sex != null">sex=#{sex,jdbcType=INTEGER},</if>
+      <if test="createdTime != null">createdTime=#{createdTime},</if> 
+      <if test="creator != null">creator=#{creator,jdbcType=INTEGER},</if> 
+      <if test="isLocked != null">isLocked=#{isLocked,jdbcType=VARCHAR},</if> 
+      <if test="lastModifiedTime != null">lastModifiedTime=#{lastModifiedTime},</if>
+      <if test="lastModifier != null">lastModifier=#{lastModifier,jdbcType=INTEGER},</if> 
+      </set>  
+      <where>  
+        <if test="id != null">  
+            mu_id = #{id,jdbcType=INTEGER}
+        </if>
+      </where>  
+   </update>  
+   
+   <!-- 查询（参数）   -->
+   <select id="selectByUserId" parameterType="java.util.Map" resultMap="mobileResult">  
+   	    select * from bao_mobile_user  
+        where creator= #{userId}
+   </select> 
+   
+</mapper>   

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sellerNet.backManagement.dao.impl.ImgsItemMapperImpl">
+	<resultMap id="imgsMap" type="com.sellerNet.backManagement.entity.ImgsItem">
+		<id column="id" property="id" />
+		<result column="newsId" property="newsId" />
+		<result column="picUrl" property="picUrl" />
+		<result column="picDesc" property="picDesc" />
+		<result column="orderNo" property="orderNo" />
+	</resultMap>
+
+	<insert id="insert" parameterType="com.sellerNet.backManagement.entity.ImgsItem">
+		insert into bao_news_imgs (newsId,picUrl,picDesc,orderNo) values(#{newsId},#{picUrl},#{picDesc},#{orderNo})
+	</insert>
+
+	<!-- 查询（参数） -->
+	<select id="selectParam" parameterType="java.util.Map"
+		resultMap="imgsMap">
+		SELECT * from bao_news_imgs 
+		<where>
+			<if test="newsId!=null">
+				and newsId=#{newsId}
+			</if>
+		</where>
+	</select>
+	<delete id="delete" parameterType="Long">
+		delete from bao_news_imgs where id=#{id}
+	</delete>
+</mapper>

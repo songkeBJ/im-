@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sellerNet.backManagement.dao.impl.SetexpressionMapperImpl" >
+  <resultMap id="BaseResultMap" type="com.sellerNet.backManagement.entity.Setexpression" >
+    <id column="u_id" property="uId" jdbcType="BIGINT" />
+    <result column="img_url" property="imgUrl" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    u_id, img_url
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from bao_set_expression
+    where u_id = #{uId,jdbcType=BIGINT}
+  </select>
+  <select id="queryList" resultMap="BaseResultMap" parameterType="com.sellerNet.backManagement.entity.Setexpression" >
+    select 
+    <include refid="Base_Column_List" />
+    from bao_set_expression
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from bao_set_expression
+    where u_id = #{uId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.sellerNet.backManagement.entity.Setexpression" >
+    insert into bao_set_expression (u_id, img_url)
+    values (#{uId,jdbcType=BIGINT}, #{imgUrl,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.sellerNet.backManagement.entity.Setexpression" >
+    insert into bao_set_expression
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="uId != null" >
+        u_id,
+      </if>
+      <if test="imgUrl != null" >
+        img_url,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="uId != null" >
+        #{uId,jdbcType=BIGINT},
+      </if>
+      <if test="imgUrl != null" >
+        #{imgUrl,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sellerNet.backManagement.entity.Setexpression" >
+    update bao_set_expression
+    <set >
+      <if test="imgUrl != null" >
+        img_url = #{imgUrl,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where u_id = #{uId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sellerNet.backManagement.entity.Setexpression" >
+    update bao_set_expression
+    set img_url = #{imgUrl,jdbcType=VARCHAR}
+    where u_id = #{uId,jdbcType=BIGINT}
+  </update>
+</mapper>

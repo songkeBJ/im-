@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>      
+<!DOCTYPE mapper      
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"      
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+<mapper namespace="com.sellerNet.backManagement.dao.impl.AuthMapperImpl">  
+    
+    
+    <!-- 根据用户id获取抢到的红包列表头-->
+   <select id="getUserList" parameterType="java.util.Map"  resultType="java.util.Map">
+   	select t1.*,t2.status phoneStatus,t2.id phoneId,t3.status videoStatus,t2.id phoneId,t3.id videoId,t4.nickname
+   	from bao_appusers t1,bao_auth_phone t2,bao_auth_video t3,bao_users t4
+   	where t1.userId=t2.objectId and t1.userId=t3.objectId and t1.userId=t4.user_id
+   	<if test="userId!=null">
+   		and t1.userId = #{userId}
+   	</if>
+   	<if test="phoneNumber!=null">
+   		and t1.phoneNumber = #{phoneNumber}
+   	</if>
+   </select>
+   <!-- 根据用户id查询抢到的红包列表 -->
+   <select id="getGroupList"  resultType="java.util.Map">
+   	select t1.*,t2.status phoneStatus,t2.id phoneId,t3.status videoStatus,t2.id phoneId,t3.id videoId,t4.nickname
+   	from bao_im_group t1,bao_auth_phone t2,bao_auth_video t3,bao_users t4
+   	where t1.id=t2.objectId and t1.id=t3.objectId and t1.creator=t4.user_id
+   	<if test="id!=null">
+   		and t1.id = #{id}
+   	</if>
+   	<if test="groupNumber!=null">
+   		and t1.groupNumber = #{groupNumber}
+   	</if>
+   	<if test="name!=null">
+   		and instr(t1.name,#{name})>0
+   	</if>
+   </select>
+</mapper>   

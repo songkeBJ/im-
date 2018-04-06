@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8" ?>      
+<!DOCTYPE mapper      
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"      
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+<mapper namespace="com.sellerNet.backManagement.dao.impl.ManagerUserMapperImpl">  
+      
+   <!-- 结果集 -->     
+   <resultMap id="agentUserResult" type="com.sellerNet.backManagement.entity.AgentUser">   
+   		<id     property="id" column="id"  jdbcType="INTEGER" />  
+      	<result property="name" column="name" jdbcType="VARCHAR"  />
+		<result property="password" column="password" jdbcType="VARCHAR"  />
+		<result property="sex" column="sex" jdbcType="INTEGER" />
+		<result property="phoneNumber" column="phoneNumber" jdbcType="VARCHAR" />
+		<result property="userEmail" column="userEmail" jdbcType="VARCHAR" />
+		<result property="balance" column="balance" jdbcType="INTEGER"  />
+		<result property="avatar" column="avatar" jdbcType="VARCHAR"  />
+		<result property="shield" column="shield" jdbcType="TINYINT" />
+		<result property="roleId" column="roleId" jdbcType="INTEGER" />
+		<result property="roleName" column="roleName" jdbcType="VARCHAR" />
+		<result property="userDescription" column="userDescription" jdbcType="VARCHAR" />
+		<result property="createdTime" column="createdTime" jdbcType="DATE" />
+		<result property="creator" column="creator" jdbcType="INTEGER" />
+		<result property="isLocked" column="isLocked" jdbcType="TINYINT" />
+		<result property="lastModifiedTime" column="lastModifiedTime"  jdbcType="DATE" />
+		<result property="lastModifier" column="lastModifier" jdbcType="INTEGER" />
+		<result property="nickName" column="nickName" jdbcType="VARCHAR" />
+		<result property="cartNo" column="cartNo" jdbcType="VARCHAR" />
+		<result property="address" column="address" jdbcType="VARCHAR" />
+		<result property="userId" column="userId"  />
+		<result property="newsNum" column="newsNum"  />
+   </resultMap>
+   
+   <!-- 新增User实体类 -->  
+    <insert id="insert" parameterType="com.sellerNet.backManagement.entity.AgentUser">  
+        insert into bao_platform_user(name,password,sex,phoneNumber,userEmail,balance,avatar,shield,userType,roleId,userDescription,createdTime,creator,isLocked,lastModifiedTime,lastModifier,nickName,cartNo,address,userId) values(
+                                  #{name,jdbcType=VARCHAR},#{password,jdbcType=VARCHAR},#{sex,jdbcType=INTEGER},#{phoneNumber,jdbcType=VARCHAR},
+        					      #{userEmail,jdbcType=VARCHAR},#{balance,jdbcType=VARCHAR},#{avatar,jdbcType=VARCHAR},#{shield,jdbcType=TINYINT},
+        					      #{userType,jdbcType=INTEGER},#{roleId,jdbcType=INTEGER},#{userDescription,jdbcType=VARCHAR},#{createdTime},
+        					      #{creator,jdbcType=INTEGER},#{isLocked,jdbcType=TINYINT},#{lastModifiedTime},#{lastModifier,jdbcType=INTEGER},#{nickName},#{cartNo},#{address},#{userId})  
+   		<selectKey resultType="long" order="AFTER" keyProperty="id">
+   			SELECT LAST_INSERT_ID();
+   		</selectKey>
+   </insert>  
+   
+   <!-- 更新对象  -->
+   <update id="update" parameterType="com.sellerNet.backManagement.entity.AgentUser">  
+      update bao_platform_user   
+      <set>  
+      <if test="name != null">name=#{name,jdbcType=VARCHAR},</if>  
+      <if test="password != null">password=#{password,jdbcType=VARCHAR},</if>
+      <if test="sex != null">sex=#{sex,jdbcType=INTEGER},</if> 
+      <if test="phoneNumber != null">phoneNumber=#{phoneNumber,jdbcType=VARCHAR},</if> 
+      <if test="userEmail != null">userEmail=#{userEmail,jdbcType=VARCHAR},</if> 
+      <if test="balance != null">balance=#{balance,jdbcType=VARCHAR},</if> 
+      <if test="avatar != null">avatar=#{avatar,jdbcType=VARCHAR},</if> 
+      <if test="shield != null">shield=#{shield,jdbcType=TINYINT},</if> 
+      <if test="roleId != null">roleId=#{roleId,jdbcType=INTEGER},</if> 
+      <if test="userDescription != null">userDescription=#{userDescription,jdbcType=VARCHAR},</if> 
+      <if test="createdTime != null">createdTime=#{createdTime},</if> 
+      <if test="creator != null">creator=#{creator,jdbcType=INTEGER},</if> 
+      <if test="isLocked != null">isLocked=#{isLocked,jdbcType=TINYINT},</if> 
+      <if test="lastModifiedTime != null">lastModifiedTime=#{lastModifiedTime},</if>
+      <if test="lastModifier != null">lastModifier=#{lastModifier,jdbcType=INTEGER},</if> 
+      <if test="nickName != null">nickName=#{nickName,jdbcType=VARCHAR},</if> 
+      <if test="cartNo != null">cartNo=#{cartNo,jdbcType=VARCHAR},</if> 
+      <if test="address != null">address=#{address,jdbcType=VARCHAR},</if> 
+      <if test="newsNum != null">newsNum=#{newsNum},</if> 
+      </set>  
+      <where>  
+        <if test="id != null">  
+            id = #{id,jdbcType=INTEGER}
+        </if>  
+      </where>  
+   </update>  
+     
+  <!-- 更新对象（参数）  
+    <update id="updateParam" parameterType="java.util.Map">  
+      update emp   
+      <set>  
+      <if test="empname != null">empname=#{empname,jdbcType=VARCHAR},</if>  
+      <if test="dep != null">depid=#{depid,jdbcType=INTEGER},</if>  
+      </set>  
+      <where>  
+        <if test="empid != null">  
+            empid = #{empid,jdbcType=INTEGER}  
+        </if>  
+      </where>  
+   </update>  
+     
+    批量更新  
+   <update id="updateBatch" parameterType="Emp">  
+        collection可以是List对于list,数组对于array,Map对应ids  
+        <foreach collection="list" item="emp" separator=";">  
+            update emp   
+                <set>  
+                   <if test="emp.empname != null">empname= #{emp.empname,jdbcType=VARCHAR},</if>  
+                   <if test="emp.dep != null">depid= #{emp.dep.depid,jdbcType=INTEGER},</if>  
+                </set>  
+                <where>  
+                    <if test="emp.empid != null">  
+                        empid = #{emp.empid,jdbcType=INTEGER}  
+                    </if>  
+                </where>  
+        </foreach>  
+   </update>  
+     
+   根据主键删除  
+   <delete id="deletePK" parameterType="int">  
+        delete from emp where empid = #{empid}  
+   </delete>  
+     
+   根据参数删除  
+   <delete id="deleteParam" parameterType="java.util.Map">  
+        delete from emp  
+        <where>  
+            <if test="empname != null">empname = #{empname}</if>  
+            <if test="depid != null"> and depid = #{depid}</if>  
+            <if test="empid != null"> and empid = #{empid}</if>  
+        </where>  
+   </delete>  
+     
+   批量插入  
+   <insert id="insertBatch" parameterType="arraylist">  
+        insert into emp(empid,empname,depid)   
+        collection可以是List对于list,数组对于array,Map对应ids  
+        <foreach collection="list" item="emp"  index="index" separator="union all">  
+         select #{emp.empid,jdbcType=NUMERIC},#{emp.empname,jdbcType=VARCHAR},#{emp.dep.depid,jdbcType=NUMERIC} from dual  
+        </foreach>  
+   </insert>  
+     
+   count  
+   <select id="count" resultType="int">  
+        select count(*) from emp e   
+  </select>  -->
+  <!-- 根据id查询用户 --> 
+   <select id="findByRoleId"  parameterType="Long" resultMap="agentUserResult">
+       select * from bao_platform_user  where roleId = #{roleId}
+   </select> 
+  <!-- 根据id查询用户 --> 
+   <select id="selectPk"  parameterType="Long" resultMap="agentUserResult">
+       select * from bao_platform_user  where id = #{userId}
+   </select> 
+  <!-- 根据userid查询用户 --> 
+   <select id="findByUserId"  parameterType="Long" resultMap="agentUserResult">
+       select * from bao_platform_user  where userId = #{userId}
+   </select> 
+   
+  <!-- 根据id查询用户 --> 
+   <select id="select"  resultMap="agentUserResult">
+       select * from bao_platform_user  
+   </select> 
+<!--   批量删除 -->  
+   <delete id="deleteBatch">  
+        delete from bao_platform_user where id in   
+        <trim prefix="(" suffix=")" suffixOverrides=",">  
+            <foreach collection="list" item="pk" separator=",">  
+                #{pk}  
+            </foreach>  
+        </trim>  
+   </delete>  
+  
+  <select id="countParam" parameterType="java.util.Map" resultType="int">  
+       SELECT count(*) from bao_platform_user u ,bao_platform_role r 
+        <where>  
+         u.roleId=r.id  
+        <if test="name != null">
+        	and u.name like  CONCAT(CONCAT('%',#{name},'%'))
+        </if>  
+        
+        <if test="roleId != null">
+        	and u.roleId = #{roleId}
+        </if>
+        
+        <if test="type != null">
+        	and u.name != #{type}
+        </if>
+        
+        <if test="start != null">
+        limit
+        #{start},
+        </if>
+        <if test="end != null">
+        #{end}
+        </if>
+         
+       </where>  
+       <if test="orderColumn != null">  
+            order by ${orderColumn}  
+            <if test="orderTurn != null">  
+                ${orderTurn}  
+            </if>  
+       </if>  
+  </select> 
+    
+   <!-- 查询（参数）   -->
+   <select id="findByNameAndPassowrd" parameterType="java.util.Map" resultMap="agentUserResult">  
+   		select * from bao_platform_user  
+        <where>  
+        <if test="name != null"> name= #{name}</if>  
+        <if test="password != null"> and password = #{password}</if>  
+       </where>  
+       <!-- <if test="orderColumn != null">  
+            order by ${orderColumn}  
+            <if test="orderTurn != null">  
+                ${orderTurn}  
+            </if>  
+       </if>   -->
+   </select> 
+   
+   <!-- 查询（参数）   -->
+   <select id="selectParam" parameterType="java.util.Map" resultMap="agentUserResult">  
+        SELECT u.id,u.name,u.sex,u.phoneNumber,u.userEmail,u.balance,u.avatar,u.shield,u.userType,u.roleId,u.userDescription,u.createdTime,u.creator,u.isLocked,u.lastModifiedTime,u.lastModifier,r.name as roleName, 
+        u.nickName,u.address,u.cartNo 
+        from bao_platform_user u ,bao_platform_role r 
+        <where>  
+         u.roleId=r.id 
+        <if test="name != null">
+        	and u.name like  CONCAT(CONCAT('%',#{name},'%'))
+        </if>  
+        <if test="roleId != null">
+        	and u.roleId = #{roleId}
+        </if>
+         <if test="userType != null">
+        	and u.userType = #{userType}
+        </if>  
+        <if test="type != null">
+        	and u.name != #{type}
+        </if> 
+        <if test="start != null">
+        limit
+        #{start},
+        </if>
+        <if test="end != null">
+        #{end}
+        </if>
+       </where>  
+       <if test="orderColumn != null">  
+            order by ${orderColumn}  
+            <if test="orderTurn != null">  
+                ${orderTurn}  
+            </if>  
+       </if>  
+   </select> 
+   
+</mapper>   

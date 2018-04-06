@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sellerNet.backManagement.dao.impl.AppMessageMapperImpl">
+	<resultMap id="appMessageMap"
+		type="com.sellerNet.backManagement.entity.AppMessage">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="isread" property="isread" jdbcType="SMALLINT" />
+		<result column="content" property="content" jdbcType="VARCHAR" />
+		<result column="title" property="title" jdbcType="VARCHAR" />
+		<result column="userid" property="userid" jdbcType="INTEGER" />
+		<result column="pushtime"  property="pushtime" />
+		<result column="readtime"  property="readtime" />
+		<result column="thumbnail" property="thumbnail" jdbcType="VARCHAR" />
+		<result column="type" property="type"  />
+	</resultMap>
+
+	<!-- 新增消息实体 -->
+	<insert id="insert" parameterType="com.sellerNet.backManagement.entity.AppMessage">
+		insert into bao_app_message(isread,content,title,userid,thumbnail,pushtime,
+		readtime,type)
+		values(#{isread,jdbcType=SMALLINT},#{content,jdbcType=VARCHAR},#{title,jdbcType=VARCHAR},#{userid,jdbcType=INTEGER},#{thumbnail,jdbcType=VARCHAR},#{pushtime},
+		#{readtime},#{type})
+	</insert>
+	<!-- 查询（参数） -->
+	<select id="selectParam" parameterType="java.util.Map"
+		resultMap="appMessageMap">
+		SELECT * from bao_app_message where userid=#{userid}
+		LIMIT #{start},#{end}
+	</select>
+	<!-- 根据id查询 -->
+	<select id="selectPk" parameterType="java.lang.Long" resultMap="appMessageMap">
+		select * from bao_app_message where id = #{id,jdbcType=INTEGER}
+	</select>
+	<!-- 根据userid查询最后一条 -->
+	<select id="getLastByUserId" parameterType="java.lang.Long"
+		resultMap="appMessageMap">
+		select * from bao_app_message where userid = #{userid} and isread=0 order by id desc
+		limit 1
+	</select>
+	<!-- 根据userid查询最后一条 -->
+	<select id="getNotReadCountByUserId" parameterType="java.lang.Long"
+		resultType="java.lang.Long">
+		select count(*) from bao_app_message where userid = #{userid} and isread=0 
+	</select>
+	<!-- 更新对象 -->
+	<update id="update" parameterType="com.sellerNet.backManagement.entity.AppMessage">
+		update bao_app_message
+		<set>
+			<if test="isread != null">
+				isread = #{isread},
+			</if>
+			<if test="content != null">
+				content = #{content,jdbcType=VARCHAR},
+			</if>
+			<if test="title != null">
+				title = #{title,jdbcType=VARCHAR},
+			</if>
+			<if test="userid != null">
+				userid = #{userid,jdbcType=BIGINT},
+			</if>
+			<if test="thumbnail != null">
+				thumbnail = #{thumbnail,jdbcType=VARCHAR},
+			</if>
+			<if test="pushtime != null">
+				pushtime = #{pushtime},
+			</if>
+			<if test="readtime != null">
+				readtime = #{readtime},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

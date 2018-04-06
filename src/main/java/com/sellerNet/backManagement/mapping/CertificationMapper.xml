@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>      
+<!DOCTYPE mapper      
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"      
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+<mapper namespace="com.sellerNet.backManagement.dao.impl.CertificationMapperImpl">  
+    <!-- 结果集 -->     
+   <resultMap id="certificationResult" type="com.sellerNet.backManagement.entity.Certification">   
+   		<id     property="id" column="id"   />  
+      	<result property="user_id" column="user_id" />
+      	<result property="user_code" column="user_code" />
+      	<result property="user_realname" column="user_realname" />
+		<result property="pass" column="pass"  />
+		<result property="createdTime" column="createdTime"  />
+		<result property="lastModifiedTime" column="lastModifiedTime"  />
+		<result property="lastModifier" column="lastModifier"  />
+   </resultMap>    
+    <!-- 后台视图结果集 -->     
+   <resultMap id="certificationDtoResult" type="com.sellerNet.backManagement.entity.CertificationDto">   
+   		<id     property="id" column="id"   />  
+      	<result property="user_id" column="user_id" />
+      	<result property="user_code" column="user_code" />
+      	<result property="user_realname" column="user_realname" />
+      	<result property="images" column="images" />
+		<result property="pass" column="pass"  />
+		<result property="nickname" column="nickname"  />
+		<result property="createdTime" column="createdTime"  />
+		<result property="lastModifiedTime" column="lastModifiedTime"  />
+		<result property="lastModifier" column="lastModifier"  />
+		<result property="lastModifierName" column="lastModifierName"  />
+   </resultMap>    
+    
+   <!-- 新增实名认证 -->  
+    <insert id="insert" parameterType="com.sellerNet.backManagement.entity.Certification">  
+        insert into bao_certification(user_id,user_code,user_realname,createdTime,pass,lastModifiedTime,lastModifier) values(#{user_id},#{user_code},#{user_realname},#{createdTime},#{pass},#{lastModifiedTime},#{lastModifier})  
+        <selectKey resultType="Long" order="AFTER" keyProperty="id">
+   			SELECT LAST_INSERT_ID();
+   		</selectKey>
+   </insert> 
+   <!-- 根据user_id查询实名认证 --> 
+   <select id="selectByUserId"  parameterType="String" resultMap="certificationResult">
+       select * from bao_certification  where user_id = #{user_id} and pass!=2
+   </select> 
+     
+     <!-- 查询（参数）   -->
+   <select id="selectParam" parameterType="java.util.Map" resultMap="certificationDtoResult">  
+        SELECT t1.*,t2.name AS lastModifierName,t3.nickname,t4.url AS images  
+        FROM bao_certification t1 LEFT OUTER JOIN bao_platform_user t2 ON t1.lastModifier=t2.id 
+        LEFT OUTER JOIN bao_users t3
+        ON t1.user_id=t3.user_id
+        LEFT OUTER JOIN bao_image t4 
+        ON t1.id=t4.objectId and t4.category='CERTIFICATION'
+         <where>  
+        <if test="pass != null">
+        	and t1.pass = #{pass}
+        </if>  
+       </where>  
+       order by  t1.createdTime desc
+       <if test="start != null">
+        limit
+        #{start},
+        </if>
+        <if test="end != null">
+        #{end}
+        </if>
+       <if test="orderColumn != null">  
+            order by ${orderColumn}  
+            <if test="orderTurn != null">  
+                ${orderTurn}  
+            </if>  
+       </if>  
+   </select> 
+   
+   <!-- 根据id查询用户 --> 
+   <select id="selectPk"  parameterType="Long" resultMap="certificationResult">
+       select * from bao_certification  where id = #{id}
+   </select> 
+   
+   <!-- 更新对象  -->
+   <update id="update" parameterType="com.sellerNet.backManagement.entity.Certification">  
+      update bao_certification   
+      <set>  
+      <if test="user_id != null">user_id=#{user_id},</if>  
+      <if test="user_code != null">user_code=#{user_code},</if>
+      <if test="user_realname != null">user_realname=#{user_realname},</if>
+      <if test="pass != null">pass=#{pass},</if> 
+      <if test="lastModifiedTime != null">lastModifiedTime=#{lastModifiedTime},</if> 
+       <if test="lastModifier != null">lastModifier=#{lastModifier},</if>
+      </set>  
+      <where>  
+        <if test="id != null">  
+            id = #{id,jdbcType=INTEGER}
+        </if>  
+      </where>  
+   </update>  
+   
+    <select id="countParam" parameterType="java.util.Map" resultType="int">
+    	SELECT count(*)  
+        FROM bao_certification t1 LEFT OUTER JOIN bao_platform_user t2 ON t1.lastModifier=t2.id 
+        LEFT OUTER JOIN bao_users t3
+        ON t1.user_id=t3.user_id
+        LEFT OUTER JOIN bao_image t4
+        ON t1.id=t4.objectId
+         <where>  
+        <if test="pass != null">
+        	and t1.pass = #{pass}
+        </if>  
+       </where>  
+       order by  t1.createdTime desc
+       <if test="start != null">
+        limit
+        #{start},
+        </if>
+        <if test="end != null">
+        #{end}
+        </if>
+       <if test="orderColumn != null">  
+            order by ${orderColumn}  
+            <if test="orderTurn != null">  
+                ${orderTurn}  
+            </if>  
+       </if>  
+    </select>
+</mapper>   

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>      
+<!DOCTYPE mapper      
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"      
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+<mapper namespace="com.sellerNet.backManagement.dao.impl.RedMapperImpl">  
+    
+    <!-- 结果集 -->     
+   <resultMap id="redResult" type="com.sellerNet.backManagement.entity.Red">   
+   		<id     property="red_id" column="red_id"   />  
+      	<result property="red_user_id" column="red_user_id" />
+      	<result property="red_user_name" column="red_user_name" />
+      	<result property="red_money" column="red_money" />
+		<result property="red_has_money" column="red_has_money" />
+		<result property="red_type" column="red_type"  />
+		<result property="red_type_name" column="red_type_name" />
+		<result property="red_send_date" column="red_send_date"  />
+		<result property="red_all_count" column="red_all_count"  />
+		<result property="red_has_count" column="red_has_count"  />
+		<result property="red_json" column="red_json" />
+		<result property="red_content" column="red_content" />
+		<result property="red_outTime" column="red_outTime" />
+   </resultMap>    
+    
+   <!-- 获取已失效但还未标记为失效的红包 --> 
+   <select id="findOutTime" resultMap="redResult">
+       	select * from bao_red_send where red_outTime=0 and DATE_SUB(NOW(),INTERVAL 24 HOUR)>=red_send_date and red_has_count>0
+   </select> 
+   <!-- 新增红包 -->  
+    <insert id="insert" parameterType="com.sellerNet.backManagement.entity.Red">  
+        insert into bao_red_send(red_user_id,red_user_name,red_money,red_has_money,red_type,red_type_name,red_send_date,red_all_count,red_has_count,red_json,red_content) values(#{red_user_id},#{red_user_name},#{red_money},#{red_has_money},#{red_type},#{red_type_name},
+        					    #{red_send_date},#{red_all_count},#{red_has_count},#{red_json},#{red_content})  
+   		<selectKey resultType="Long" order="AFTER" keyProperty="red_id">
+   			SELECT LAST_INSERT_ID();
+   		</selectKey>
+   </insert> 
+   <!-- 根据id查询红包 --> 
+   <select id="get"  parameterType="LONG" resultMap="redResult">
+       select * from bao_red_send  where red_id = #{red_id}
+   </select> 
+   <!-- 根据id查询红包 --> 
+   <select id="selectPk"  parameterType="LONG" resultMap="redResult">
+       select * from bao_red_send  where red_id = #{red_id}
+   </select> 
+        <!-- 更新对象  -->
+   <update id="update" parameterType="com.sellerNet.backManagement.entity.Red">  
+      update bao_red_send   
+      <set>  
+      <if test="red_money != null">red_money=#{red_money},</if>  
+      <if test="red_has_money != null">red_has_money=#{red_has_money},</if>
+      <if test="red_type != null">red_type=#{red_type},</if>
+      <if test="red_type_name != null">red_type_name=#{red_type_name},</if>
+      <if test="red_send_date != null">red_send_date=#{red_send_date},</if> 
+      <if test="red_all_count != null">red_all_count=#{red_all_count},</if> 
+      <if test="red_has_count != null">red_has_count=#{red_has_count},</if> 
+      <if test="red_json != null">red_json=#{red_json},</if>
+      <if test="red_outTime != null">red_outTime=#{red_outTime},</if>
+      </set>  
+      <where>  
+        <if test="red_id != null">  
+            red_id = #{red_id}
+        </if>
+      </where>  
+   </update> 
+    <!-- 根据用户id获取发红包列表头-->
+   <select id="getSendHeadByUserIdAndYear" parameterType="java.util.Map" resultType="java.util.Map">
+   	select t2.nickname,ifnull(t2.face,'未设置') avatar,
+   	(select ifnull(sum(red_money),0) from bao_red_send where red_user_id=#{userId}) AS allMoney
+   	,(select count(*) from bao_red_send where red_user_id=#{userId}) AS allCount
+   	from bao_users t2 
+   	where t2.user_id=#{userId}
+   	
+   </select>
+   <!-- 根据用户id查询发红包列表 -->
+   <select id="getSendListByUserIdAndYear" parameterType="java.util.Map" resultType="java.util.Map">
+   	select t1.red_user_name,t1.red_money,t1.red_type_name,
+   	t1.red_send_date,t1.red_all_count,t1.red_has_count,t1.red_outTime
+   	from bao_red_send t1
+   	where t1.red_user_id=#{userId}
+   	order by red_send_date desc
+   	limit #{start},#{end}
+   </select>
+    <!-- 根据用户id获取抢到的红包列表头-->
+   <select id="getGrabHeadByUserIdAndYear" parameterType="java.util.Map" resultType="java.util.Map">
+   	select t2.nickname,ifnull(t2.face,'未设置') avatar,
+   	(select ifnull(sum(red_money),0) from bao_red_record where red_user_id=#{userId}) AS allMoney
+   	,(select count(*) from bao_red_record where red_user_id=#{userId}) AS allCount
+   	,(select count(red_ismax) from bao_red_record where red_user_id=#{userId} and red_ismax='1' and YEAR(red_record_date) = #{year}) AS allMaxCount
+   	from bao_users t2
+   	where t2.user_id=#{userId}
+   </select>
+   <!-- 根据用户id查询抢到的红包列表 -->
+   <select id="getGrabListByUserIdAndYear" parameterType="java.util.Map" resultType="java.util.Map">
+   	select t1.red_name,t1.red_money,t1.red_record_date
+   	from bao_red_record t1
+   	where t1.red_user_id=#{userId}
+   	order by red_record_date desc 
+   	limit #{start},#{end}
+   </select>
+</mapper>   

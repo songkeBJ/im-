@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sellerNet.backManagement.dao.impl.SetUserShowMapperImpl" >
+  <resultMap id="BaseResultMap" type="com.sellerNet.backManagement.entity.SetUserShow" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="id" property="id" jdbcType="BIGINT" />
+    <result column="u_id" property="uId" jdbcType="BIGINT" />
+    <result column="c_u_id" property="cUId" jdbcType="BIGINT" />
+    <result column="c_u_img" property="cuImg" jdbcType="VARCHAR" />
+    <result column="c_u_name" property="cuname" jdbcType="VARCHAR" />
+    <result column="flag" property="flag" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, u_id, c_u_id, flag,(select face from bao_users where user_id = c_u_id) as c_u_img,(select nickname from bao_users where user_id = c_u_id) as c_u_name 
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from bao_set_user_show
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  
+  <select id="queryList" resultMap="BaseResultMap" parameterType="com.sellerNet.backManagement.entity.SetUserShow" >
+    select 
+    <include refid="Base_Column_List" />
+    from bao_set_user_show 
+    where 1 =1 
+    <if test="uId != null">
+    	and u_id = #{uId,jdbcType=BIGINT} 
+    </if>
+    <if test="flag != null">
+    	and flag = #{flag,jdbcType=VARCHAR}
+    </if>
+    <if test="cUId != null">
+    	and c_u_id = #{cUId,jdbcType=BIGINT} 
+    </if>
+    
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from bao_set_user_show
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.sellerNet.backManagement.entity.SetUserShow" >
+    insert into bao_set_user_show (id, u_id, c_u_id, flag
+      )
+    values (#{id,jdbcType=BIGINT}, #{uId,jdbcType=BIGINT}, #{cUId,jdbcType=BIGINT}, #{flag,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.sellerNet.backManagement.entity.SetUserShow" >
+    insert into bao_set_user_show
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="uId != null" >
+        u_id,
+      </if>
+      <if test="cUId != null" >
+        c_u_id,
+      </if>
+      <if test="flag != null" >
+        flag,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="uId != null" >
+        #{uId,jdbcType=BIGINT},
+      </if>
+      <if test="cUId != null" >
+        #{cUId,jdbcType=BIGINT},
+      </if>
+      <if test="flag != null" >
+        #{flag,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sellerNet.backManagement.entity.SetUserShow" >
+    update bao_set_user_show
+    <set >
+      <if test="uId != null" >
+        u_id = #{uId,jdbcType=BIGINT},
+      </if>
+      <if test="cUId != null" >
+        c_u_id = #{cUId,jdbcType=BIGINT},
+      </if>
+      <if test="flag != null" >
+        flag = #{flag,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sellerNet.backManagement.entity.SetUserShow" >
+    update bao_set_user_show
+    set u_id = #{uId,jdbcType=BIGINT},
+      c_u_id = #{cUId,jdbcType=BIGINT},
+      flag = #{flag,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

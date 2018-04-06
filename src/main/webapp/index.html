@@ -1,0 +1,89 @@
+
+   
+  
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>app下载页面</title>
+<link href="/favicon.ico" rel="icon" type="image/x-icon" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no"/>
+<link rel="stylesheet" type="text/css" href="http://cwdg.oss-cn-hangzhou.aliyuncs.com/resources/indexjscs/css/style(2).css"/>
+<style>
+html,body{ width:100%; height:100%;}
+</style>
+<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script type="text/javascript">
+	$(function(){
+		$.get("api/qr/downQRCodeAndroidUrl.do", function(data){
+			  $('#androidA').attr('href',data);
+			});
+	})
+</script>
+</head>
+<body>
+<div class="head">
+	<div class="head-l"><a href="javascript:history.go(-1)"><img src="images/head_l_icon.png" width="100%" /></a></div>
+    <div class="head-m">手机客户端下载</div>
+</div>
+<div class="heng40"></div>
+
+<div class="app-down">
+	<div class="app-down-sec">
+    	<div class="app-down-img"><img src="images/cw_iphone.png" /></div>
+         <div class="app-down-btn">
+	        <a id="androidA"  href="#" class="img" />
+	        <img id="androidImg" class="img" src="http://cwdg.oss-cn-hangzhou.aliyuncs.com/resources/indexjscs/images/cw_btn1.png" /></a>
+	        <a id="iosA"  href="1.3.1"> <img src="http://cwdg.oss-cn-hangzhou.aliyuncs.com/resources/indexjscs/images/cw_btn2.png" /></a>
+        </div>
+    </div>
+</div>
+<div id="app-down-mask"></div>
+<div id="app-mask-content">
+	<p class="app-down-first"><span>1</span> 点击右上角的 <img src="images/colon.png" alt="" /> 按钮</p>
+	<p class="app-down-first"><span>2</span> 选择 <img src="images/browser.png" alt="" /></p>
+	<img src="images/arrows.png" alt="" class="arrows"/>
+	<img src="images/error.png" class="error" />
+</div>
+</body>
+    <script src="http://ssc-5580.oss-cn-shenzhen.aliyuncs.com/resources/js/jquery-3.2.1.min.js"></script>
+<script type="text/javascript">
+document.documentElement.style.fontSize = document.documentElement.clientWidth / 640*100 + 'px';
+$('.img').click(function(){
+	if(!isWeiXin()){
+		return;
+	}
+	$('#app-down-mask').css('display', 'block');
+	$('#app-mask-content').css('display', 'block');
+}) 
+$('.error').click(function(){
+	$('#app-down-mask').css('display', 'none');
+	$('#app-mask-content').css('display', 'none');
+})
+$('#iosA').click(function(){
+alert("平台审核中，马上上线");
+})																																																
+  	//判断是否微信登陆
+    function isWeiXin() {
+	    var ua = window.navigator.userAgent.toLowerCase();
+	   // console.log(ua);//mozilla/5.0 (iphone; 
+	    if (ua.match(/MicroMessenger/i) == 'micromessenger') {
+	   	 	return true;
+	   	} else {
+	    	return false;
+	    }
+    }
+  	
+    $(document).ready(function(){
+        if(isWeiXin()){
+	        	$('#app-down-mask').css('display', 'block');
+	    		$('#app-mask-content').css('display', 'block');
+	    		$("#androidA").removeAttr("href");
+	    		$("#androidImg").attr("class","img");
+	    		$("#iosA").removeAttr("href");
+    	   }else{
+    		  $("#androidImg").removeAttr("class");
+    	   }
+     });  
+</script>
+</html>

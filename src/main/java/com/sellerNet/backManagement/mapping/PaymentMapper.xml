@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>      
+<!DOCTYPE mapper      
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"      
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+<mapper namespace="com.sellerNet.backManagement.dao.impl.PaymentMapperImpl">  
+      
+   <!-- 结果集 -->     
+   <resultMap id="paymentResult" type="com.sellerNet.backManagement.entity.Payment">   
+   		<id     property="id" column="id"  jdbcType="INTEGER" />  
+      	<result property="cardNo" column="cardNo" jdbcType="VARCHAR"  />
+      	<result property="bankName" column="bankName" jdbcType="VARCHAR"  />
+      	<result property="idcard" column="idcard" jdbcType="VARCHAR"  />
+		<result property="cardType" column="cardType" jdbcType="VARCHAR"  />
+		<result property="phoneNumber" column="phoneNumber" jdbcType="VARCHAR"  />
+		<result property="username" column="username" jdbcType="VARCHAR"  />
+		<result property="oneOuota" column="oneOuota" jdbcType="VARCHAR"  />
+		<result property="dayusername" column="dayusername" jdbcType="VARCHAR"  />
+		<result property="createdTime" column="createdTime" />
+		<result property="creator" column="creator" jdbcType="INTEGER" />
+		<result property="isLocked" column="isLocked" jdbcType="TINYINT" />
+		<result property="lastModifiedTime" column="lastModifiedTime"  />
+		<result property="lastModifier" column="lastModifier" jdbcType="INTEGER" />
+   </resultMap>  
+     
+   <!-- 新增Code实体类 -->  
+    <insert id="insert" parameterType="com.sellerNet.backManagement.entity.Payment">  
+        insert into bao_app_payment(cardNo,bankName,idcard,cardType,phoneNumber,username,oneOuota,dayusername,createdTime,creator,isLocked,lastModifiedTime,lastModifier) values(#{cardNo,jdbcType=VARCHAR},#{bankName,jdbcType=VARCHAR},#{idcard,jdbcType=VARCHAR},#{cardType,jdbcType=VARCHAR},#{phoneNumber,jdbcType=VARCHAR},#{username,jdbcType=VARCHAR},#{oneOuota,jdbcType=VARCHAR},#{dayusername,jdbcType=VARCHAR},#{createdTime},#{creator,jdbcType=INTEGER},#{isLocked,jdbcType=TINYINT},#{lastModifiedTime},#{lastModifier,jdbcType=INTEGER})  
+   </insert>  
+   <!-- 查询（参数）   -->
+   <select id="selectParam" parameterType="java.util.Map" resultMap="paymentResult">  
+   
+        select * from bao_app_payment   
+        <where>  
+        <if test="cardNo != null"> cardNo = #{cardNo}</if> 
+        <if test="creator != null"> creator = #{creator}</if>  
+        and isLocked = 0
+       </where>  
+   </select> 
+   
+   <update id="delete" parameterType="Long">  
+        UPDATE bao_app_payment p
+        <set>
+      	 p.isLocked =1
+      </set>
+      <where>
+            p.id = #{bankId} 
+            and p.isLocked=0 
+      </where>
+   </update> 
+   
+   <!-- 根据id查询用户 --> 
+   <select id="selectPk"  parameterType="Long" resultMap="paymentResult">
+       select * from bao_app_payment  where id = #{id}
+   </select>
+   
+   <!-- 更新对象  -->
+   <update id="update" parameterType="com.sellerNet.backManagement.entity.Payment">  
+      update bao_app_payment   
+      <set>  
+      <if test="cardNo != null">cardNo=#{cardNo,jdbcType=VARCHAR},</if>  
+      <if test="cardType != null">cardType=#{cardType,jdbcType=VARCHAR},</if>
+      <if test="bankName != null">bankName=#{bankName,jdbcType=VARCHAR},</if>
+      <if test="idcard != null">idcard=#{idcard,jdbcType=VARCHAR},</if>
+      <if test="phoneNumber != null">phoneNumber=#{phoneNumber,jdbcType=VARCHAR},</if>
+      <if test="username != null">username=#{username,jdbcType=VARCHAR},</if>
+      <if test="oneOuota != null">oneOuota=#{oneOuota,jdbcType=VARCHAR},</if>
+      <if test="dayusername != null">dayusername=#{dayusername,jdbcType=VARCHAR},</if>
+      <if test="createdTime != null">created_time=#{createdTime},</if> 
+      <if test="creator != null">creator=#{creator,jdbcType=INTEGER},</if> 
+      <if test="isLocked != null">isLocked=#{isLocked,jdbcType=VARCHAR},</if> 
+      <if test="lastModifiedTime != null">lastModifiedTime=#{lastModifiedTime},</if>
+      <if test="lastModifier != null">lastModifier=#{lastModifier,jdbcType=INTEGER},</if> 
+      </set>  
+      <where>  
+        <if test="id != null">  
+            id = #{id,jdbcType=INTEGER}
+        </if>
+      </where>  
+   </update>  
+</mapper>   

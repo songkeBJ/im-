@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sellerNet.backManagement.dao.impl.AreaMapperImpl">
+	<resultMap id="areaMap" type="com.sellerNet.backManagement.entity.Area">
+		<id column="area_id" property="areaId" jdbcType="SMALLINT" />
+		<result column="city_id" property="cityId" jdbcType="SMALLINT" />
+		<result column="area_name" property="areaName" jdbcType="VARCHAR" />
+		<result column="orderby" property="orderby" jdbcType="TINYINT" />
+	</resultMap>
+
+	<select id="selectPk" resultMap="areaMap" parameterType="java.lang.Short">
+		select *
+		from bao_area
+		where area_id = #{areaId,jdbcType=SMALLINT}
+	</select>
+
+	<select id="select" resultMap="areaMap">
+		select * from bao_area
+	</select>
+
+	<!-- 查询（参数） -->
+	<select id="selectParam" parameterType="java.util.Map"
+		resultMap="areaMap">
+		SELECT * from bao_area b
+		where b.city_id = #{cityId}
+	</select>
+
+</mapper>

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>      
+<!DOCTYPE mapper      
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"      
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+<mapper namespace="com.sellerNet.backManagement.dao.impl.TransferAccountMapperImpl">  
+      
+   <!-- 结果集 -->     
+   <resultMap id="transferResult" type="com.sellerNet.backManagement.entity.TransferAccount">   
+   		<id     property="id" column="id"  jdbcType="INTEGER" />  
+      	<result property="toUser" column="toUser" jdbcType="INTEGER"  />
+		<result property="weixinAccount" column="weixinAccount" jdbcType="VARCHAR"  />
+		<result property="zfbaoAccount" column="zfbaoAccount" jdbcType="VARCHAR"  />
+		<result property="status" column="status" jdbcType="TINYINT"  />
+		<result property="amount" column="amount" jdbcType="VARCHAR"  />
+		<result property="remark" column="remark" jdbcType="VARCHAR"  />
+		<result property="createdTime" column="createdTime" />
+		<result property="creator" column="creator" jdbcType="INTEGER" />
+		<result property="isLocked" column="isLocked" jdbcType="TINYINT" />
+		<result property="lastModifiedTime" column="lastModifiedTime"  />
+		<result property="lastModifier" column="lastModifier" jdbcType="INTEGER" />
+   </resultMap>  
+     
+   <!-- 新增Code实体类 -->  
+    <insert id="insert" parameterType="com.sellerNet.backManagement.entity.TransferAccount">  
+        insert into bao_app_transferAccount(toUser,weixinAccount,zfbaoAccount,status,amount,createdTime,creator,isLocked,lastModifiedTime,lastModifier,remark) values(#{toUser,jdbcType=INTEGER},#{weixinAccount,jdbcType=VARCHAR},#{zfbaoAccount,jdbcType=VARCHAR},#{status,jdbcType=TINYINT},#{amount,jdbcType=VARCHAR},#{createdTime},#{creator,jdbcType=INTEGER},#{isLocked,jdbcType=TINYINT},#{lastModifiedTime},#{lastModifier,jdbcType=INTEGER},#{remark,jdbcType=VARCHAR})  
+   		<selectKey resultType="long" order="AFTER" keyProperty="id">
+   			SELECT LAST_INSERT_ID();
+   		</selectKey>
+   </insert>  
+   <!-- 查询（参数）   -->
+   <select id="selectParam" parameterType="java.util.Map" resultMap="transferResult">  
+   
+        select * from bao_app_transferAccount   
+        <where>  
+        isLocked = 0
+        <if test="code != null"> and code= #{code}</if>  
+        <if test="phoneNumber != null"> and phoneNumber = #{phoneNumber}</if>  
+        <if test="createdTime != null"> and createdTime > #{createdTime}</if>
+        <if test="creator != null"> and creator = #{creator}</if>
+        <if test="createdTime != null"> 
+        	order by createdTime desc
+        </if>
+        <if test="start != null">
+        limit
+        #{start},
+        </if>
+        <if test="end != null">
+        #{end}
+        </if>
+       </where>  
+   </select> 
+   
+    <!-- 查询24小时转账不领取退还 --> 
+   <select id="findOutTime"   resultMap="transferResult">
+       select * from bao_app_transferAccount 
+       where TIMESTAMPDIFF(HOUR,createdTime,NOW()) &gt;=24 and status=0 and isLocked =0
+   </select> 
+   <!-- 根据id查询用户 --> 
+   <select id="select"   resultMap="transferResult">
+       select * from bao_app_transferAccount order by createdTime desc limit 0,6  
+   </select> 
+   <!-- 根据id查询用户 --> 
+   <select id="selectPk"  parameterType="Long" resultMap="transferResult">
+       select * from bao_app_transferAccount  where id = #{id}
+   </select> 
+   <!-- 更新对象  -->
+   <update id="update" parameterType="com.sellerNet.backManagement.entity.TransferAccount">  
+      update bao_app_transferAccount   
+      <set>  
+      <if test="status != null">status=#{status,jdbcType=TINYINT},</if>  
+      <if test="createdTime != null">createdTime=#{createdTime},</if> 
+      <if test="creator != null">creator=#{creator,jdbcType=INTEGER},</if> 
+      <if test="isLocked != null">isLocked=#{isLocked,jdbcType=VARCHAR},</if> 
+      <if test="lastModifiedTime != null">lastModifiedTime=#{lastModifiedTime},</if>
+      <if test="lastModifier != null">lastModifier=#{lastModifier,jdbcType=INTEGER},</if> 
+      </set>  
+      <where>  
+        <if test="id != null">  
+            id = #{id,jdbcType=INTEGER}
+        </if>
+      </where>  
+   </update>  
+</mapper>   

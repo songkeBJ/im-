@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>      
+<!DOCTYPE mapper      
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"      
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+<mapper namespace="com.sellerNet.backManagement.dao.impl.PhoneNumberMapperImpl">  
+      
+   <!-- 结果集 -->     
+   <resultMap id="phoneResult" type="com.sellerNet.backManagement.entity.PhoneNumber">   
+   		<id     property="id" column="id"  jdbcType="INTEGER" />  
+      	<result property="friendId" column="friendId" jdbcType="INTEGER"  />
+		<result property="phoneNumber" column="phoneNumber" jdbcType="VARCHAR"  />
+		<result property="createdTime" column="createdTime" />
+		<result property="creator" column="creator" jdbcType="INTEGER" />
+		<result property="isLocked" column="isLocked" jdbcType="TINYINT" />
+		<result property="lastModifiedTime" column="lastModifiedTime"  />
+		<result property="lastModifier" column="lastModifier" jdbcType="INTEGER" />
+   </resultMap>  
+     
+   <!-- 新增Code实体类 -->  
+    <insert id="insert" parameterType="com.sellerNet.backManagement.entity.PhoneNumber">  
+        insert into bao_app_phoneNumber(friendId,phoneNumber,createdTime,creator,isLocked,lastModifiedTime,lastModifier) values(#{friendId,jdbcType=INTEGER},#{phoneNumber,jdbcType=VARCHAR},#{createdTime},#{creator,jdbcType=INTEGER},#{isLocked,jdbcType=TINYINT},#{lastModifiedTime},#{lastModifier,jdbcType=INTEGER})  
+   </insert>  
+   <!-- 查询（参数）   -->
+   <select id="selectParam" parameterType="java.util.Map" resultMap="phoneResult">  
+   
+        select * from bao_app_phoneNumber   
+        <where>  
+        <if test="friendId != null"> friendId= #{friendId}</if>  
+        and isLocked = 0
+       </where>  
+   </select> 
+   
+   <!-- 更新对象  -->
+   <update id="update" parameterType="com.sellerNet.backManagement.entity.PhoneNumber">  
+      update bao_app_phoneNumber   
+      <set>  
+      <if test="friendId != null">friendId=#{friendId,jdbcType=INTEGER},</if>  
+      <if test="phoneNumber != null">phoneNumber=#{phoneNumber,jdbcType=VARCHAR},</if>
+      <if test="createdTime != null">createdTime=#{createdTime},</if> 
+      <if test="creator != null">creator=#{creator,jdbcType=INTEGER},</if> 
+      <if test="isLocked != null">isLocked=#{isLocked,jdbcType=VARCHAR},</if> 
+      <if test="lastModifiedTime != null">lastModifiedTime=#{lastModifiedTime},</if>
+      <if test="lastModifier != null">lastModifier=#{lastModifier,jdbcType=INTEGER},</if> 
+      </set>  
+      <where>  
+        <if test="id != null">  
+            id = #{id,jdbcType=INTEGER}
+        </if>
+      </where>  
+   </update>  
+   
+   
+   <!-- 批量删除 -->
+   <delete id="deleteBatch">  
+        delete from bao_app_phoneNumber where id in   
+        <trim prefix="(" suffix=")" suffixOverrides=",">  
+            <foreach collection="list" item="pk" separator=",">  
+                #{pk}  
+            </foreach>  
+        </trim>  
+   </delete> 
+   <!-- 批量插入   -->
+   <insert id="insertBatch" parameterType="arraylist">  
+        insert into bao_app_phoneNumber(friendId,phoneNumber,createdTime,creator,isLocked,lastModifiedTime,lastModifier)   
+        <!-- collection可以是List对于list,数组对于array,Map对应ids  --> 
+        <foreach collection="list" item="groupMember"  index="index" separator="union all">  
+        	select #{groupMember.friendId,jdbcType=INTEGER},
+        	#{groupMember.phoneNumber,jdbcType=VARCHAR},
+			#{groupMember.createdTime,jdbcType=DATE},
+			#{groupMember.creator,jdbcType=INTEGER},
+			#{groupMember.isLocked,jdbcType=TINYINT},
+			#{groupMember.lastModifiedTime,jdbcType=DATE},
+			#{groupMember.lastModifier,jdbcType=INTEGER} 
+			from dual 
+        </foreach>  
+   </insert>
+</mapper>   

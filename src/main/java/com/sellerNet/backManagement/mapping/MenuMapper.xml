@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" ?>      
+<!DOCTYPE mapper      
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"      
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+<mapper namespace="com.sellerNet.backManagement.dao.impl.MenuMapperImpl">  
+      
+   <!-- 结果集 -->     
+   <resultMap id="menuResult" type="com.sellerNet.backManagement.entity.Menu">   
+   		<id     property="id" column="id"  jdbcType="INTEGER" />  
+      	<result property="authName" column="authName" jdbcType="VARCHAR"  />
+		<result property="authPath" column="authPath" jdbcType="VARCHAR"  />
+		<result property="parentId" column="parentId" jdbcType="INTEGER" />
+		<result property="authDescription" column="authDescription" jdbcType="VARCHAR" />
+		<result property="state" column="state" jdbcType="VARCHAR" />
+		<result property="iconCls" column="iconCls" jdbcType="VARCHAR"  />
+		<result property="createdTime" column="createdTime" jdbcType="DATE" />
+		<result property="creator" column="creator" jdbcType="INTEGER" />
+		<result property="isLocked" column="isLocked" jdbcType="TINYINT" />
+		<result property="lastModifiedTime" column="lastModifiedTime"  jdbcType="DATE" />
+		<result property="lastModifier" column="lastModifier" jdbcType="INTEGER" />
+		<result property="loginFailedCount" column="loginFailedCount" jdbcType="INTEGER" />
+		<result property="lastLoginTime" column="lastLoginTime" jdbcType="DATE" />
+   </resultMap>
+     
+   <!-- 新增User实体类 -->  
+    <insert id="insert" parameterType="com.sellerNet.backManagement.entity.Menu">  
+        insert into bao_platform_menu(authName,authPath,parentId,authDescription,state,iconCls,createdTime,creator,isLocked,lastModifiedTime,lastModifier) values(#{authName,jdbcType=VARCHAR},#{authPath,jdbcType=VARCHAR},#{parentId,jdbcType=INTEGER},#{authDescription,jdbcType=VARCHAR}
+        					,#{state,jdbcType=VARCHAR},#{iconCls,jdbcType=VARCHAR},#{createdTime},#{creator,jdbcType=INTEGER},#{isLocked,jdbcType=TINYINT},#{lastModifiedTime},#{lastModifier,jdbcType=INTEGER})  
+   
+   		<selectKey resultType="long" order="AFTER" keyProperty="id">
+   			SELECT LAST_INSERT_ID();
+   		</selectKey>
+   </insert>  
+   
+   <!-- 根据id查询用户 --> 
+   <select id="selectPk"  parameterType="Long" resultMap="menuResult">
+       select * from bao_platform_menu  where id = #{id}    order by menuNo 
+   </select> 
+   
+   <!-- 根据parentid查询菜单--> 
+   <select id="getByParentId"  parameterType="Long" resultMap="menuResult">
+       select * from bao_platform_menu  where parentId = #{parentId}    order by menuNo 
+   </select> 	
+   	
+   <!-- 更新对象  -->
+   <update id="update" parameterType="com.sellerNet.backManagement.entity.Menu">  
+      update bao_platform_menu   
+      <set>  
+      <if test="authName != null">authName=#{authName,jdbcType=VARCHAR},</if>  
+      <if test="authPath != null">authPath=#{authPath,jdbcType=VARCHAR},</if>
+      <if test="parentId != null">parentId=#{parentId,jdbcType=INTEGER},</if> 
+      <if test="authDescription != null">authDescription=#{authDescription,jdbcType=VARCHAR},</if> 
+      <if test="state != null">state=#{state,jdbcType=VARCHAR},</if> 
+      <if test="iconCls != null">iconCls=#{iconCls,jdbcType=VARCHAR},</if> 
+      <if test="createdTime != null">createdTime=#{createdTime},</if> 
+      <if test="creator != null">creator=#{creator,jdbcType=INTEGER},</if> 
+      <if test="isLocked != null">isLocked=#{isLocked,jdbcType=VARCHAR},</if> 
+      <if test="lastModifiedTime != null">lastModifiedTime=#{lastModifiedTime},</if>
+      <if test="lastModifier != null">lastModifier=#{lastModifier,jdbcType=INTEGER},</if> 
+      </set>  
+      <where>  
+        <if test="id != null">  
+            id = #{id,jdbcType=INTEGER}
+        </if>  
+      </where>  
+   </update>  
+   
+   <!-- 更新对象  -->
+   <update id="updateStateByAuthId" parameterType="java.util.Map" >  
+      update bao_platform_menu   
+      <set>  
+      <if test="state != null">state=#{state,jdbcType=VARCHAR},</if> 
+      <if test="createdTime != null">createdTime=#{createdTime},</if> 
+      <if test="creator != null">creator=#{creator,jdbcType=INTEGER},</if> 
+      <if test="isLocked != null">isLocked=#{isLocked,jdbcType=VARCHAR},</if> 
+      <if test="lastModifiedTime != null">lastModifiedTime=#{lastModifiedTime},</if>
+      <if test="lastModifier != null">lastModifier=#{lastModifier,jdbcType=INTEGER},</if> 
+      </set>  
+      <where>  
+        <if test="menuId != null">  
+            id = #{menuId}
+        </if>  
+      </where>  
+   </update>  
+    
+   <!-- 查询（参数）   -->
+   <select id="getByParentIdAndMenus" parameterType="java.util.Map" resultMap="menuResult">  
+   
+        select * from bao_platform_menu   
+        <where>  
+        <if test="parentId != null"> parentId= #{parentId}</if>  
+        <if test="menuIds != null"> and id in</if> 
+       </where> 
+       <foreach item="item" index="index" collection="menuIds" open="(" separator="," close=")">  
+ 	 		#{item}  
+ 		</foreach>
+ 		   order by menuNo 
+       <!-- <if test="orderColumn != null">  
+            order by ${orderColumn}  
+            <if test="orderTurn != null">  
+                ${orderTurn}  
+            </if>  
+       </if>   -->
+   </select> 
+   
+   <select id="countParam" parameterType="java.util.Map" resultType="int">  
+        SELECT count(*) from bao_platform_menu 
+        <where>  
+        <if test="name != null">
+        	and name like "%#{name}%"
+        </if>  
+        
+        <if test="parentId != null">
+        	and parentId =${parentId} 
+        </if>  
+       </where>  
+       <if test="orderColumn != null">  
+            order by ${orderColumn}  
+            <if test="orderTurn != null">  
+                ${orderTurn}  
+            </if>  
+       </if>  
+  </select> 
+  
+  <!-- 查询（参数）   -->
+   <select id="selectParam" parameterType="java.util.Map" resultMap="menuResult">  
+        SELECT * from bao_platform_menu 
+        <where>  
+        <if test="name != null">
+        	and name like "%#{name}%"
+        </if>  
+       </where>  
+       <if test="orderColumn != null">  
+            order by ${orderColumn}  
+            <if test="orderTurn != null">  
+                ${orderTurn}  
+            </if>  
+       </if>  
+       
+       order by menuNo 
+   </select> 
+ <!--    根据主键删除   -->
+   <delete id="delete" parameterType="long">  
+        delete from bao_platform_menu where id = #{authId}
+   </delete>  
+</mapper>   

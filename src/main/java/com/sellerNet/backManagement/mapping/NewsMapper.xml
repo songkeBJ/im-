@@ -1,0 +1,457 @@
+<?xml version="1.0" encoding="UTF-8"?>      
+<!DOCTYPE mapper      
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"      
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+<mapper namespace="com.sellerNet.backManagement.dao.impl.NewsMapperImpl">  
+      
+   <!-- 结果集 -->     
+   <resultMap id="newsTypeResult" type="com.sellerNet.backManagement.entity.NewsType">   
+   		<id     property="id" column="id"  />  
+      	<result property="name" column="name" />
+		<result property="code" column="code"   />
+		<result property="createdTime" column="createdTime" />
+		<result property="orderNo" column="orderNo" />
+   </resultMap>  
+   <!-- 结果集 -->     
+   <resultMap id="newsResult" type="com.sellerNet.backManagement.entity.News">   
+   		<id     property="id" column="id"  jdbcType="INTEGER" />  
+      	<result property="title" column="title" jdbcType="VARCHAR"  />
+		<result property="content" column="content"   />
+		<result property="createdTime" column="createdTime" />
+		<result property="pcUserId" column="pcUserId" />
+		<result property="isLocked" column="isLocked" jdbcType="TINYINT" />
+		<result property="type" column="type"  />
+		<result property="lastModifiedTime" column="lastModifiedTime"  />
+		<result property="lastModifier" column="lastModifier"  />
+		<result property="playLength" column="playLength"  />
+		<result property="userId" column="userId"  />
+   </resultMap>  
+   <!-- 结果集 -->     
+   <resultMap id="newsDtoResult" type="com.sellerNet.backManagement.dto.NewsDto">   
+   		<id     property="id" column="id"   />  
+      	<result property="title" column="title"   />
+		<result property="content" column="content"   />
+		<result property="commentTime" column="commentTime"   />
+		<result property="createdTime" column="createdTime" />
+		<result property="nickName" column="nickName" />
+		<result property="isLocked" column="isLocked" jdbcType="TINYINT" />
+		<result property="type" column="type"  />
+		<result property="lastModifiedTime" column="lastModifiedTime"  />
+		<result property="lastModifier" column="lastModifier"  />
+		<result property="titleImages" column="titleImages"  />
+		<result property="imgOrVedio" column="imgOrVedio"  />
+		<result property="allCount" column="allCount"  />
+		<result property="playLength" column="playLength"  />
+		<result property="userId" column="userId"  />
+   </resultMap>  
+   <!-- 结果集 -->     
+   <resultMap id="newsIndexResult" type="com.sellerNet.backManagement.entity.NewsIndex">   
+   		<id     property="id" column="id"   />  
+      	<result property="title" column="title"   />
+		<result property="content" column="content"   />
+		<result property="commentTime" column="commentTime"   />
+		<result property="createdTime" column="createdTime" />
+		<result property="pcUserName" column="pcUserName" />
+		<result property="isLocked" column="isLocked" jdbcType="TINYINT" />
+		<result property="type" column="type"  />
+		<result property="lastModifiedTime" column="lastModifiedTime"  />
+		<result property="lastModifier" column="lastModifier"  />
+		<result property="titleImages" column="titleImages"  />
+		<result property="lookTime" column="lookTime"  />
+		<result property="imgOrVedio" column="imgOrVedio"  />
+		<result property="playLength" column="playLength"  />
+		<result property="userId" column="userId"  />
+   </resultMap>  
+   <!-- 结果集 -->     
+   <resultMap id="newsIndexDetailResult" type="com.sellerNet.backManagement.entity.NewsIndexDetail">   
+   		<id     property="id" column="id"   />  
+      	<result property="title" column="title"   />
+		<result property="content" column="content"   />
+		<result property="createdTime" column="createdTime" />
+		<result property="pcUserName" column="pcUserName" />
+		<result property="isLocked" column="isLocked" jdbcType="TINYINT" />
+		<result property="type" column="type"  />
+		<result property="lastModifiedTime" column="lastModifiedTime"  />
+		<result property="lastModifier" column="lastModifier"  />
+		<result property="titleImages" column="titleImages"  />
+		<result property="lookTime" column="lookTime"  />
+		<result property="avatar" column="avatar"  />
+		<result property="isLikeTime" column="isLikeTime"  />
+		<result property="imgOrVedio" column="imgOrVedio"  />
+		<result property="playLength" column="playLength"  />
+		<result property="userId" column="userId"  />
+   </resultMap>  
+     <!-- 获取资讯详情 -->
+     <select id="getNewsIndexDetail" parameterType="Long"  resultMap="newsIndexDetailResult">  
+         SELECT t1.*,t2.nickName AS pcUserName,(select count(*) from bao_islike where exprienceId=t1.id AND category='NEWS_DETAIL' and isLike=1) AS isLikeTime,t4.url AS titleImages,t5.face as avatar FROM 
+		 bao_news t1 LEFT OUTER JOIN bao_users t2 ON t1.userId=t2.user_id
+		 LEFT OUTER JOIN bao_image t4 ON t4.objectId=t1.id AND t4.category='TITLEIMAGE'
+		 LEFT OUTER JOIN bao_users t5 ON t1.userId=t5.user_id
+		 WHERE t1.id=#{id}
+   </select>  
+     
+   <!-- 获取本人发布的新闻列表 -->
+     <select id="getMyNewsList"  parameterType="java.util.Map" resultMap="newsIndexResult">  
+         SELECT t1.*,t4.url AS titleImages FROM 
+		 bao_news t1
+		 LEFT OUTER JOIN bao_image t4 ON t4.objectId=t1.id AND t4.category='TITLEIMAGE'
+		 WHERE t1.isLocked=0 and t1.userId=#{userId}
+		 order by t1.createdTime desc
+		 <if test="start != null">
+        limit
+        #{start},
+        </if>
+        <if test="end != null">
+        #{end}
+        </if>
+   </select>  
+   <!-- 获取首页新闻列表 -->
+     <select id="getNewsListByType"  parameterType="java.util.Map" resultMap="newsIndexResult">  
+         SELECT t1.*,t2.nickName AS pcUserName,COUNT(t3.id) AS commentTime,t4.url AS titleImages FROM 
+		 bao_news t1 LEFT OUTER JOIN bao_users t2 ON t1.userId=t2.user_id
+		 LEFT OUTER JOIN bao_app_evaluate t3 ON t1.id=t3.objectId AND t3.category='NEWS'
+		 LEFT OUTER JOIN bao_image t4 ON t4.objectId=t1.id AND t4.category='TITLEIMAGE'
+		 WHERE TYPE=#{type} And t1.isLocked=0
+		 <if test="keyword!=null">
+		 	and ( LOCATE(#{keyword}, t1.title)>0 or LOCATE(#{keyword}, t1.content)>0 )
+		 </if>
+		 GROUP BY t1.id
+		 order by t1.orderNo desc,t1.createdTime desc
+		 <if test="start != null">
+        limit
+        #{start},
+        </if>
+        <if test="end != null">
+        #{end}
+        </if>
+   </select>  
+   <!-- 获取首页固定项新闻列表 -->
+     <select id="getFixedNewsList"  parameterType="java.util.Map" resultMap="newsIndexResult">  
+         SELECT t1.*,t2.nickName AS pcUserName,COUNT(t3.id) AS commentTime,t4.url AS titleImages FROM 
+		 bao_news t1 LEFT OUTER JOIN bao_users t2 ON t1.userId=t2.user_id
+		 LEFT OUTER JOIN bao_app_evaluate t3 ON t1.id=t3.objectId AND t3.category='NEWS'
+		 LEFT OUTER JOIN bao_image t4 ON t4.objectId=t1.id AND t4.category='TITLEIMAGE'
+		 WHERE imgOrVedio=#{imgOrVedio} And t1.isLocked=0
+		 <if test="keyword!=null">
+		 	and ( LOCATE(#{keyword}, t1.title)>0 or LOCATE(#{keyword}, t1.content)>0 )
+		 </if>
+		 GROUP BY t1.id
+		 order by t1.orderNo desc,t1.createdTime desc
+		 <if test="start != null">
+        limit
+        #{start},
+        </if>
+        <if test="end != null">
+        #{end}
+        </if>
+   </select>  
+   <!-- 获取搜索新闻列表 -->
+     <select id="getNewsListByKeyWord"  parameterType="java.util.Map" resultMap="newsIndexResult">  
+         SELECT t1.*,t2.nickName AS pcUserName,COUNT(t3.id) AS commentTime,t4.url AS titleImages FROM 
+		 bao_news t1 LEFT OUTER JOIN bao_users t2 ON t1.userId=t2.user_id
+		 LEFT OUTER JOIN bao_app_evaluate t3 ON t1.id=t3.objectId AND t3.category='NEWS'
+		 LEFT OUTER JOIN bao_image t4 ON t4.objectId=t1.id AND t4.category='TITLEIMAGE'
+		 WHERE ( LOCATE(#{keyword}, t1.title)>0 or LOCATE(#{keyword}, t1.content)>0 ) And t1.isLocked=0
+		 GROUP BY t1.id
+		 order by t1.orderNo desc,t1.createdTime desc
+		 <if test="start != null">
+        limit
+        #{start},
+        </if>
+        <if test="end != null">
+        #{end}
+        </if>
+   </select>  
+   <!-- 获取首页热点新闻列表 -->
+     <select id="getHotNewsList" parameterType="java.util.Map"  resultMap="newsIndexResult">  
+         SELECT t1.*,t2.nickName AS pcUserName,COUNT(t3.id) AS commentTime,t4.url AS titleImages FROM 
+		 bao_news t1 LEFT OUTER JOIN bao_users t2 ON t1.userId=t2.user_id
+		 LEFT OUTER JOIN bao_app_evaluate t3 ON t1.id=t3.objectId AND t3.category='NEWS'
+		 LEFT OUTER JOIN bao_image t4 ON t4.objectId=t1.id AND t4.category='TITLEIMAGE'
+		 where t1.isLocked=0
+		 <if test="keyword!=null">
+		 	and ( LOCATE(#{keyword}, t1.title)>0 or LOCATE(#{keyword}, t1.content)>0 )
+		 </if>
+		 GROUP BY t1.id
+		 order by t1.orderNo desc,t1.lookTime desc
+		 <if test="start != null">
+        limit
+        #{start},
+        </if>
+        <if test="end != null">
+        #{end}
+        </if>
+   </select>  
+   <!-- 获取首页推荐和置顶新闻列表 -->
+     <select id="getCommendNewsList" parameterType="java.util.Map"  resultMap="newsIndexResult">  
+         SELECT t1.*,t2.nickName AS pcUserName,COUNT(t3.id) AS commentTime,t4.url AS titleImages FROM 
+		 bao_news t1 LEFT OUTER JOIN bao_users t2 ON t1.userId=t2.user_id
+		 LEFT OUTER JOIN bao_app_evaluate t3 ON t1.id=t3.objectId AND t3.category='NEWS'
+		 LEFT OUTER JOIN bao_image t4 ON t4.objectId=t1.id AND t4.category='TITLEIMAGE'
+		 where t1.isLocked=0
+		 <if test="keyword!=null">
+		 	and ( LOCATE(#{keyword}, t1.title)>0 or LOCATE(#{keyword}, t1.content)>0 )
+		 </if>
+		 GROUP BY t1.id
+		 order by t1.orderNo desc,t1.createdTime desc
+		 <if test="start != null">
+        limit
+        #{start},
+        </if>
+        <if test="end != null">
+        #{end}
+        </if>
+   </select>  
+   <!-- 获取满足热的新闻资讯 -->
+     <select id="getHotNews" parameterType="java.util.Map"  resultType="java.util.Map">  
+         SELECT t1.id FROM 
+		 bao_news t1 
+		 where t1.orderNo=0 and lookTime>=#{lookTime}
+		 order by lookTime desc
+		 limit 0,#{lookEnd}
+   </select>  
+   <!-- 新增实体类 -->  
+    <insert id="insert" parameterType="com.sellerNet.backManagement.entity.News">  
+        insert into bao_news(title,content,createdTime,pcUserId,isLocked,type,lastModifiedTime,lastModifier,userId,imgOrVedio,playLength) values(#{title},#{content},#{createdTime},#{pcUserId,jdbcType=INTEGER},#{isLocked},#{type},#{lastModifiedTime},#{lastModifier},#{userId},#{imgOrVedio},#{playLength})  
+        <selectKey resultType="long" order="AFTER" keyProperty="id">
+			SELECT LAST_INSERT_ID();
+		</selectKey>
+   </insert>  
+   <!-- 新增资讯发布记录-->  
+    <insert id="insertRecord" parameterType="com.sellerNet.backManagement.entity.News">  
+        insert into bao_news_record(title,content,createdTime,pcUserId,isLocked,type,lastModifiedTime,lastModifier,userId,imgOrVedio,playLength) values(#{title},#{content},#{createdTime},#{pcUserId,jdbcType=INTEGER},#{isLocked},#{type},#{lastModifiedTime},#{lastModifier},#{userId},#{imgOrVedio},#{playLength})  
+        <selectKey resultType="long" order="AFTER" keyProperty="id">
+			SELECT LAST_INSERT_ID();
+		</selectKey>
+   </insert>  
+   <!-- 新增实体类 -->  
+    <select id="selectPk"  parameterType="Long" resultMap="newsResult">  
+        select * from bao_news where id=#{id}
+   </select>  
+   <!-- 根据消息id获取关注列表中的消息信息 -->
+     <select id="getFocusNews" parameterType="Long"  resultType="java.util.Map">  
+     	SELECT t1.*,t4.url AS titleImages FROM 
+		 bao_news t1
+		 LEFT OUTER JOIN bao_image t4 ON t4.objectId=t1.id AND t4.category='TITLEIMAGE'
+		 where t1.isLocked=0 and t1.id=#{id}
+   </select> 
+   <!-- 查询总数实体类 -->
+   <select id="countParam" parameterType="java.util.Map" resultType="int">  
+       SELECT count(*) from bao_news f
+         <where> 
+        <if test="isLocked != null">
+          and f.isLocked = #{isLocked}
+        </if>  
+        <if test="userId != null">
+          and f.userId = #{userId}
+        </if>  
+        <if test="start != null">
+        limit
+        #{start},
+        </if>
+        <if test="end != null">
+        #{end}
+        </if>
+       </where>  
+       <if test="orderColumn != null">  
+            order by ${orderColumn}  
+            <if test="orderTurn != null">  
+                ${orderTurn}  
+            </if>  
+       </if>  
+  </select> 
+  
+   <!-- 查询（参数）   -->
+   <select id="selectParam" parameterType="java.util.Map" resultMap="newsResult">  
+   
+        select * from bao_news   
+        <where>  
+        <if test="pcUserId != null"> and pcUserId= #{pcUserId}</if> 
+        <if test="startTime != null"> and createdTime &gt; #{startTime}</if>
+        <if test="endTime != null"> and createdTime &lt; #{endTime}</if>
+        and isLocked = 0 ORDER BY createdTime asc
+        <if test="start != null">
+        limit
+        #{start},
+        </if>
+        <if test="end != null">
+        #{end}
+        </if>
+       </where>  
+       <if test="orderColumn != null">  
+            order by ${orderColumn}  
+            <if test="orderTurn != null">  
+                ${orderTurn}  
+            </if>  
+       </if>  
+   </select> 
+   <!-- 查询（参数）后台   -->
+   <select id="selectParamForBack" parameterType="java.util.Map" resultMap="newsDtoResult">  
+        SELECT t1.*,t2.nickname AS nickName,t3.url AS titleImages,COUNT(t4.id) AS allCount
+        FROM bao_news t1 
+        LEFT JOIN bao_users t2 ON t2.user_id =t1.userId  
+        LEFT JOIN bao_image t3 ON t3.objectId =t1.id AND t3.category='TITLEIMAGE'
+        LEFT JOIN bao_news_complain t4 ON t4.newsId =t1.id
+        <where>  
+        <if test="userId != null"> and userId= #{userId}</if> 
+        <if test="startTime != null"> and createdTime &gt; #{startTime}</if>
+        <if test="endTime != null"> and createdTime &lt; #{endTime}</if>
+        <if test="isLocked != null"> and isLocked = #{isLocked}</if> 
+        <if test="keyword != null"> and ( LOCATE(#{keyword}, t1.title)>0 or LOCATE(#{keyword}, t1.content)>0 )</if> 
+        </where>
+        GROUP BY t1.id 
+        ORDER BY createdTime ASC
+        <where>
+        <if test="start != null">
+        limit
+        #{start},
+        </if>
+        <if test="end != null">
+        #{end}
+        </if>
+       </where>  
+       <if test="orderColumn != null">  
+            order by ${orderColumn}  
+            <if test="orderTurn != null">  
+                ${orderTurn}  
+            </if>  
+       </if>  
+   </select> 
+   
+   <!-- 更新对象  -->
+   <update id="update" parameterType="com.sellerNet.backManagement.entity.News">  
+      update bao_news   
+      <set>  
+      <if test="title != null">title=#{title},</if>  
+      <if test="content != null">content=#{content},</if>
+      <if test="createdTime != null">createdTime=#{createdTime},</if> 
+      <if test="pcUserId != null">pcUserId=#{pcUserId},</if> 
+      <if test="type != null">type=#{type},</if> 
+      <if test="lable != null">lable=#{lable},</if> 
+      <if test="isLocked != null">isLocked=#{isLocked},</if> 
+      <if test="lastModifiedTime != null">lastModifiedTime=#{lastModifiedTime},</if>
+      <if test="lastModifier != null">lastModifier=#{lastModifier},</if> 
+      <if test="orderNo != null">orderNo=#{orderNo},</if> 
+      <if test="playLength != null">playLength=#{playLength}</if> 
+      </set>  
+      <where>  
+        <if test="id != null">  
+            id = #{id}
+        </if>
+        <if test="pcUserId != null">  
+           and pcUserId = #{pcUserId}
+        </if> 
+      </where>  
+   </update>  
+   
+   
+   <delete id="deleteParam" parameterType="java.util.Map">  
+        delete from bao_news  
+        <where>  
+            <if test="pcUserId != null">pcUserId = #{pcUserId}</if>  
+        </where>  
+   </delete>  
+   
+   <select id="select"   resultMap="newsResult">
+       select * from bao_news 
+   </select> 
+   
+  <!--   批量删除   -->
+   <delete id="deleteBatch">  
+        delete from bao_news where id in   
+        <trim prefix="(" suffix=")" suffixOverrides=",">  
+            <foreach collection="list" item="pk" separator=",">  
+                #{pk}  
+            </foreach>  
+        </trim>  
+   </delete> 
+     <!-- 一级 -->
+   <select id="dayCount"  resultType="int" parameterType="java.util.Map">  
+      select count(*) from bao_news_record t1 
+      AND to_days(t1.createdTime) = to_days(now())   
+  </select> 
+  <!-- 二级 -->
+   <select id="monthCount"  resultType="int" parameterType="java.util.Map">  
+     SELECT COUNT(*) FROM bao_news_record  
+      where DATE_FORMAT(createdTime, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' ) 
+  </select> 
+  <!-- 三级 -->
+   <select id="allCount"  resultType="int" parameterType="java.util.Map">  
+        select count(*) from bao_news_record t1
+  </select> 
+   <!-- 按月份统计提现金额 -->
+   <select id="countByMonth"  resultType="java.util.HashMap" parameterType="java.util.Map">  
+      SELECT count(*) con,DATE_FORMAT(createdTime,'%Y-%m') AS tm FROM bao_news_record t1  
+      GROUP BY DATE_FORMAT(createdTime,'%Y-%m')
+  </select> 
+   <!-- 增加资讯浏览次数 -->
+   <update id="updateNewsLookTime"  parameterType="Long" >  
+      update bao_news set lookTime=lookTime+1 where id=#{newsId}
+  </update> 
+   <!-- 添加资讯发布收入记录 -->
+   <insert id="insertNewsMoney"  parameterType="java.util.Map" >  
+      insert into bao_news_money (newsId,money,createdTime) values(#{newsId},#{money},#{createdTime})
+  </insert> 
+   <!-- 添加资讯类型 -->
+   <insert id="insertNewsType"  parameterType="java.util.Map" >  
+      insert into bao_news_type (name,createdTime,code,orderNo) values(#{name},#{createdTime},#{code},#{orderNo})
+  </insert> 
+   <!-- 删除资讯类型 -->
+   <delete id="deleteNewsType" >  
+      delete from bao_news_type where id in   
+        <trim prefix="(" suffix=")" suffixOverrides=",">  
+            <foreach collection="list" item="pk" separator=",">  
+                #{pk}  
+            </foreach>  
+        </trim>  
+  </delete> 
+   <!-- 获取所有资讯类型 -->
+   <select id="getAllNewsType" resultType="java.util.Map">  
+      select * from bao_news_type order by orderNo
+  </select> 
+   <!--修改资讯类型 -->
+   <update id="updateNewsType" parameterType="java.util.Map">  
+      update bao_news_type set name=#{name},code=#{code},orderNo=#{orderNo} where id=#{id} 
+  </update> 
+   <!-- 获取单个资讯类型 -->
+   <select id="getNewsType" parameterType="java.util.Map" resultType="java.util.Map">  
+      select * from bao_news_type where id = #{id}
+  </select> 
+  <!-- 一级 -->
+   <select id="dayCountMoney"  resultType="double" parameterType="java.util.Map">  
+      select sum(t1.money) from bao_news_money t1 
+      AND to_days(t1.createdTime) = to_days(now())   
+  </select> 
+  <!-- 二级 -->
+   <select id="monthCountMoney"  resultType="double" parameterType="java.util.Map">  
+     SELECT sum(t1.money) FROM bao_news_money t1
+      where DATE_FORMAT(t1.createdTime, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' ) 
+  </select> 
+  <!-- 三级 -->
+   <select id="allCountMoney"  resultType="double" parameterType="java.util.Map">  
+        select sum(t1.money) from bao_news_money t1
+  </select> 
+   <!-- 按月份统计提现金额 -->
+   <select id="countByMonthMoney"  resultType="java.util.HashMap" parameterType="java.util.Map">  
+      SELECT sum(t1.money) con,DATE_FORMAT(createdTime,'%Y-%m') AS tm FROM bao_news_money t1  
+      GROUP BY DATE_FORMAT(createdTime,'%Y-%m')
+  </select> 
+   <!-- 根据参数获取资讯类型 -->
+   <select id="getNewsTypeParam"  resultMap="newsTypeResult" parameterType="java.util.Map">  
+      SELECT * from bao_news_type
+      <where>
+      	<if test="name!=null">
+      		and name=#{name}
+      	</if>
+      	<if test="code!=null">
+      		and code=#{code}
+      	</if>
+      	<if test="orderNo!=null">
+      		and orderNo=#{orderNo}
+      	</if>
+      	<if test="id!=null">
+      		and id!=#{id}
+      	</if>
+      </where>
+  </select> 
+</mapper>   

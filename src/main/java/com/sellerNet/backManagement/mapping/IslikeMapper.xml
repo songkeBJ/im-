@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>      
+<!DOCTYPE mapper      
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"      
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+<mapper namespace="com.sellerNet.backManagement.dao.impl.IslikeMapperImpl">  
+      
+   <!-- 结果集 -->     
+   <resultMap id="isLikeResult" type="com.sellerNet.backManagement.entity.Islike">   
+   		<id     property="id" column="id"  jdbcType="INTEGER" />  
+      	<result property="islike" column="islike" jdbcType="TINYINT"  />
+		<result property="exprienceId" column="exprienceId" jdbcType="INTEGER"  />
+		<result property="createdTime" column="createdTime" jdbcType="DATE" />
+		<result property="creator" column="creator" jdbcType="INTEGER" />
+		<result property="isLocked" column="isLocked" jdbcType="TINYINT" />
+		<result property="lastModifiedTime" column="lastModifiedTime"  jdbcType="DATE" />
+		<result property="lastModifier" column="lastModifier" jdbcType="INTEGER" />
+      <!-- 多对一的关系，注意resultMap的名字为 引用的namespace+resultMap的Id -->  
+     <!--  <association property="dep" column="depid" javaType="Dep" resultMap="hwt.Mapper.DepMapper.depResult"/>  --> 
+   </resultMap>  
+     
+   <!-- 新增islike实体类 -->  
+    <insert id="insert" parameterType="com.sellerNet.backManagement.entity.Islike">  
+        insert into bao_isLike(islike,exprienceId,createdTime,creator,isLocked,lastModifiedTime,lastModifier,category) values(#{islike,jdbcType=TINYINT},#{exprienceId,jdbcType=INTEGER},#{createdTime},#{creator,jdbcType=INTEGER},#{isLocked,jdbcType=TINYINT},#{lastModifiedTime},#{lastModifier,jdbcType=INTEGER},#{category})  
+   </insert>  
+   <!-- 查询（参数）   -->
+   <select id="select"  resultMap="isLikeResult">  
+        select * from bao_isLike 
+   </select>
+   
+   <!-- 根据id查询用户 --> 
+   <select id="selectPk"  parameterType="Long" resultMap="isLikeResult">
+       select * from bao_isLike  where id = #{id} 
+   </select> 
+   
+   <!-- 根据id查询用户 --> 
+   <select id="getByUserIdAndCategory"  parameterType="java.util.Map" resultMap="isLikeResult">
+       select * from bao_isLike  
+       <where>  
+        <if test="userId != null"> and creator= #{userId}</if>  
+        <if test="category != null"> and category = #{category}</if>
+        	and isLocked = 0
+       </where>  
+   </select> 
+   <!-- 查询某用户对某个评论的点赞情况 --> 
+   <select id="getByUserIdAndCategoryAndEvaId"  parameterType="java.util.Map" resultMap="isLikeResult">
+       select * from bao_isLike  
+       <where>  
+        <if test="userId != null"> and creator= #{userId}</if>  
+        <if test="category != null"> and category = #{category}</if>
+        <if test="exprienceId != null"> and exprienceId = #{exprienceId}</if>
+        	and isLocked = 0
+       </where>  
+   </select> 
+   
+   <delete id="delete" parameterType="Long">  
+        delete from bao_isLike  where id = #{id}
+   </delete>  
+   
+   <select id="getByuserIdAndExprienceIdAndCategory" parameterType="java.util.Map" resultMap="isLikeResult"> 
+       select * from bao_isLike 
+        <where>  
+        <if test="userId != null"> and creator= #{userId}</if>  
+        <if test="category != null"> and category= #{category}</if>  
+        <if test="exprienceId != null"> and exprienceId = #{exprienceId}</if>
+        	and isLocked = 0
+       </where>  
+   </select>
+   <select id="getByExprienceIdAndCategory" parameterType="java.util.Map" resultMap="isLikeResult"> 
+       select * from bao_isLike 
+        <where>  
+        <if test="category != null"> and category= #{category}</if>  
+        <if test="exprienceId != null"> and exprienceId = #{exprienceId}</if>
+        	and isLocked = 0
+       </where>  
+   </select>
+   <select id="getByNewsIdAndCategory" parameterType="java.util.Map" resultMap="isLikeResult"> 
+       select * from bao_isLike 
+        <where>  
+        <if test="category != null"> and category= #{category}</if>  
+        <if test="newsId != null"> and exprienceId = #{newsId}</if>
+        	and isLocked = 0
+       </where>  
+   </select>
+   
+   
+   
+   <!-- 查询（参数）   -->
+   <select id="getByExpriencesAndCategory" parameterType="java.util.Map"  resultMap="isLikeResult">  
+        select * from bao_isLike 
+         <where> 
+         isLike = 1 
+        <if test="exprienceId != null"> and exprienceId= #{exprienceId}</if>  
+        <if test="category != null"> and category = #{category}</if>
+       </where>  
+   </select> 
+   
+   <!-- 更新对象  -->
+   <update id="update" parameterType="com.sellerNet.backManagement.entity.Islike">  
+      update bao_isLike   
+      <set>  
+      <if test="islike != null">islike=#{islike,jdbcType=TINYINT},</if>  
+      <if test="exprienceId != null">exprienceId=#{exprienceId,jdbcType=INTEGER},</if>
+      <if test="createdTime != null">createdTime=#{createdTime},</if> 
+      <if test="creator != null">creator=#{creator,jdbcType=INTEGER},</if> 
+      <if test="isLocked != null">isLocked=#{isLocked,jdbcType=TINYINT},</if> 
+      <if test="lastModifiedTime != null">lastModifiedTime=#{lastModifiedTime},</if>
+      <if test="lastModifier != null">lastModifier=#{lastModifier,jdbcType=INTEGER}</if> 
+      </set>  
+      <where>  
+        <if test="id != null">  
+          and id = #{id,jdbcType=INTEGER}
+        </if>
+      </where> 
+      
+   </update>  
+</mapper>   

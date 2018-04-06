@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>      
+<!DOCTYPE mapper      
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"      
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+<mapper namespace="com.sellerNet.backManagement.dao.impl.ReceiptAddressMapperImpl">  
+      
+   <!-- 结果集 -->     
+   <resultMap id="adressResult" type="com.sellerNet.backManagement.entity.ReceiptAddress">   
+   		<id     property="id" column="id"  jdbcType="INTEGER" />  
+      	<result property="goodsReceipt" column="goodsReceipt" jdbcType="VARCHAR"  />
+		<result property="phoneNumber" column="phoneNumber" jdbcType="VARCHAR"  />
+		<result property="region" column="region" jdbcType="VARCHAR"  />
+		<result property="postcode" column="postcode" jdbcType="VARCHAR"  />
+		<result property="detailedAddress" column="detailedAddress" jdbcType="VARCHAR"  />
+		<result property="userId" column="userId" jdbcType="INTEGER"  />
+		
+		<result property="createdTime" column="createdTime" />
+		<result property="creator" column="creator" jdbcType="INTEGER" />
+		<result property="isLocked" column="isLocked" jdbcType="TINYINT" />
+		<result property="lastModifiedTime" column="lastModifiedTime"  />
+		<result property="lastModifier" column="lastModifier" jdbcType="INTEGER" />
+   </resultMap>  
+     
+   <!-- 新增Code实体类 -->  
+    <insert id="insert" parameterType="com.sellerNet.backManagement.entity.ReceiptAddress">  
+        insert into bao_receipt_address(goodsReceipt,phoneNumber,region,postcode,detailedAddress,userId,createdTime,creator,isLocked,lastModifiedTime,lastModifier) values(#{goodsReceipt,jdbcType=VARCHAR},#{phoneNumber,jdbcType=VARCHAR},#{region,jdbcType=VARCHAR},#{postcode,jdbcType=VARCHAR},#{detailedAddress,jdbcType=VARCHAR},#{userId,jdbcType=VARCHAR},#{createdTime},#{creator,jdbcType=INTEGER},#{isLocked,jdbcType=TINYINT},#{lastModifiedTime},#{lastModifier,jdbcType=INTEGER})  
+   </insert>  
+   
+   <!-- 查询（参数）   -->
+   <select id="selectParam" parameterType="java.util.Map" resultMap="adressResult">  
+        select * from bao_receipt_address where userId = #{userId}
+   </select> 
+   
+    <!-- 根据id查询用户 --> 
+   <select id="selectPk"  parameterType="Long" resultMap="adressResult">
+       select * from bao_receipt_address  where id = #{id}
+   </select>
+   
+   <!-- 更新对象  -->
+   <update id="update" parameterType="com.sellerNet.backManagement.entity.ReceiptAddress">  
+      update bao_receipt_address   
+      <set>  
+      <if test="goodsReceipt != null">goodsReceipt=#{goodsReceipt,jdbcType=VARCHAR},</if>  
+      <if test="phoneNumber != null">phoneNumber=#{phoneNumber,jdbcType=VARCHAR},</if>
+      <if test="region != null">region=#{region,jdbcType=VARCHAR},</if>
+      <if test="postcode != null">postcode=#{postcode,jdbcType=VARCHAR},</if>
+      <if test="detailedAddress != null">detailedAddress=#{detailedAddress,jdbcType=VARCHAR},</if>
+      <if test="userId != null">userId=#{userId,jdbcType=INTEGER},</if>
+      <if test="createdTime != null">createdTime=#{createdTime},</if> 
+      <if test="creator != null">creator=#{creator,jdbcType=INTEGER},</if> 
+      <if test="isLocked != null">isLocked=#{isLocked,jdbcType=VARCHAR},</if> 
+      <if test="lastModifiedTime != null">lastModifiedTime=#{lastModifiedTime},</if>
+      <if test="lastModifier != null">lastModifier=#{lastModifier,jdbcType=INTEGER},</if> 
+      </set>  
+      <where>  
+        <if test="id != null">  
+            id = #{id,jdbcType=INTEGER}
+        </if>
+      </where>  
+   </update>  
+</mapper>   

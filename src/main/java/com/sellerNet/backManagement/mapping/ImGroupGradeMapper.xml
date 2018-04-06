@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper      
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"      
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.sellerNet.backManagement.dao.impl.im.ImGroupGradeMapperImpl">
+	<resultMap id="groupGradeResult"
+		type="com.sellerNet.backManagement.entity.im.ImGroupGrade">
+		<id property="id" column="id" jdbcType="INTEGER" />
+		<result property="groupId" column="groupId" jdbcType="INTEGER" />
+		<result property="name" column="name" jdbcType="VARCHAR" />
+		<result property="orderBy" column="orderBy" jdbcType="INTEGER" />
+		<result property="grade" column="grade" jdbcType="VARCHAR" />
+
+		<result property="createdTime" column="createdTime" jdbcType="DATE" />
+		<result property="creator" column="creator" jdbcType="INTEGER" />
+		<result property="isLocked" column="isLocked" jdbcType="TINYINT" />
+		<result property="lastModifiedTime" column="lastModifiedTime"
+			jdbcType="DATE" />
+		<result property="lastModifier" column="lastModifier" jdbcType="INTEGER" />
+	</resultMap>
+
+	<!-- 通过分组ID查询所有分组 -->
+	<select id="findByGroupId" parameterType="Long" resultMap="groupGradeResult">
+		SELECT g.id,g.createdTime,g.name,g.grade,g.groupId,g.orderBy FROM
+		bao_im_group_grade g WHERE g.groupId=#{groupId} AND g.isLocked=0 ORDER
+		BY g.id ASC
+	</select>
+
+	<!-- 更新对象（参数） -->
+	<update id="deleteAllGrades" parameterType="java.util.Map">
+		update bao_im_group_grade m
+		<set>
+			<if test="modifiedAt != null">m.lastModifiedTime=#{modifiedAt},</if>
+			<if test="deletedby != null">m.lastModifier=#{deletedby,jdbcType=INTEGER},</if>
+			m.isLocked=1
+		</set>
+		<where>
+			<if test="groupId != null">
+				m.groupId = #{groupId,jdbcType=INTEGER}
+			</if>
+			and m.isLocked=0
+		</where>
+	</update>
+
+	<!-- 根据门派id和等级查询 -->
+	<select id="getGroupGrade" parameterType="java.util.Map"
+		resultMap="groupGradeResult">
+		select * from bao_im_group_grade
+		<where>
+			<if test="groupId != null"> groupId= #{groupId}</if>
+			<if test="grade != null"> and grade = #{grade}</if>
+			and isLocked = 0
+		</where>
+	</select>
+
+	<!-- 批量插入 -->
+	<insert id="insertBatch" parameterType="arraylist">
+		insert into
+		bao_im_group_grade(groupId,name,orderBy,grade,createdTime,creator,isLocked,lastModifiedTime,lastModifier)
+		<!-- collection可以是List对于list,数组对于array,Map对应ids -->
+		<foreach collection="list" item="groupGrade" index="index"
+			separator="union all">
+			select #{groupGrade.groupId,jdbcType=INTEGER},
+			#{groupGrade.name,jdbcType=VARCHAR},
+			#{groupGrade.orderBy,jdbcType=INTEGER},
+			#{groupGrade.grade,jdbcType=VARCHAR},
+			#{groupGrade.createdTime},
+			#{groupGrade.creator,jdbcType=INTEGER},
+			#{groupGrade.isLocked,jdbcType=TINYINT},
+			#{groupGrade.lastModifiedTime},
+			#{groupGrade.lastModifier,jdbcType=INTEGER}
+			from dual
+		</foreach>
+	</insert>
+
+</mapper>

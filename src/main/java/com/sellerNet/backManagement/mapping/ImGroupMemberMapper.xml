@@ -1,0 +1,357 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper      
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"      
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.sellerNet.backManagement.dao.impl.im.ImGroupMemberMapperImpl">
+	<resultMap id="groupMemberResult"
+		type="com.sellerNet.backManagement.entity.im.ImGroupMember">
+		<id property="id" column="id" jdbcType="INTEGER" />
+		<result property="groupId" column="groupId" jdbcType="INTEGER" />
+		<result property="userId" column="userId" jdbcType="INTEGER" />
+		<result property="role" column="role" jdbcType="VARCHAR" />
+		<result property="groupGradeId" column="groupGradeId" jdbcType="INTEGER" />
+		<result property="isEnabled" column="isEnabled" jdbcType="TINYINT" />
+		<result property="imNumber" column="imNumber" jdbcType="VARCHAR" />
+		<result property="nameInGroup" column="nameInGroup" jdbcType="VARCHAR" />
+		<result property="title" column="title" jdbcType="VARCHAR" />
+
+		<result property="createdTime" column="createdTime" />
+		<result property="creator" column="creator" jdbcType="INTEGER" />
+		<result property="isLocked" column="isLocked" jdbcType="TINYINT" />
+		<result property="lastModifiedTime" column="lastModifiedTime" />
+		<result property="lastModifier" column="lastModifier" jdbcType="INTEGER" />
+	</resultMap>
+
+	<resultMap type="com.sellerNet.backManagement.dto.im.ImGroupMemberDTO"
+		id="imGroupMemberDTO">
+		<id property="groupMemberId" column="id" jdbcType="INTEGER" />
+		<id property="id" column="user_id" jdbcType="INTEGER" />
+		<result property="username" column="nickname" jdbcType="VARCHAR" />
+		<result property="nameInGroup" column="nameInGroup" jdbcType="VARCHAR" />
+		<result property="avatar" column="face" jdbcType="VARCHAR" />
+		<result property="role" column="role" jdbcType="VARCHAR" />
+		<result property="gradeName" column="name" jdbcType="VARCHAR" />
+		<result property="districtName" column="districtId" jdbcType="VARCHAR" />
+		<result property="thermalSignatrue" column="thermalSignatrue"
+			jdbcType="VARCHAR" />
+		<result property="isEnabled" column="isEnabled" jdbcType="TINYINT" />
+		<result property="title" column="title" jdbcType="VARCHAR" />
+	</resultMap>
+	<!-- 新增实体类 -->
+	<insert id="insert"
+		parameterType="com.sellerNet.backManagement.entity.im.ImGroupMember">
+		insert into
+		bao_im_group_member(groupId,userId,role,groupGradeId,isEnabled,imNumber,nameInGroup,title,createdTime,creator,isLocked,lastModifiedTime,lastModifier)
+		values(#{groupId,jdbcType=INTEGER},#{userId,jdbcType=INTEGER},#{role,jdbcType=VARCHAR},#{groupGradeId,jdbcType=INTEGER}
+		,#{isEnabled,jdbcType=TINYINT},#{imNumber,jdbcType=VARCHAR},#{nameInGroup,jdbcType=VARCHAR},#{title,jdbcType=VARCHAR},#{createdTime},#{creator,jdbcType=INTEGER},#{isLocked,jdbcType=TINYINT},#{lastModifiedTime},#{lastModifier,jdbcType=INTEGER})
+		<selectKey resultType="long" order="AFTER" keyProperty="id">
+			SELECT LAST_INSERT_ID();
+		</selectKey>
+	</insert>
+
+	<!-- 根据id查询用户 -->
+	<select id="selectPk" parameterType="Long" resultMap="groupMemberResult">
+		select * from bao_im_group_member where id = #{id}
+	</select>
+	<!-- 查询（参数） -->
+	<select id="findByGroupIdAndUserIdInAndIsDeletedFalse"
+		parameterType="java.util.Map" resultMap="groupMemberResult">
+		select * from bao_im_group_member
+		<where>
+			<if test="groupId != null"> groupId= #{groupId}</if>
+			<if test="memberIds != null"> and userId = #{memberIds}</if>
+		</where>
+	</select>
+
+	<!-- 根据title查询成员信息 -->
+	<select id="getGroupByTitle" parameterType="string" resultMap="groupMemberResult">
+		select * from bao_im_group_member
+		where title= #{title}
+	</select>
+
+	<!-- 删除所有成员） -->
+	<update id="deleteAllMembers" parameterType="java.util.Map">
+		UPDATE bao_im_group_member m
+		<set>
+			<if test="deletedBy != null">m.lastModifier=#{deletedBy,jdbcType=INTEGER},</if>
+			<if test="modifiedAt != null">m.lastModifiedTime=#{modifiedAt,jdbcType=DATE},</if>
+			m.isLocked =1
+		</set>
+		<where>
+			<if test="groupId != null">
+				m.groupId = #{groupId,jdbcType=INTEGER}
+			</if>
+			and m.isLocked=0
+		</where>
+	</update>
+
+	<!-- 全部禁言 -->
+	<update id="banAll" parameterType="java.util.Map">
+		UPDATE bao_im_group_member m
+		<set>
+			m.isEnabled=0,
+			<if test="modifier != null">m.lastModifier=#{modifier,jdbcType=INTEGER},</if>
+			<if test="lastModifiedTime != null">m.lastModifiedTime=#{modifiedAt,jdbcType=DATE},</if>
+			m.isLocked =1
+		</set>
+		<where>
+			<if test="groupId != null">
+				m.groupId = #{groupId,jdbcType=INTEGER}
+			</if>
+			and m.isLocked=0
+		</where>
+	</update>
+
+	<!-- 更新对象 -->
+	<update id="update"
+		parameterType="com.sellerNet.backManagement.entity.im.ImGroupMember">
+		update bao_im_group_member
+		<set>
+			<if test="groupId != null">groupId=#{groupId,jdbcType=INTEGER},</if>
+			<if test="userId != null">userId=#{userId,jdbcType=INTEGER},</if>
+			<if test="role != null">role=#{role,jdbcType=VARCHAR},</if>
+			<if test="groupGradeId != null">groupGradeId=#{groupGradeId,jdbcType=INTEGER},</if>
+			<if test="isEnabled != null">isEnabled=#{isEnabled,jdbcType=TINYINT},</if>
+			<if test="imNumber != null">imNumber=#{imNumber,jdbcType=VARCHAR},</if>
+			<if test="nameInGroup != null">nameInGroup=#{nameInGroup,jdbcType=VARCHAR},</if>
+			<if test="title != null">title=#{title,jdbcType=VARCHAR},</if>
+			<if test="createdTime != null">createdTime=#{createdTime},</if>
+			<if test="creator != null">creator=#{creator,jdbcType=INTEGER},</if>
+			<if test="isLocked != null">isLocked=#{isLocked,jdbcType=VARCHAR},</if>
+			<if test="lastModifiedTime != null">lastModifiedTime=#{lastModifiedTime},</if>
+			<if test="lastModifier != null">lastModifier=#{lastModifier,jdbcType=INTEGER}</if>
+		</set>
+		<where>
+			<if test="id != null">
+				id = #{id,jdbcType=INTEGER}
+			</if>
+		</where>
+	</update>
+
+	<!-- 批量修改禁言状态 -->
+	<update id="updateEnableStatusInBatch" parameterType="java.util.Map">
+		UPDATE bao_im_group_member m
+		<set>
+			<if test="isEnabled != null">m.isEnabled=#{isEnabled,jdbcType=TINYINT},</if>
+			<if test="modifier != null">m.lastModifier=#{modifier,jdbcType=INTEGER},</if>
+			<if test="lastModifiedTime != null">m.lastModifiedTime=#{modifiedAt,jdbcType=DATE},</if>
+			m.isLocked =1
+		</set>
+		<where>
+			<if test="groupId != null">
+				m.groupId = #{groupId,jdbcType=INTEGER}
+			</if>
+			<if test="groupId != null">
+				m.userId IN #{userIds,jdbcType=VARCHAR}
+			</if>
+			and m.isLocked=0
+		</where>
+	</update>
+
+	<!-- 查询DTO列表 -->
+	<select id="findDTOByUserIdAndGroupId" parameterType="INTEGER"
+		resultMap="groupMemberResult">
+		SELECT
+		m.id,m.createdTime,m.userId,m.groupId,m.groupGradeId,m.role,m.isEnabled,m.imNumber,m.nameInGroup,m.title
+		FROM bao_im_group_member m
+		<where>
+			<if test="groupId != null">
+				m.groupId = #{groupId,jdbcType=INTEGER}
+			</if>
+			<if test="userId != null">
+				and m.userId =#{userId,jdbcType=INTEGER}
+			</if>
+			and m.isLocked=0
+		</where>
+	</select>
+
+	<!-- 查询 -->
+	<select id="findByUserIdAndGroupId" parameterType="java.util.Map"
+		resultMap="groupMemberResult">
+		SELECT * FROM bao_im_group_member m
+		<where>
+			<if test="userId != null">
+				m.userId =#{userId,jdbcType=INTEGER}
+			</if>
+			<if test="groupId != null">
+				and m.groupId = #{groupId,jdbcType=INTEGER}
+			</if>
+			and m.isLocked=0
+		</where>
+	</select>
+
+	<!-- 查询DTO列表 -->
+	<select id="findAllAdminsDTO" parameterType="INTEGER" resultMap="groupMemberResult">
+		SELECT
+		m.id,m.groupId,m.userId,m.role,m.groupGradeId,m.isEnabled,m.imNumber,m.nameInGroup,m.title,m.createdTime
+		FROM bao_im_group_member m
+		<where>
+			m.groupId = #{groupId}
+			and m.role='ADMIN'
+			and m.isLocked=0
+		</where>
+	</select>
+
+	<!-- 根据群组ID和角色名称获取群组成员 -->
+	<select id="findByGroupIdAndRole" parameterType="java.util.Map"
+		resultMap="groupMemberResult">
+		SELECT * FROM bao_im_group_member m
+		<where>
+			m.groupId = #{groupId}
+			and m.role = #{role}
+			and m.isLocked=0
+		</where>
+	</select>
+
+	<!-- 查询DTO列表 -->
+	<select id="findAllMembers" parameterType="Long" resultMap="imGroupMemberDTO">
+		SELECT
+		u.user_id,u.face,u.nickname,m.nameInGroup,m.role,g.grade,m.title,ua.thermalSignatrue,m.isEnabled
+		FROM bao_im_group_member m,bao_im_group_grade g,bao_users
+		u,bao_appusers ua
+		<where>
+			m.groupId = #{groupId}
+			AND m.groupGradeId=g.id
+			AND m.userId=u.user_id
+			AND ua.phoneNumber=u.mobile
+			AND m.isLocked=0
+			AND g.isLocked=0
+			AND ua.isLocked=0
+			ORDER BY m.id asc
+		</where>
+	</select>
+
+	<!-- 查询DTO列表 -->
+	<select id="findGroupMemberDetail" parameterType="java.util.Map"
+		resultMap="imGroupMemberDTO">
+		SELECT
+		m.id,u.user_id,u.nickname,m.nameInGroup,u.face,m.role,g.name,m.isEnabled
+		FROM bao_im_group_member m,bao_im_group_grade g,bao_users u
+		<where>
+			<if test="groupId != null">
+				m.groupId = #{groupId,jdbcType=INTEGER}
+			</if>
+			<if test="userId != null">
+				and m.userId =#{userId,jdbcType=INTEGER}
+			</if>
+			<if test="userId != null">
+				and u.user_id =#{userId,jdbcType=INTEGER}
+			</if>
+			AND m.groupGradeId=g.id
+			AND m.isLocked=0
+			AND g.isLocked=0
+			<!-- AND u.isLocked=0 -->
+		</where>
+	</select>
+	<insert id="insertBatch" parameterType="arraylist">
+		insert into
+		bao_im_group_member(groupId,userId,role,imNumber,groupGradeId,nameInGroup,title,createdTime,creator,isLocked,lastModifiedTime,lastModifier)
+		<!-- collection可以是List对于list,数组对于array,Map对应ids -->
+		<foreach collection="list" item="groupMember" index="index"
+			separator="union all">
+			select #{groupMember.groupId,jdbcType=INTEGER},
+			#{groupMember.userId,jdbcType=INTEGER},
+			#{groupMember.role,jdbcType=VARCHAR},
+			#{groupMember.imNumber,jdbcType=VARCHAR},
+			#{groupMember.groupGradeId,jdbcType=INTEGER},
+			#{groupMember.nameInGroup,jdbcType=VARCHAR},
+			#{groupMember.title,jdbcType=VARCHAR},
+			#{groupMember.createdTime,jdbcType=DATE},
+			#{groupMember.creator,jdbcType=INTEGER},
+			#{groupMember.isLocked,jdbcType=TINYINT},
+			#{groupMember.lastModifiedTime,jdbcType=DATE},
+			#{groupMember.lastModifier,jdbcType=INTEGER}
+			from dual
+		</foreach>
+	</insert>
+
+
+
+	<!-- 批量删除 -->
+	<delete id="deleteBatch">
+		delete from bao_im_group_member where userId in
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<foreach collection="list" item="pk" separator=",">
+				#{pk}
+			</foreach>
+		</trim>
+	</delete>
+	<!-- 单个删除 -->
+	<update id="deleteMember" parameterType="Long">
+		UPDATE bao_im_group_member m
+		<set>
+			m.isLocked =1
+		</set>
+		<where>
+			m.id = #{id}
+			and m.isLocked=0
+		</where>
+	</update>
+
+
+
+
+
+	<select id="countParam" parameterType="java.util.Map"
+		resultType="int">
+		SELECT count(*) from bao_im_group_member f
+		<where>
+			f.isLocked=0
+			<if test="userId ==0 ">
+				and f.userId = #{userId}
+			</if>
+			<if test="groupId ==0 ">
+				and f.groupId = #{groupId }
+			</if>
+
+			<if test="start != null">
+				limit
+				#{start},
+			</if>
+			<if test="end != null">
+				#{end}
+			</if>
+
+		</where>
+		<if test="orderColumn != null">
+			order by ${orderColumn}
+			<if test="orderTurn != null">
+				${orderTurn}
+			</if>
+		</if>
+	</select>
+
+	<!-- 查询（参数） -->
+	<select id="selectParam" parameterType="java.util.Map"
+		resultMap="groupMemberResult">
+		SELECT * from bao_im_group_member f
+		<where>
+			f.isLocked=0
+			<if test="userId ==0 ">
+				and f.userId = #{userId}
+			</if>
+
+			<if test="groupId ==0 ">
+				and f.groupId = #{groupId }
+			</if>
+			<if test="start != null">
+				limit
+				#{start},
+			</if>
+			<if test="end != null">
+				#{end}
+			</if>
+
+		</where>
+		<if test="orderColumn != null">
+			order by ${orderColumn}
+			<if test="orderTurn != null">
+				${orderTurn}
+			</if>
+		</if>
+	</select>
+
+
+
+</mapper>

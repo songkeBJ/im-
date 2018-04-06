@@ -1,0 +1,386 @@
+<?xml version="1.0" encoding="UTF-8" ?>      
+<!DOCTYPE mapper      
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"      
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+<mapper namespace="com.sellerNet.backManagement.dao.impl.AppUserOneMapperImpl">  
+      
+   <!-- 结果集 -->     
+   <resultMap id="useroneResult" type="com.sellerNet.backManagement.entity.UserOne">   
+   		<id     property="user_id" column="user_id"  jdbcType="INTEGER" />  
+      	<result property="account" column="account" jdbcType="VARCHAR"  />
+      	<result property="username" column="nickname" jdbcType="VARCHAR"  />
+      	<result property="nickname" column="nickname" jdbcType="VARCHAR"  />
+		<result property="password" column="password" jdbcType="VARCHAR"  />
+		<result property="avator" column="face" jdbcType="VARCHAR"  />
+		<result property="balance" column="money" jdbcType="VARCHAR" />
+		<result property="email" column="email" jdbcType="VARCHAR" />
+		<result property="phoneNumber" column="mobile" jdbcType="VARCHAR" />
+		<result property="bshop" column="bshop" jdbcType="INTEGER"  />
+		<result property="audit" column="audit" jdbcType="INTEGER"  />
+		<result property="invite6" column="invite6" jdbcType="INTEGER"  />
+		<result property="createdTime" column="reg_time"/>
+		<result property="regip" column="reg_ip"  jdbcType="VARCHAR"/>
+		<result property="lastTime" column="last_time" />
+		<result property="customerServiceStatus" column="customerServiceStatus" jdbcType="TINYINT" />
+		
+		<result property="spreadMan" column="spreadMan" jdbcType="INTEGER"  />
+		<result property="addPay" column="addPay" jdbcType="VARCHAR"  />
+		<result property="lockStatus" column="lockStatus"  jdbcType="INTEGER" />
+		<result property="moneylock" column="moneylock"  jdbcType="INTEGER" />
+		<result property="newsNum" column="newsNum"  />
+		<result property="sign" column="sign"  />
+		<result property="equipmentOS" column="equipmentOS"  />
+		<result property="deviceToken" column="deviceToken"  />
+   </resultMap>
+   
+    <resultMap id="userDtoResult" type="com.sellerNet.backManagement.dto.UserOneCountDto">   
+   		<id     property="user_id" column="user_id"  jdbcType="INTEGER" />  
+      	<result property="account" column="account" jdbcType="VARCHAR"  />
+      	<result property="username" column="nickname" jdbcType="VARCHAR"  />
+      	<result property="nickname" column="nickname" jdbcType="VARCHAR"  />
+		<result property="password" column="password" jdbcType="VARCHAR"  />
+		<result property="avator" column="face" jdbcType="VARCHAR"  />
+		<result property="balance" column="money" jdbcType="VARCHAR" />
+		<result property="email" column="email" jdbcType="VARCHAR" />
+		<result property="phoneNumber" column="mobile" jdbcType="VARCHAR" />
+		<result property="bshop" column="bshop" jdbcType="INTEGER"  />
+		<result property="audit" column="audit" jdbcType="INTEGER"  />
+		<result property="invite6" column="invite6" jdbcType="INTEGER"  />
+		<result property="createdTime" column="reg_time"/>
+		<result property="regip" column="reg_ip"  jdbcType="VARCHAR"/>
+		<result property="lastTime" column="last_time" />
+		<result property="customerServiceStatus" column="customerServiceStatus" jdbcType="TINYINT" />
+		
+		<result property="spreadMan" column="spreadMan" jdbcType="INTEGER"  />
+		<result property="addPay" column="addPay" jdbcType="VARCHAR"  />
+		<result property="lockStatus" column="lockStatus"  jdbcType="INTEGER" />
+		<result property="moneylock" column="moneylock"  jdbcType="INTEGER" />
+		
+		<result property="dayCount" column="dayCount" jdbcType="VARCHAR"  />
+		<result property="monthCount" column="monthCount" jdbcType="VARCHAR"  />
+		<result property="allCount" column="allCount"  jdbcType="VARCHAR" />
+   </resultMap>
+   
+   <resultMap type="com.sellerNet.backManagement.dto.UserDto" id="useronedto">
+   		<result property="phoneNumber" column="phone_number" jdbcType="VARCHAR" />
+   </resultMap>
+   
+    <delete id="delete" parameterType="int">  
+        delete from bao_users where user_id = #{id}  
+   </delete> 
+   
+   <select id="countCustomerServiceList"  parameterType="java.util.Map" resultType="int">
+      select 
+      	count(*)
+       from bao_users bu LEFT JOIN bao_appusers ba on bu.mobile = ba.phoneNumber 
+       <where>
+       		<if test="username != null">
+       		and bu.nickname LIKE CONCAT(CONCAT('%', #{username}), '%')
+       		</if> 
+       		<if test="phoneNumber != null">
+       		and bu.mobile = #{phoneNumber}
+       		</if> 
+       		and bu.customerServiceStatus=1
+       </where>
+   </select> 
+     
+   <!-- 新增app端用户 -->  
+    <insert id="insert" parameterType="com.sellerNet.backManagement.entity.UserOne">  
+        insert into bao_users(sign,account,nickname,password,face,money,email,mobile,bshop,audit,reg_time,reg_ip,last_time,customerServiceStatus,spreadMan,addPay,lockStatus,moneylock,equipmentOS,deviceToken) values("",#{account,jdbcType=VARCHAR},#{username,jdbcType=VARCHAR},#{password,jdbcType=VARCHAR},#{avator,jdbcType=VARCHAR},
+        					#{balance,jdbcType=VARCHAR},#{email,jdbcType=VARCHAR},#{phoneNumber,jdbcType=VARCHAR},#{bshop,jdbcType=INTEGER},#{audit,jdbcType=INTEGER},#{createdTime},#{regip,jdbcType=VARCHAR},#{lastTime},#{customerServiceStatus,jdbcType=INTEGER}
+        					,#{spreadMan,jdbcType=INTEGER},#{addPay,jdbcType=VARCHAR},#{lockStatus,jdbcType=INTEGER},#{moneylock,jdbcType=INTEGER},#{equipmentOS},#{deviceToken})  
+   		<selectKey resultType="int" order="AFTER" keyProperty="user_id">
+   			SELECT LAST_INSERT_ID();
+   		</selectKey>
+   </insert> 
+   
+   <!-- 通过手机号查询用户 --> 
+   <select id="byPhoneNumber" parameterType="String" resultMap="useroneResult">
+      select  * from bao_users where mobile = #{phoneNumber}
+   </select> 
+   
+   <!-- 通过环信账号查询用户 --> 
+  <!--  <select id="findUserByImNumber" parameterType="String" resultMap="imuserdto">
+      select  * from t_app_user where im_number = #{imNumber} 
+   </select>  -->
+   
+   <!-- 通过邮箱查询用户 --> 
+   <select id="byUserEmail" parameterType="String" resultMap="useroneResult">
+      select  * from bao_users where user_email = #{userEmail}
+   </select> 
+   
+   <!-- 通过用户名查询用户 --> 
+   <select id="byUserName" parameterType="String" resultMap="useroneResult">
+      select  * from bao_users where user_name = #{username}
+   </select> 
+   
+   <!-- 获取id值最大的用户 --> 
+   <select id="byMaxUser"  resultMap="useroneResult">
+       select * from bao_users  u where u.id = (select max(id) from bao_users)
+   </select> 
+   
+   <!-- 模糊搜索好友--> 
+   <select id="byUserIdAndTerms"  parameterType="java.util.Map" resultMap="useroneResult">
+       select * from bao_users  u 
+       <where>
+       		<if test="username != null">
+       		u.nickname LIKE CONCAT(CONCAT('%', #{username}), '%')
+       		</if> 
+       		<if test="phoneNumber != null">
+       		u.mobile = #{phoneNumber} or u.user_id = #{phoneNumber}
+       		</if> 
+       </where>
+   </select> 
+   
+   <!-- 根据id查询用户 --> 
+   <select id="selectPk"  parameterType="INTEGER" resultMap="useroneResult">
+       select * from bao_users  where user_id = #{id}
+   </select> 
+   	
+   <!-- 根据id查询用户 --> 
+   <select id="byInvite6"  parameterType="INTEGER" resultMap="useroneResult">
+       select * from bao_users  where invite6 = #{userId}
+   </select> 	
+   
+   <!-- 根据id查询用户 --> 
+   <select id="select"   resultMap="useroneResult">
+       select * from bao_users  where lockStatus =0
+   </select> 	
+   <!-- 更新对象  -->
+   <update id="update" parameterType="com.sellerNet.backManagement.entity.UserOne">  
+      update bao_users   
+      <set>  
+      <if test="account != null">account=#{account,jdbcType=VARCHAR},</if>  
+      <if test="newsNum != null">newsNum=#{newsNum},</if>  
+      <if test="username != null">nickname=#{username,jdbcType=VARCHAR},</if>
+      <if test="password != null">password=#{password,jdbcType=VARCHAR},</if>
+      <if test="avator != null">face=#{avator,jdbcType=INTEGER},</if> 
+      <if test="balance != null">money=#{balance,jdbcType=VARCHAR},</if> 
+      <if test="email != null">email=#{email,jdbcType=VARCHAR},</if> 
+      <if test="phoneNumber != null">mobile=#{phoneNumber,jdbcType=VARCHAR},</if> 
+      <if test="bshop != null">bshop=#{bshop,jdbcType=INTEGER},</if> 
+      <if test="audit != null">audit=#{audit,jdbcType=INTEGER},</if> 
+      <if test="createdTime != null">reg_time=#{createdTime},</if> 
+      <if test="regip != null">reg_ip=#{regip,jdbcType=VARCHAR},</if> 
+      <if test="lastTime != null">last_time=#{lastTime},</if> 
+      <if test="customerServiceStatus != null">customerServiceStatus=#{customerServiceStatus},</if>
+      <if test="spreadMan != null">spreadMan=#{spreadMan},</if>
+      <if test="addPay != null">addPay=#{addPay},</if>
+       <if test="lockStatus != null">lockStatus=#{lockStatus},</if>
+      <if test="moneylock != null">moneylock=#{moneylock},</if>
+      <if test="sign != null">sign=#{sign},</if>
+      </set>  
+      <where>  
+        <if test="user_id != null">  
+            user_id = #{user_id,jdbcType=INTEGER}
+        </if>  
+      </where>  
+   </update>  
+     
+   <select id="count" resultType="int">  
+       SELECT count(*) from bao_users f
+  </select> 
+   <select id="countParam" parameterType="java.util.Map" resultType="int">  
+       SELECT count(*) from bao_users f
+       <where> 
+       <if test="username != null">
+         and f.username = #{username}
+       </if>
+       </where> 
+       <!-- 	order by  f.user_id desc
+       <if test="start != null">
+        limit
+        #{start},
+        </if>
+        <if test="end != null">
+        #{end}
+        </if>
+       <if test="orderColumn != null">  
+            order by ${orderColumn}  
+            <if test="orderTurn != null">  
+                ${orderTurn}  
+            </if>  
+       </if>   -->
+  </select> 
+  
+  <!-- 一级 -->
+   <select id="findmySpreadNumOne"  parameterType="Integer"  resultType="int">  
+       select count(1) from bao_users where spreadMan=#{userId}
+  </select> 
+  <!-- 二级 -->
+   <select id="findmySpreadNumTwo"  parameterType="Integer"  resultType="int">  
+      select count(1) from bao_users where spreadMan in(select user_id from bao_users where spreadMan=#{userId})
+  </select> 
+  <!-- 三级 -->
+   <select id="findmySpreadNumThree"  parameterType="Integer"  resultType="int">  
+       select count(1) from bao_users where spreadMan in(select user_id from bao_users where spreadMan in(select user_id from bao_users where spreadMan=#{userId}))
+  </select> 
+  
+   <!-- 查询（参数）   -->
+   <select id="selectParam" parameterType="java.util.Map" resultMap="useroneResult">  
+        SELECT *  from bao_users f
+         <where>  
+        <if test="userEmail != null">
+        	and f.userEmail = #{userEmail}
+        </if>  
+        
+        <if test="phoneNumber != null">
+        	and f.mobile = #{phoneNumber}
+        </if>
+        
+        <if test="username != null">
+        	and f.nickname = #{username}
+        </if>
+        
+        <if test="userIdF != null">
+        	and f.user_id != #{userIdF} 
+        </if>
+        
+        <if test="customerServiceStatus != null">
+        	and f.customerServiceStatus = #{customerServiceStatus}
+        </if>
+       </where>  
+       order by  f.user_id desc
+       <if test="start != null">
+        limit
+        #{start},
+        </if>
+        <if test="end != null">
+        #{end}
+        </if>
+       <if test="orderColumn != null">  
+            order by ${orderColumn}  
+            <if test="orderTurn != null">  
+                ${orderTurn}  
+            </if>  
+       </if>  
+   </select> 
+   
+     <!-- 一级 -->
+   <select id="dayCount"  resultType="int" parameterType="java.util.Map">  
+      select count(*) from bao_users t1 
+      left join bao_appusers t2 on t1.user_id =t2.userId 
+      where to_days(t1.reg_time) = to_days(now())   and ( t2.isbang not in (10) or t2.isbang is null) 
+       <if test="disList != null">
+       			and t2.districtId is not null and 
+       			<foreach collection="disList"  item="ulist"  open="(" separator="or" close=")" index="index">
+       				 t2.districtId  LIKE CONCAT(CONCAT('%', #{ulist}), '%') 
+       			</foreach>
+       		</if> 
+  </select> 
+  <!-- 二级 -->
+   <select id="monthCount"  resultType="int" parameterType="java.util.Map">  
+      select count(*) from bao_users t1  
+      left join bao_appusers t2 on t1.user_id =t2.userId 
+      where DATE_FORMAT(t1.reg_time, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' ) and ( t2.isbang not in (10) or t2.isbang is null)
+    <if test="disList != null">
+       			and t2.districtId is not null and 
+       			<foreach collection="disList"  item="ulist"  open="(" separator="or" close=")" index="index">
+       				 t2.districtId  LIKE CONCAT(CONCAT('%', #{ulist}), '%') 
+       			</foreach>
+       		</if> 
+  </select> 
+  <!-- 按月份统计查询注册人数 -->
+   <select id="countByMonth"  resultType="java.util.HashMap" parameterType="java.util.Map">  
+      SELECT COUNT(*) con,DATE_FORMAT(reg_time,'%Y-%m') AS tm FROM bao_users t1  
+      LEFT JOIN bao_appusers t2 ON t1.user_id =t2.userId  WHERE  t2.isbang NOT IN (10) OR t2.isbang IS NULL 
+      GROUP BY DATE_FORMAT(reg_time,'%Y-%m')
+    <if test="disList != null">
+       			and t2.districtId is not null and 
+       			<foreach collection="disList"  item="ulist"  open="(" separator="or" close=")" index="index">
+       				 t2.districtId  LIKE CONCAT(CONCAT('%', #{ulist}), '%') 
+       			</foreach>
+       		</if> 
+  </select> 
+  <!-- 三级 -->
+   <select id="allCount"  resultType="int" parameterType="java.util.Map">  
+        select count(*) from bao_users t1  
+          left join bao_appusers t2 on t1.user_id =t2.userId  where  t2.isbang not in (10) or t2.isbang is null 
+           <if test="disList != null">
+       			and t2.districtId is not null and 
+       			<foreach collection="disList"  item="ulist"  open="(" separator="or" close=")" index="index">
+       				 t2.districtId  LIKE CONCAT(CONCAT('%', #{ulist}), '%') 
+       			</foreach>
+       		</if> 
+  </select> 
+  
+   <select id="allCountBySex"  parameterType="java.util.Map"  resultType="Integer" >  
+        select count(*) from bao_users t1  
+        left join bao_appusers t2 on t1.user_id =t2.userId  where  t2.isbang not in (10) or t2.isbang is null 
+        <if test="sex != null">
+        	and t2.sex = #{sex} 
+        </if> 
+          <if test="disList != null">
+       			and t2.districtId is not null and 
+       			<foreach collection="disList"  item="ulist"  open="(" separator="or" close=")" index="index">
+       				 t2.districtId  LIKE CONCAT(CONCAT('%', #{ulist}), '%') 
+       			</foreach>
+       		</if> 
+  </select> 
+  
+    <!-- 一级 -->
+   <select id="dayCashCount"  parameterType="java.util.Map" resultMap="userDtoResult">  
+  select t1.*,dayCount,monthCount,allCount from bao_users t1 
+  left join bao_appusers t8 on t1.user_id =t8.userId 
+LEFT JOIN (select userId,sum(amount)as dayCount from bao_recharge_record where active=6 and to_days(createdTime) = to_days(now()) GROUP BY userId) t2 on t2.userId =t1.user_id 
+LEFT JOIN (select userId,sum(amount)as monthCount from bao_recharge_record  where active=6 and DATE_SUB(CURDATE(), INTERVAL 30 DAY) &lt;= date(createdTime) GROUP BY userId) t3 on t3.userId =t1.user_id 
+LEFT JOIN (select userId,sum(amount)as allCount from bao_recharge_record  where active=6 GROUP BY userId) t4 on t4.userId =t1.user_id 
+   where ( t8.isbang not in (10) or t8.isbang is null) 
+   <if test="start != null">
+        limit
+        #{start},
+        </if>
+        <if test="end != null">
+        #{end}
+        </if>
+  </select> 
+  
+     <select id="allUserPay"  parameterType="java.util.Map" resultType="String">  
+  select sum(allCount) from bao_users t1 
+  left join bao_appusers t8 on t1.user_id =t8.userId 
+LEFT JOIN (select userId,sum(amount)as dayCount from bao_recharge_record where active=6 and to_days(createdTime) = to_days(now()) GROUP BY userId) t2 on t2.userId =t1.user_id 
+LEFT JOIN (select userId,sum(amount)as monthCount from bao_recharge_record  where active=6 and DATE_SUB(CURDATE(), INTERVAL 30 DAY) &lt;= date(createdTime) GROUP BY userId) t3 on t3.userId =t1.user_id 
+LEFT JOIN (select userId,sum(amount)as allCount from bao_recharge_record  where active=6 GROUP BY userId) t4 on t4.userId =t1.user_id 
+   where ( t8.isbang not in (10) or t8.isbang is null) 
+   <if test="start != null">
+        limit
+        #{start},
+        </if>
+        <if test="end != null">
+        #{end}
+        </if>
+  </select> 
+     <select id="allDayUserPay"  parameterType="java.util.Map" resultType="String">  
+  select sum(dayCount) from bao_users t1 
+  left join bao_appusers t8 on t1.user_id =t8.userId 
+LEFT JOIN (select userId,sum(amount)as dayCount from bao_recharge_record where active=6 and to_days(createdTime) = to_days(now()) GROUP BY userId) t2 on t2.userId =t1.user_id 
+LEFT JOIN (select userId,sum(amount)as monthCount from bao_recharge_record  where active=6 and DATE_SUB(CURDATE(), INTERVAL 30 DAY) &lt;= date(createdTime) GROUP BY userId) t3 on t3.userId =t1.user_id 
+LEFT JOIN (select userId,sum(amount)as allCount from bao_recharge_record  where active=6 GROUP BY userId) t4 on t4.userId =t1.user_id 
+   where ( t8.isbang not in (10) or t8.isbang is null) 
+   <if test="start != null">
+        limit
+        #{start},
+        </if>
+        <if test="end != null">
+        #{end}
+        </if>
+  </select> 
+     <select id="allMonthUserPay"  parameterType="java.util.Map" resultType="String">  
+  select sum(monthCount) from bao_users t1 
+  left join bao_appusers t8 on t1.user_id =t8.userId 
+LEFT JOIN (select userId,sum(amount)as dayCount from bao_recharge_record where active=6 and to_days(createdTime) = to_days(now()) GROUP BY userId) t2 on t2.userId =t1.user_id 
+LEFT JOIN (select userId,sum(amount)as monthCount from bao_recharge_record  where active=6 and DATE_SUB(CURDATE(), INTERVAL 30 DAY) &lt;= date(createdTime) GROUP BY userId) t3 on t3.userId =t1.user_id 
+LEFT JOIN (select userId,sum(amount)as allCount from bao_recharge_record  where active=6 GROUP BY userId) t4 on t4.userId =t1.user_id 
+   where ( t8.isbang not in (10) or t8.isbang is null) 
+   <if test="start != null">
+        limit
+        #{start},
+        </if>
+        <if test="end != null">
+        #{end}
+        </if>
+  </select> 
+     
+     
+     
+</mapper>   

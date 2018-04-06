@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>      
+<!DOCTYPE mapper      
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"      
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+<mapper namespace="com.sellerNet.backManagement.dao.impl.LableMemberMapperImpl">  
+      
+   <!-- 结果集 -->     
+   <resultMap id="lableMemberResult" type="com.sellerNet.backManagement.entity.LableMember">   
+   		<id     property="id" column="id"  jdbcType="INTEGER" />  
+      	<result property="lableId" column="lableId" jdbcType="INTEGER"  />
+		<result property="name" column="name" jdbcType="VARCHAR"  />
+		<result property="userId" column="userId" jdbcType="INTEGER"  />
+		<result property="friendId" column="friendId" jdbcType="INTEGER"  />
+		<result property="createdTime" column="createdTime" />
+		<result property="creator" column="creator" jdbcType="INTEGER" />
+		<result property="isLocked" column="isLocked" jdbcType="TINYINT" />
+		<result property="lastModifiedTime" column="lastModifiedTime"  />
+		<result property="lastModifier" column="lastModifier" jdbcType="INTEGER" />
+   </resultMap>  
+     
+   <!-- 新增Code实体类 -->  
+    <insert id="insert" parameterType="com.sellerNet.backManagement.entity.LableMember">  
+        insert into bao_app_lable_member(lableId,name,userId,friendId,createdTime,creator,isLocked,lastModifiedTime,lastModifier) values(#{lableId,jdbcType=INTEGER},#{name,jdbcType=VARCHAR},#{userId,jdbcType=INTEGER},#{friendId,jdbcType=INTEGER},#{createdTime},#{creator,jdbcType=INTEGER},#{isLocked,jdbcType=TINYINT},#{lastModifiedTime},#{lastModifier,jdbcType=INTEGER})  
+   </insert>  
+   <!-- 查询（参数）   -->
+   <select id="selectParam" parameterType="java.util.Map" resultMap="lableMemberResult">  
+   
+        select * from bao_app_lable_member   
+        <where>  
+        	isLocked = 0
+        <if test="userId != null"> userId= #{userId}</if>  
+        <if test="name != null"> name= #{name}</if>  
+        <if test="friendId != null"> friendId= #{friendId}</if>  
+        <if test="creator != null"> creator= #{userId}</if>  
+        <if test="lableId != null"> and lableId= #{lableId}</if>  
+       </where>  
+   </select> 
+   
+   <!-- 查询（参数）   -->
+   <select id="getUserIdAndLableId" parameterType="java.util.Map" resultMap="lableMemberResult">  
+   
+        select * from bao_app_lable_member   
+        <where>  
+        <if test="userId != null"> userId= #{userId}</if> 
+        and 
+        <if test="lableId != null"> lableId= #{lableId}</if>  
+        and isLocked = 0
+       </where>  
+   </select> 
+   
+   <!-- 更新对象  -->
+   <update id="update" parameterType="com.sellerNet.backManagement.entity.LableMember">  
+      update bao_app_lable_member   
+      <set>  
+      <if test="lableId != null">lableId=#{lableId,jdbcType=INTEGER},</if>  
+      <if test="name != null">name=#{name,jdbcType=VARCHAR},</if>
+      <if test="userId != null">userId=#{userId,jdbcType=INTEGER},</if>
+      <if test="friendId != null">friendId=#{friendId,jdbcType=INTEGER},</if>
+      <if test="createdTime != null">createdTime=#{createdTime},</if> 
+      <if test="creator != null">creator=#{creator,jdbcType=INTEGER},</if> 
+      <if test="isLocked != null">isLocked=#{isLocked,jdbcType=VARCHAR},</if> 
+      <if test="lastModifiedTime != null">lastModifiedTime=#{lastModifiedTime},</if>
+      <if test="lastModifier != null">lastModifier=#{lastModifier,jdbcType=INTEGER},</if> 
+      </set>  
+      <where>  
+        <if test="id != null">  
+            id = #{id,jdbcType=INTEGER}
+        </if>
+      </where>  
+   </update>  
+   
+    <!-- 批量插入   -->
+   <insert id="insertBatch" parameterType="arraylist">  
+        insert into bao_app_lable_member(lableId,name,userId,friendId,avatar,createdTime,creator,isLocked,lastModifiedTime,lastModifier)   
+        <!-- collection可以是List对于list,数组对于array,Map对应ids  --> 
+        <foreach collection="list" item="groupMember"  index="index" separator="union all">  
+        	select #{groupMember.lableId,jdbcType=INTEGER},
+        	#{groupMember.name,jdbcType=VARCHAR},
+        	#{groupMember.userId,jdbcType=INTEGER},
+        	#{groupMember.friendId,jdbcType=INTEGER},
+        	#{groupMember.avatar,jdbcType=VARCHAR},
+			#{groupMember.createdTime,jdbcType=DATE},
+			#{groupMember.creator,jdbcType=INTEGER},
+			#{groupMember.isLocked,jdbcType=TINYINT},
+			#{groupMember.lastModifiedTime,jdbcType=DATE},
+			#{groupMember.lastModifier,jdbcType=INTEGER} 
+			from dual 
+        </foreach>  
+   </insert>
+   
+ <!--   批量删除   -->
+   <delete id="deleteBatch">  
+        delete from bao_app_lable_member where id in   
+        <trim prefix="(" suffix=")" suffixOverrides=",">  
+            <foreach collection="list" item="pk" separator=",">  
+                #{pk}  
+            </foreach>  
+        </trim>  
+   </delete> 
+   <!-- 根据参数删除   -->
+   <delete id="deleteParam" parameterType="java.util.Map">  
+        delete from bao_app_lable_member  
+        <where>  
+            <if test="lableId != null">lableId = #{lableId}</if>  
+        </where>  
+   </delete>  
+   
+   
+   
+   
+</mapper>   

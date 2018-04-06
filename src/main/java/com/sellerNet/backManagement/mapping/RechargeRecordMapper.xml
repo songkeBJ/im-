@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>      
+<!DOCTYPE mapper      
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"      
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+<mapper namespace="com.sellerNet.backManagement.dao.impl.RechargeRecordMapperImpl">  
+      
+   <!-- 结果集 -->     
+   <resultMap id="recordResult" type="com.sellerNet.backManagement.entity.RechargeRecord">   
+   		<id     property="id" column="id"  jdbcType="INTEGER" />  
+   		<result property="userId" column="userId" jdbcType="TINYINT"  />
+      	<result property="orderId" column="orderId" jdbcType="VARCHAR"  />
+      	<result property="amount" column="amount" jdbcType="VARCHAR"  />
+		<result property="active" column="active" jdbcType="VARCHAR"  />
+		<result property="content" column="content" jdbcType="VARCHAR"  />
+		<result property="phoneNumber" column="bankcard" jdbcType="VARCHAR"  />
+		<result property="createdTime" column="createdTime"  />
+		<result property="creator" column="creator" jdbcType="INTEGER" />
+		<result property="isLocked" column="isLocked" jdbcType="TINYINT" />
+		<result property="lastModifiedTime" column="lastModifiedTime"   />
+		<result property="lastModifier" column="lastModifier" jdbcType="INTEGER" />
+   </resultMap>  
+     
+   <!-- 新增Code实体类 -->  
+    <insert id="insert" parameterType="com.sellerNet.backManagement.entity.RechargeRecord">  
+        insert into bao_recharge_record(userId,orderId,amount,active,content,bankcard,createdTime,creator,isLocked,lastModifiedTime,lastModifier) values(#{userId,jdbcType=INTEGER},#{orderId,jdbcType=VARCHAR},#{amount,jdbcType=VARCHAR},#{active,jdbcType=VARCHAR},#{content,jdbcType=VARCHAR},#{phoneNumber,jdbcType=VARCHAR},#{createdTime},#{creator,jdbcType=INTEGER},#{isLocked,jdbcType=TINYINT},#{lastModifiedTime},#{lastModifier,jdbcType=INTEGER})  
+   </insert>  
+   
+   <select id="selectByUserId" parameterType="java.util.Map"  resultMap="recordResult">
+   		select * from bao_recharge_record  where creator = #{userId}
+   		 order by id DESC
+	    limit #{start},#{end}
+   </select>
+   
+   <!-- 根据id查询用户 --> 
+   <select id="selectPk"  parameterType="Long" resultMap="recordResult">
+       select * from bao_recharge_record  where id = #{id}
+   </select> 
+   
+      <!-- 根据id查询用户 --> 
+   <select id="selectSum"  parameterType="java.util.Map"  resultType="String">
+       select sum(amount) from bao_recharge_record  where userId = #{userId} and  active =#{active}
+   </select> 
+   
+   <!-- 查询（参数）   -->
+   <select id="selectParam" parameterType="java.util.Map" resultMap="recordResult">  
+        select t1.userId,t1.orderId,t1.amount,t1.active,t1.createdTime,t2.nickname as userName,t2.mobile as phoneNumber  
+         from bao_recharge_record   t1 left join bao_users t2 on t2.user_id =t1.userId 
+        <where>  
+        <if test="userId != null">and t1.userId= #{userId} </if>  
+        <if test="orderId != null">and t1.orderId  LIKE CONCAT(CONCAT('%', #{orderId}), '%') </if>  
+        <if test="userName != null">and t2.nickname  LIKE CONCAT(CONCAT('%', #{userName}), '%') </if>  
+        <if test="code != null">and t1.code= #{code}</if>  
+        <if test="phoneNumber != null"> and t2.mobile = #{phoneNumber}</if>  
+        <if test="createdTime != null"> and t1.createdTime > #{createdTime}</if>
+        <if test="startTime != null and endTime !=null"> and t1.createdTime between #{startTime} and #{endTime}</if>
+        <if test="creator != null"> and t1.creator > #{userId}</if>
+        <if test="active != null"> and t1.active =#{active}</if>
+         <if test="active2 != null">and t1.active in(12,13) </if>
+        order by createdTime desc
+        <if test="start != null">
+        limit
+        #{start},
+        </if>
+        <if test="end != null">
+        #{end}
+        </if>
+       </where>  
+       <if test="orderColumn != null">  
+            order by ${orderColumn}  
+            <if test="orderTurn != null">  
+                ${orderTurn}  
+            </if>  
+       </if>  
+   </select> 
+   
+   <!-- 更新对象  -->
+   <update id="update" parameterType="com.sellerNet.backManagement.entity.RechargeRecord">  
+      update bao_recharge_record   
+      <set>  
+      <if test="orderId != null">orderId=#{orderId,jdbcType=VARCHAR},</if>  
+      <if test="active != null">active=#{active,jdbcType=VARCHAR},</if>
+      <if test="amount != null">amount=#{amount,jdbcType=VARCHAR},</if>
+      <if test="phoneNumber != null">bankcard=#{phoneNumber,jdbcType=VARCHAR},</if>
+      <if test="createdTime != null">createdTime=#{createdTime},</if> 
+      <if test="creator != null">creator=#{creator,jdbcType=INTEGER},</if> 
+      <if test="isLocked != null">isLocked=#{isLocked,jdbcType=VARCHAR},</if> 
+      <if test="lastModifiedTime != null">lastModifiedTime=#{lastModifiedTime},</if>
+      <if test="lastModifier != null">lastModifier=#{lastModifier,jdbcType=INTEGER},</if> 
+      </set>  
+      <where>  
+        <if test="id != null">  
+            id = #{id,jdbcType=INTEGER}
+        </if>
+      </where>  
+   </update>  
+   
+   
+    <select id="countParam" parameterType="java.util.Map" resultType="int">  
+         select count(*)
+         from bao_recharge_record   t1 left join bao_users t2 on t2.user_id =t1.userId 
+        <where>  
+        <if test="userId != null">and t1.userId= #{userId} or t1.creator= #{userId}</if>  
+        <if test="orderId != null">and t1.orderId  LIKE CONCAT(CONCAT('%', #{orderId}), '%') </if>  
+        <if test="userName != null">and t2.nickname  LIKE CONCAT(CONCAT('%', #{userName}), '%') </if>  
+        <if test="code != null">and t1.code= #{code}</if>  
+        <if test="phoneNumber != null"> and t2.mobile = #{phoneNumber}</if>  
+        <if test="createdTime != null"> and t1.createdTime > #{createdTime}</if>
+        <if test="creator != null"> and t1.creator > #{userId}</if>
+        <if test="active != null"> and t1.active =#{active}</if>
+          <if test="active2 != null">and t1.active in(12,13) </if>
+        order by createdTime desc
+        <if test="start != null">
+        limit
+        #{start},
+        </if>
+        <if test="end != null">
+        #{end}
+        </if>
+       </where>  
+       <if test="orderColumn != null">  
+            order by ${orderColumn}  
+            <if test="orderTurn != null">  
+                ${orderTurn}  
+            </if>  
+       </if>  
+  </select> 
+  <select id="alladdPay" parameterType="java.util.Map" resultType="String">  
+      select sum(t1.amount) from bao_recharge_record t1
+       left join bao_appusers t2 on t1.userId =t2.userId 
+      where t1.active =#{active} 
+      <if test="disList != null">
+       			and t2.districtId is not null and 
+       			<foreach collection="disList"  item="ulist"  open="(" separator="or" close=")" index="index">
+       				 t2.districtId  LIKE CONCAT(CONCAT('%', #{ulist}), '%') 
+       			</foreach>
+       		</if> 
+       	 <if test="day != null">
+       	  and to_days(t1.createdTime) = to_days(now()) 
+       	 </if> 
+       	  <if test="month != null">
+       	 and DATE_SUB(CURDATE(), INTERVAL 30 DAY) &lt;= date(t1.createdTime) 
+       	 </if> 
+  </select> 
+  
+  
+          <!-- 一级 -->
+   <select id="dayCount" parameterType="java.util.Map" resultType="String">  
+      select sum(amount) from bao_recharge_record where active =6 and to_days(createdTime) = to_days(now())
+  </select> 
+  <!-- 二级 -->
+   <select id="monthCount" parameterType="java.util.Map" resultType="String">  
+      select sum(amount) from bao_recharge_record where active =6 and DATE_FORMAT(t1.createdTime, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )
+  </select> 
+  <!-- 三级 -->
+   <select id="allCount" parameterType="java.util.Map" resultType="String">  
+        select sum(amount) from bao_recharge_record where active =6
+  </select> 
+  <!-- 按月统计充值金额 -->
+   <select id="userCashPoundageCountMonthData"  resultType="java.util.Map">  
+        select sum(amount) con,DATE_FORMAT(createdTime,'%Y-%m') tm 
+        from bao_recharge_record 
+        where active =6
+        GROUP BY DATE_FORMAT(createdTime,'%Y-%m')
+  </select> 
+     <select id="countBydis" parameterType="java.util.Map" resultType="String">  
+        select sum(amount) from bao_recharge_record t1
+        left join bao_appusers t2 on t2.userId =t1.userId   
+        where 1=1 and t1.active=#{active} 
+		 <if test="disList != null">
+	      			and t2.districtId is not null and 
+      			<foreach collection="disList"  item="ulist"  open="(" separator="or" close=")" index="index">
+      				 t2.districtId  LIKE CONCAT(CONCAT('%', #{ulist}), '%') 
+      			</foreach>
+	      </if> 
+  </select> 
+  
+  
+     <select id="sumRequestAll" parameterType="java.util.Map" resultType="int">  
+       select count(*) from bao_im_request where 1=1 and status='ACCEPTED'  
+        <if test="day != null">
+            and to_days(createdTime) = to_days(now()) 
+        </if>
+         <if test="month != null">
+        	 and DATE_SUB(CURDATE(), INTERVAL 30 DAY) &lt;= date(createdTime)  
+        </if>
+   </select> 
+   
+     
+     <select id="getAllSincer" parameterType="java.util.Map" resultType="String">  
+      select sum(amount) from bao_recharge_record where active =1  
+        <if test="day != null">
+            and to_days(createdTime) = to_days(now()) 
+        </if>
+         <if test="month != null">
+        	 and DATE_SUB(CURDATE(), INTERVAL 30 DAY) &lt;= date(createdTime)  
+        </if>
+   </select> 
+  
+</mapper>   
