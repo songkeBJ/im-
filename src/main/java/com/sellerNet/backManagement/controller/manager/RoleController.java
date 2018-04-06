@@ -33,9 +33,9 @@ import com.sellerNet.backManagement.utils.StringUtil;
  */
 @Controller
 @RequestMapping("/admin")
-public class AgentRoleController extends BaseController{
+public class RoleController extends BaseController{
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(AgentRoleController.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(RoleController.class);
 	
 	@Resource
 	private ManagerUserService managerUserService;

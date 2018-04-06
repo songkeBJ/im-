@@ -19,7 +19,6 @@ import com.sellerNet.backManagement.controller.BaseController;
 import com.sellerNet.backManagement.entity.AppMessage;
 import com.sellerNet.backManagement.entity.JsonResult;
 import com.sellerNet.backManagement.service.AppMessageService;
-import com.sellerNet.backManagement.utils.StringUtil;
 /**
  * app消息
  * 
@@ -42,7 +41,7 @@ public class AppMessageController extends BaseController{
    */
   @ResponseBody
   @RequestMapping(value="getListByUserId.do", method={RequestMethod.GET,RequestMethod.POST})
-  public JsonResult getListByUserId(@RequestParam(value="userid", required=true) Long userid,
+  public JsonResult getListByUserId(@RequestParam(value="userId", required=true) Long userid,
           @RequestParam(value="page", required=false) Integer page) { 
 	  		JsonResult jsonResult = new JsonResult();  
 	  
@@ -62,7 +61,7 @@ public class AppMessageController extends BaseController{
   
   @ResponseBody
   @RequestMapping(value="addMessage.do", method={RequestMethod.GET,RequestMethod.POST})
-  public JsonResult addMessage(@RequestParam(value="userid", required=false) Long userid) { 
+  public JsonResult addMessage(@RequestParam(value="userId", required=false) Long userid) { 
 	  		JsonResult jsonResult = new JsonResult();  
 	  
 	  		AppMessage appmessage=new AppMessage();
@@ -116,7 +115,7 @@ public class AppMessageController extends BaseController{
    */
   @ResponseBody
   @RequestMapping(value="getLastByUserId.do", method={RequestMethod.GET,RequestMethod.POST})
-  public JsonResult getLastByUserId(@RequestParam(value="userid", required=false) Long userid) { 
+  public JsonResult getLastByUserId(@RequestParam(value="userId", required=false) Long userid) { 
 	  		JsonResult jsonResult = new JsonResult();
 	  		AppMessage appmessage=appMessageService.getLastByUserId(userid); 			
 	  		jsonResult.setDataObject(appmessage);

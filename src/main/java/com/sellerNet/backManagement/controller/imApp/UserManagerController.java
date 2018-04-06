@@ -202,6 +202,8 @@ public JsonResult checkUser(String phoneNumber, JsonResult jsonResult) {
   @RequestMapping(value="signIn.do", method={RequestMethod.GET,RequestMethod.POST})
   public JsonResult<UserDto> signIn(@RequestParam(value="phoneNumber",required=false) String phoneNumber, 
 		   						    @RequestParam(value="password",required=false) String password,
+		   						    @RequestParam(value="deviceToken",required=true) String deviceToken,
+		   						    @RequestParam(value="equipmentOS",required=true) String equipmentOS,
 		   						    HttpServletRequest request){
     JsonResult jsonResult = new JsonResult();
     //<editor-fold desc="step1 : 校验入参>
@@ -217,7 +219,7 @@ public JsonResult checkUser(String phoneNumber, JsonResult jsonResult) {
     }
     //<editor-fold >
     //<editor-fold desc="step3 : 用户登陆并返回登陆信息>
-    return appUserOneService.signIn(phoneNumber, password,request);
+    return appUserOneService.signIn(phoneNumber, password,request,deviceToken,equipmentOS);
     //<editor-fold >
   }
 

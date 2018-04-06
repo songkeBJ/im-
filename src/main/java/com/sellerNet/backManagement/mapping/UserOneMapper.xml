@@ -152,6 +152,8 @@
       <set>  
       <if test="account != null">account=#{account,jdbcType=VARCHAR},</if>  
       <if test="newsNum != null">newsNum=#{newsNum},</if>  
+      <if test="equipmentOS != null">equipmentOS=#{equipmentOS},</if>  
+      <if test="deviceToken != null">deviceToken=#{deviceToken},</if>  
       <if test="username != null">nickname=#{username,jdbcType=VARCHAR},</if>
       <if test="password != null">password=#{password,jdbcType=VARCHAR},</if>
       <if test="avator != null">face=#{avator,jdbcType=INTEGER},</if> 

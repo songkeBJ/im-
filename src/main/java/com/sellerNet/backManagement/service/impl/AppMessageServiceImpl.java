@@ -56,7 +56,7 @@ public class AppMessageServiceImpl extends BaseServiceImpl<AppMessage, Long>
 		Long notReadCount = appMessageMapper.getNotReadCountByUserId(userid);
 		//发送系统消息
 		List<String> receivers = new ArrayList<>();
-		receivers.add(userid.toString()); //18510829662  18263826828
+		receivers.add(userOne.getPhoneNumber()); //18510829662  18263826828
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("notReadCount", notReadCount);
 		jsonObject.put("lastMessage", lastMessage);

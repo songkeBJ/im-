@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpSession;
 
 import net.sf.json.JSONObject;
 
@@ -21,18 +20,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.google.gson.JsonObject;
 import com.sellerNet.backManagement.config.PushConst;
 import com.sellerNet.backManagement.controller.BaseController;
-import com.sellerNet.backManagement.dto.CityAgent;
 import com.sellerNet.backManagement.dto.CountParm;
-import com.sellerNet.backManagement.dto.NewsDto;
 import com.sellerNet.backManagement.dto.UserOneCountDto;
 import com.sellerNet.backManagement.entity.AgentUser;
 import com.sellerNet.backManagement.entity.AppMessage;
 import com.sellerNet.backManagement.entity.Certification;
-import com.sellerNet.backManagement.entity.City;
-import com.sellerNet.backManagement.entity.Citys;
 import com.sellerNet.backManagement.entity.PageEntity;
 import com.sellerNet.backManagement.entity.PagingResult;
 import com.sellerNet.backManagement.entity.User;
@@ -48,7 +42,6 @@ import com.sellerNet.backManagement.service.ManagerUserService;
 import com.sellerNet.backManagement.service.RechargeRecordService;
 import com.sellerNet.backManagement.service.RoleService;
 import com.sellerNet.backManagement.service.im.ImRequestService;
-import com.sellerNet.backManagement.thread.PushMsgThread;
 import com.sellerNet.backManagement.thread.RedThreadPool;
 import com.sellerNet.backManagement.utils.Md5Utils;
 import com.sellerNet.backManagement.utils.StringUtil;

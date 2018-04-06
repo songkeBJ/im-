@@ -140,7 +140,7 @@ public class AppUserOneServiceImpl extends BaseServiceImpl<UserOne, Integer> imp
     return jsonResult;
   }
 
-  public JsonResult<UserDto> signIn(String phoneNumber, String password,HttpServletRequest request){
+  public JsonResult<UserDto> signIn(String phoneNumber, String password,HttpServletRequest request,String deviceToken,String equipmentOS){
     JsonResult jsonResult = new JsonResult();
 
     UserOne alreadyExist = this.appUserOneMapper.byPhoneNumber(phoneNumber);
@@ -206,7 +206,7 @@ public class AppUserOneServiceImpl extends BaseServiceImpl<UserOne, Integer> imp
       return jsonResult;
     }
     String usertoId;
-    //更新token
+    //更新token和设备信息
     User user3 = appUserMapper.byPhoneNumber(phoneNumber);
     usertoId=user3.getUserId().toString();
     String token=Md5Utils.encrypt(phoneNumber+password+new Date().getTime());
@@ -214,6 +214,8 @@ public class AppUserOneServiceImpl extends BaseServiceImpl<UserOne, Integer> imp
     if(user3.getSex()==null){
     	user3.setSex(1);
     }
+    alreadyExist.setDeviceToken(deviceToken);
+    alreadyExist.setEquipmentOS(equipmentOS);
     appUserMapper.update(user3);
     alreadyExist.setLastTime(new Date());
     appUserOneMapper.update(alreadyExist);

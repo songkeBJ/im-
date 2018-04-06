@@ -300,7 +300,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <if test="keyword != null"> and ( LOCATE(#{keyword}, t1.title)>0 or LOCATE(#{keyword}, t1.content)>0 )</if> 
         </where>
         GROUP BY t1.id 
-        ORDER BY createdTime ASC
+        ORDER BY createdTime DESC
         <where>
         <if test="start != null">
         limit

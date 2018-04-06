@@ -1,6 +1,5 @@
 package com.sellerNet.backManagement.controller.manager;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -27,8 +26,6 @@ import com.sellerNet.backManagement.controller.BaseController;
 import com.sellerNet.backManagement.entity.AgentUser;
 import com.sellerNet.backManagement.entity.PageEntity;
 import com.sellerNet.backManagement.entity.PagingResult;
-import com.sellerNet.backManagement.entity.Set;
-import com.sellerNet.backManagement.entity.UserOne;
 import com.sellerNet.backManagement.service.AppUserOneService;
 import com.sellerNet.backManagement.service.AppUserService;
 import com.sellerNet.backManagement.service.ManagerUserService;
@@ -38,15 +35,13 @@ import com.sellerNet.backManagement.utils.Md5Utils;
 import com.sellerNet.backManagement.utils.StringUtil;
 
 /**
- * 代理商管理http://localhost:8080/recharge_Platform/agentUser/login.do
- * @author gxg
- *
+ *会员管理
  */
 @Controller
 @RequestMapping("/admin")
-public class AgentUserController extends BaseController{
+public class UserController extends BaseController{
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(AgentUserController.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 	
 	@Resource
 	private ManagerUserService managerUserService;

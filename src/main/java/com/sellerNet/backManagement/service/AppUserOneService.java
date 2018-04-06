@@ -29,10 +29,12 @@ public abstract interface AppUserOneService extends baseService<UserOne, Integer
   
   /**
    * 用户登陆
+ * @param equipmentOS 
+ * @param deviceToken 
   * @param userOne
   * @return
   */
-  public abstract JsonResult<UserDto> signIn(String phoneNumber, String password,HttpServletRequest request);
+  public abstract JsonResult<UserDto> signIn(String phoneNumber, String password,HttpServletRequest request, String deviceToken, String equipmentOS);
   
   public abstract List<UserOne> byUserIdAndTerms(Map paramMap);
   

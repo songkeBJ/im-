@@ -80,9 +80,9 @@ import com.sellerNet.backManagement.utils.StringUtil;
  */
 @Controller
 @RequestMapping("/member")
-public class AgentUserController2 extends BaseController{
+public class PcUserController extends BaseController{
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(AgentUserController2.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(PcUserController.class);
 	@Resource
 	private ManagerUserService managerUserService;
 	
