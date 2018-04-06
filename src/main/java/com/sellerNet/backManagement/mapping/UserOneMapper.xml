@@ -222,8 +222,14 @@
    <select id="selectParam" parameterType="java.util.Map" resultMap="useroneResult">  
         SELECT *  from bao_users f
          <where>  
-        <if test="userEmail != null">
-        	and f.userEmail = #{userEmail}
+        <if test="deviceToken != null">
+        	and f.deviceToken = #{deviceToken}
+        </if>  
+        <if test="deviceTokenNotNull != null">
+        	and f.deviceToken is not null
+        </if>  
+        <if test="equipmentOS != null">
+        	and f.equipmentOS = #{equipmentOS}
         </if>  
         
         <if test="phoneNumber != null">

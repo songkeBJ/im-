@@ -77,4 +77,8 @@ public class AppMessageServiceImpl extends BaseServiceImpl<AppMessage, Long>
 			}
 		}
 	}
+	
+	public static void main(String[] args) throws Exception {
+		UmengUtil.sendIOSUnicast("b4c9dc51b3afc337fa89f0934f041b28ec45c523ceca315b22ecffaa1cab7510", "11", "22", "5", "");
+	}
 }

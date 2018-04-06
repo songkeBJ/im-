@@ -798,6 +798,42 @@ public class NewsController extends BaseController{
 		return result;
 	}
 	/**
+	 * 推送系统消息
+	 */
+	@ResponseBody
+	@RequestMapping(value="/sysNewsPush.do")
+	public Map<String, Object> sysNewsPush(@RequestParam(value = "title",required=true) String title,
+			@RequestParam(value = "content",required=true) String content
+			) throws Exception{
+		JSONObject result=new JSONObject();
+		//推送系统消息给所有在线用户(deviceToken不为null的用户)
+		Map paramMap = new HashMap<>();
+		paramMap.put("deviceTokenNotNull","deviceTokenNotNull");
+		List<UserOne> pushUsers = appUserOneService.selectParam(paramMap);
+		if(pushUsers!=null&&!pushUsers.isEmpty()){
+			for (int i = 0; i < pushUsers.size(); i++) {
+				UserOne pushUser = pushUsers.get(i);
+				AppMessage appMessage = new AppMessage();
+				appMessage.setPushtime(new Date());
+				appMessage.setIsread(0);
+				appMessage.setUserid((long)pushUser.getUser_id());
+				appMessage.setType(PushConst.NEWS);
+				appMessage.setTitle(title);
+				appMessage.setContent(content);
+				appMessageService.pushMessage(appMessage);
+			}
+		}
+		result.put("success", true);
+		return result;
+	}
+	/**
+	 * 推送系统消息页面
+	 */
+	@RequestMapping(value="/sysNewsPushManage.do")
+	public String sysNewsPushManage() throws Exception{
+		return "sysNewsPushManage";
+	}
+	/**
 	 * 置顶/推荐资讯
 	 * @return
 	 */

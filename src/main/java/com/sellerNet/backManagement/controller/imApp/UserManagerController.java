@@ -117,6 +117,30 @@ public class UserManagerController extends BaseController{
 		@Resource 
 		private LableForUserService lableForUserService;
 
+		/**
+		 * 清除deviceToken
+		 */
+		@ResponseBody
+		@RequestMapping(value="cleanDeviceToken.do", method={RequestMethod.GET,RequestMethod.POST})
+		public JsonResult cleanDeviceToken(@RequestParam(value="userId", required=true) String userId, 
+				HttpServletRequest request) { 
+			JsonResult jsonResult = new JsonResult();
+			
+			UserOne userOne = appUserOneService.get(Integer.valueOf(userId));
+			if(userOne==null){
+				jsonResult.setCode(Constant.RESUT_FAIL);
+				jsonResult.setErrorDescription("该用户不存在");
+				return jsonResult;
+			}
+			userOne.setDeviceToken(null);
+			userOne.setEquipmentOS(null);
+			appUserOneService.update(userOne);
+			jsonResult.setCode(Constant.RESUT_SUCCESS);
+			jsonResult.setErrorDescription("清除设备信息成功");
+			return  jsonResult;
+			
+			//<editor-fold >
+		}
   /**
    * 账号注册
    */

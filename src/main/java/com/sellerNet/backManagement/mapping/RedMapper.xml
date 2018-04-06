@@ -83,8 +83,8 @@
    <select id="getGrabHeadByUserIdAndYear" parameterType="java.util.Map" resultType="java.util.Map">
    	select t2.nickname,ifnull(t2.face,'未设置') avatar,
    	(select ifnull(sum(red_money),0) from bao_red_record where red_user_id=#{userId}) AS allMoney
-   	,(select count(*) from bao_red_record where red_user_id=#{userId}) AS allCount
-   	,(select count(red_ismax) from bao_red_record where red_user_id=#{userId} and red_ismax='1' and YEAR(red_record_date) = #{year}) AS allMaxCount
+   	,(select ifnull(count(*),0) from bao_red_record where red_user_id=#{userId}) AS allCount
+   	,(select ifnull(count(red_ismax),0) from bao_red_record where red_user_id=#{userId} and red_ismax='1') AS allMaxCount
    	from bao_users t2
    	where t2.user_id=#{userId}
    </select>

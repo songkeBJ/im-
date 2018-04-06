@@ -12,4 +12,6 @@ public abstract interface AppMessageService extends baseService<AppMessage, Long
 	public AppMessage getLastByUserId(Long userid);
 	
 	public void pushMessage(AppMessage appMessage) throws Exception;
+	
+	
 }

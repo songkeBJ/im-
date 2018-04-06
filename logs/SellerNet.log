@@ -1991,3 +1991,129 @@
 [DEBUG] [2018-02-27 15:51:23][ytx.org.apache.http.impl.conn.BasicClientConnectionManager]Connection can be kept alive indefinitely
 [DEBUG] [2018-02-27 15:51:23][ytx.org.apache.http.impl.conn.DefaultClientConnection]Connection 0.0.0.0:63068<->42.121.254.126:8883 closed
 [INFO] [2018-02-27 15:51:23][com.sellerNet.backManagement.openapi.sdk.CCPRestSDK]Tue Feb 27 15:51:23 CST 2018 QuerySMSTemplate response body = {"msgId":"6825CDEA04774B14BE36C8374F8455CE|dpkl3W","statusCode":"000000","timestamp":"1519717882598","statusMsg":"success"}
+[DEBUG] [2018-04-06 17:09:47][org.apache.http.impl.conn.BasicClientConnectionManager]Get connection for route {}->http://msg.umeng.com:80
+[DEBUG] [2018-04-06 17:09:48][org.apache.http.impl.conn.DefaultClientConnectionOperator]Connecting to msg.umeng.com:80
+[DEBUG] [2018-04-06 17:09:48][org.apache.http.client.protocol.RequestAddCookies]CookieSpec selected: default
+[DEBUG] [2018-04-06 17:09:48][org.apache.http.client.protocol.RequestAuthCache]Auth cache not set in the context
+[DEBUG] [2018-04-06 17:09:48][org.apache.http.client.protocol.RequestTargetAuthentication]Target auth state: UNCHALLENGED
+[DEBUG] [2018-04-06 17:09:48][org.apache.http.client.protocol.RequestProxyAuthentication]Proxy auth state: UNCHALLENGED
+[DEBUG] [2018-04-06 17:09:48][org.apache.http.impl.client.DefaultHttpClient]Attempt 1 to execute request
+[DEBUG] [2018-04-06 17:09:48][org.apache.http.impl.conn.DefaultClientConnection]Sending request: POST /api/send?sign=4b5b6752bf5de861501e00064c8c9c5f HTTP/1.1
+[DEBUG] [2018-04-06 17:09:48][org.apache.http.wire] >> "POST /api/send?sign=4b5b6752bf5de861501e00064c8c9c5f HTTP/1.1[\r][\n]"
+[DEBUG] [2018-04-06 17:09:48][org.apache.http.wire] >> "User-Agent: Mozilla/5.0[\r][\n]"
+[DEBUG] [2018-04-06 17:09:48][org.apache.http.wire] >> "Content-Length: 286[\r][\n]"
+[DEBUG] [2018-04-06 17:09:48][org.apache.http.wire] >> "Content-Type: text/plain; charset=UTF-8[\r][\n]"
+[DEBUG] [2018-04-06 17:09:48][org.apache.http.wire] >> "Host: msg.umeng.com[\r][\n]"
+[DEBUG] [2018-04-06 17:09:48][org.apache.http.wire] >> "Connection: Keep-Alive[\r][\n]"
+[DEBUG] [2018-04-06 17:09:48][org.apache.http.wire] >> "[\r][\n]"
+[DEBUG] [2018-04-06 17:09:48][org.apache.http.headers]>> POST /api/send?sign=4b5b6752bf5de861501e00064c8c9c5f HTTP/1.1
+[DEBUG] [2018-04-06 17:09:48][org.apache.http.headers]>> User-Agent: Mozilla/5.0
+[DEBUG] [2018-04-06 17:09:48][org.apache.http.headers]>> Content-Length: 286
+[DEBUG] [2018-04-06 17:09:48][org.apache.http.headers]>> Content-Type: text/plain; charset=UTF-8
+[DEBUG] [2018-04-06 17:09:48][org.apache.http.headers]>> Host: msg.umeng.com
+[DEBUG] [2018-04-06 17:09:48][org.apache.http.headers]>> Connection: Keep-Alive
+[DEBUG] [2018-04-06 17:09:48][org.apache.http.wire] >> "{"payload":{"notifyType":"5","aps":{"badge":0,"alert":"11","sound":"default"},"text":"22","id":""},"appkey":"5a9a361cb27b0a3d700004d8","type":"unicast","production_mode":"false","device_tokens":"b4c9dc51b3afc337fa89f0934f041b28ec45c523ceca315b22ecffaa1cab7510","timestamp":"1523005786"}"
+[DEBUG] [2018-04-06 17:09:48][org.apache.http.wire] << "HTTP/1.1 200 [\r][\n]"
+[DEBUG] [2018-04-06 17:09:48][org.apache.http.wire] << "Server: Tengine[\r][\n]"
+[DEBUG] [2018-04-06 17:09:48][org.apache.http.wire] << "Date: Fri, 06 Apr 2018 09:09:45 GMT[\r][\n]"
+[DEBUG] [2018-04-06 17:09:48][org.apache.http.wire] << "Content-Type: text/plain;charset=UTF-8[\r][\n]"
+[DEBUG] [2018-04-06 17:09:48][org.apache.http.wire] << "Content-Length: 60[\r][\n]"
+[DEBUG] [2018-04-06 17:09:48][org.apache.http.wire] << "Connection: keep-alive[\r][\n]"
+[DEBUG] [2018-04-06 17:09:48][org.apache.http.wire] << "X-Application-Context: api-server-java:production:7001[\r][\n]"
+[DEBUG] [2018-04-06 17:09:48][org.apache.http.wire] << "[\r][\n]"
+[DEBUG] [2018-04-06 17:09:48][org.apache.http.impl.conn.DefaultClientConnection]Receiving response: HTTP/1.1 200 
+[DEBUG] [2018-04-06 17:09:48][org.apache.http.headers]<< HTTP/1.1 200 
+[DEBUG] [2018-04-06 17:09:48][org.apache.http.headers]<< Server: Tengine
+[DEBUG] [2018-04-06 17:09:48][org.apache.http.headers]<< Date: Fri, 06 Apr 2018 09:09:45 GMT
+[DEBUG] [2018-04-06 17:09:48][org.apache.http.headers]<< Content-Type: text/plain;charset=UTF-8
+[DEBUG] [2018-04-06 17:09:48][org.apache.http.headers]<< Content-Length: 60
+[DEBUG] [2018-04-06 17:09:48][org.apache.http.headers]<< Connection: keep-alive
+[DEBUG] [2018-04-06 17:09:48][org.apache.http.headers]<< X-Application-Context: api-server-java:production:7001
+[DEBUG] [2018-04-06 17:09:48][org.apache.http.impl.client.DefaultHttpClient]Connection can be kept alive indefinitely
+[DEBUG] [2018-04-06 17:09:48][org.apache.http.wire] << "{"ret":"SUCCESS","data":{"msg_id":"uup3t5d152300578598700"}}"
+[DEBUG] [2018-04-06 17:09:48][org.apache.http.impl.conn.BasicClientConnectionManager]Releasing connection org.apache.http.impl.conn.ManagedClientConnectionImpl@ac3dc3
+[DEBUG] [2018-04-06 17:09:48][org.apache.http.impl.conn.BasicClientConnectionManager]Connection can be kept alive indefinitely
+[DEBUG] [2018-04-06 17:10:17][org.apache.http.impl.conn.BasicClientConnectionManager]Get connection for route {}->http://msg.umeng.com:80
+[DEBUG] [2018-04-06 17:10:17][org.apache.http.impl.conn.DefaultClientConnectionOperator]Connecting to msg.umeng.com:80
+[DEBUG] [2018-04-06 17:10:17][org.apache.http.client.protocol.RequestAddCookies]CookieSpec selected: default
+[DEBUG] [2018-04-06 17:10:17][org.apache.http.client.protocol.RequestAuthCache]Auth cache not set in the context
+[DEBUG] [2018-04-06 17:10:17][org.apache.http.client.protocol.RequestTargetAuthentication]Target auth state: UNCHALLENGED
+[DEBUG] [2018-04-06 17:10:17][org.apache.http.client.protocol.RequestProxyAuthentication]Proxy auth state: UNCHALLENGED
+[DEBUG] [2018-04-06 17:10:17][org.apache.http.impl.client.DefaultHttpClient]Attempt 1 to execute request
+[DEBUG] [2018-04-06 17:10:17][org.apache.http.impl.conn.DefaultClientConnection]Sending request: POST /api/send?sign=d79817f2597e3f7ee65c7f044079dc48 HTTP/1.1
+[DEBUG] [2018-04-06 17:10:17][org.apache.http.wire] >> "POST /api/send?sign=d79817f2597e3f7ee65c7f044079dc48 HTTP/1.1[\r][\n]"
+[DEBUG] [2018-04-06 17:10:17][org.apache.http.wire] >> "User-Agent: Mozilla/5.0[\r][\n]"
+[DEBUG] [2018-04-06 17:10:17][org.apache.http.wire] >> "Content-Length: 286[\r][\n]"
+[DEBUG] [2018-04-06 17:10:17][org.apache.http.wire] >> "Content-Type: text/plain; charset=UTF-8[\r][\n]"
+[DEBUG] [2018-04-06 17:10:17][org.apache.http.wire] >> "Host: msg.umeng.com[\r][\n]"
+[DEBUG] [2018-04-06 17:10:17][org.apache.http.wire] >> "Connection: Keep-Alive[\r][\n]"
+[DEBUG] [2018-04-06 17:10:17][org.apache.http.wire] >> "[\r][\n]"
+[DEBUG] [2018-04-06 17:10:17][org.apache.http.headers]>> POST /api/send?sign=d79817f2597e3f7ee65c7f044079dc48 HTTP/1.1
+[DEBUG] [2018-04-06 17:10:17][org.apache.http.headers]>> User-Agent: Mozilla/5.0
+[DEBUG] [2018-04-06 17:10:17][org.apache.http.headers]>> Content-Length: 286
+[DEBUG] [2018-04-06 17:10:17][org.apache.http.headers]>> Content-Type: text/plain; charset=UTF-8
+[DEBUG] [2018-04-06 17:10:17][org.apache.http.headers]>> Host: msg.umeng.com
+[DEBUG] [2018-04-06 17:10:17][org.apache.http.headers]>> Connection: Keep-Alive
+[DEBUG] [2018-04-06 17:10:17][org.apache.http.wire] >> "{"payload":{"notifyType":"5","aps":{"badge":0,"alert":"11","sound":"default"},"text":"22","id":""},"appkey":"5a9a361cb27b0a3d700004d8","type":"unicast","production_mode":"false","device_tokens":"b4c9dc51b3afc337fa89f0934f041b28ec45c523ceca315b22ecffaa1cab7510","timestamp":"1523005816"}"
+[DEBUG] [2018-04-06 17:10:17][org.apache.http.wire] << "HTTP/1.1 200 [\r][\n]"
+[DEBUG] [2018-04-06 17:10:17][org.apache.http.wire] << "Server: Tengine[\r][\n]"
+[DEBUG] [2018-04-06 17:10:17][org.apache.http.wire] << "Date: Fri, 06 Apr 2018 09:10:15 GMT[\r][\n]"
+[DEBUG] [2018-04-06 17:10:17][org.apache.http.wire] << "Content-Type: text/plain;charset=UTF-8[\r][\n]"
+[DEBUG] [2018-04-06 17:10:17][org.apache.http.wire] << "Content-Length: 60[\r][\n]"
+[DEBUG] [2018-04-06 17:10:17][org.apache.http.wire] << "Connection: keep-alive[\r][\n]"
+[DEBUG] [2018-04-06 17:10:17][org.apache.http.wire] << "X-Application-Context: api-server-java:production:7001[\r][\n]"
+[DEBUG] [2018-04-06 17:10:17][org.apache.http.wire] << "[\r][\n]"
+[DEBUG] [2018-04-06 17:10:17][org.apache.http.impl.conn.DefaultClientConnection]Receiving response: HTTP/1.1 200 
+[DEBUG] [2018-04-06 17:10:17][org.apache.http.headers]<< HTTP/1.1 200 
+[DEBUG] [2018-04-06 17:10:17][org.apache.http.headers]<< Server: Tengine
+[DEBUG] [2018-04-06 17:10:17][org.apache.http.headers]<< Date: Fri, 06 Apr 2018 09:10:15 GMT
+[DEBUG] [2018-04-06 17:10:17][org.apache.http.headers]<< Content-Type: text/plain;charset=UTF-8
+[DEBUG] [2018-04-06 17:10:17][org.apache.http.headers]<< Content-Length: 60
+[DEBUG] [2018-04-06 17:10:17][org.apache.http.headers]<< Connection: keep-alive
+[DEBUG] [2018-04-06 17:10:17][org.apache.http.headers]<< X-Application-Context: api-server-java:production:7001
+[DEBUG] [2018-04-06 17:10:17][org.apache.http.impl.client.DefaultHttpClient]Connection can be kept alive indefinitely
+[DEBUG] [2018-04-06 17:10:17][org.apache.http.wire] << "{"ret":"SUCCESS","data":{"msg_id":"uu3iirw152300581572100"}}"
+[DEBUG] [2018-04-06 17:10:17][org.apache.http.impl.conn.BasicClientConnectionManager]Releasing connection org.apache.http.impl.conn.ManagedClientConnectionImpl@ac3dc3
+[DEBUG] [2018-04-06 17:10:17][org.apache.http.impl.conn.BasicClientConnectionManager]Connection can be kept alive indefinitely
+[DEBUG] [2018-04-06 17:11:33][org.apache.http.impl.conn.BasicClientConnectionManager]Get connection for route {}->http://msg.umeng.com:80
+[DEBUG] [2018-04-06 17:11:33][org.apache.http.impl.conn.DefaultClientConnectionOperator]Connecting to msg.umeng.com:80
+[DEBUG] [2018-04-06 17:11:33][org.apache.http.client.protocol.RequestAddCookies]CookieSpec selected: default
+[DEBUG] [2018-04-06 17:11:33][org.apache.http.client.protocol.RequestAuthCache]Auth cache not set in the context
+[DEBUG] [2018-04-06 17:11:33][org.apache.http.client.protocol.RequestTargetAuthentication]Target auth state: UNCHALLENGED
+[DEBUG] [2018-04-06 17:11:33][org.apache.http.client.protocol.RequestProxyAuthentication]Proxy auth state: UNCHALLENGED
+[DEBUG] [2018-04-06 17:11:33][org.apache.http.impl.client.DefaultHttpClient]Attempt 1 to execute request
+[DEBUG] [2018-04-06 17:11:33][org.apache.http.impl.conn.DefaultClientConnection]Sending request: POST /api/send?sign=6087551054fbf97868aaa4a1d6cb4ab4 HTTP/1.1
+[DEBUG] [2018-04-06 17:11:33][org.apache.http.wire] >> "POST /api/send?sign=6087551054fbf97868aaa4a1d6cb4ab4 HTTP/1.1[\r][\n]"
+[DEBUG] [2018-04-06 17:11:33][org.apache.http.wire] >> "User-Agent: Mozilla/5.0[\r][\n]"
+[DEBUG] [2018-04-06 17:11:33][org.apache.http.wire] >> "Content-Length: 286[\r][\n]"
+[DEBUG] [2018-04-06 17:11:33][org.apache.http.wire] >> "Content-Type: text/plain; charset=UTF-8[\r][\n]"
+[DEBUG] [2018-04-06 17:11:33][org.apache.http.wire] >> "Host: msg.umeng.com[\r][\n]"
+[DEBUG] [2018-04-06 17:11:33][org.apache.http.wire] >> "Connection: Keep-Alive[\r][\n]"
+[DEBUG] [2018-04-06 17:11:33][org.apache.http.wire] >> "[\r][\n]"
+[DEBUG] [2018-04-06 17:11:33][org.apache.http.headers]>> POST /api/send?sign=6087551054fbf97868aaa4a1d6cb4ab4 HTTP/1.1
+[DEBUG] [2018-04-06 17:11:33][org.apache.http.headers]>> User-Agent: Mozilla/5.0
+[DEBUG] [2018-04-06 17:11:33][org.apache.http.headers]>> Content-Length: 286
+[DEBUG] [2018-04-06 17:11:33][org.apache.http.headers]>> Content-Type: text/plain; charset=UTF-8
+[DEBUG] [2018-04-06 17:11:33][org.apache.http.headers]>> Host: msg.umeng.com
+[DEBUG] [2018-04-06 17:11:33][org.apache.http.headers]>> Connection: Keep-Alive
+[DEBUG] [2018-04-06 17:11:33][org.apache.http.wire] >> "{"payload":{"notifyType":"5","aps":{"badge":0,"alert":"11","sound":"default"},"text":"22","id":""},"appkey":"5a9a361cb27b0a3d700004d8","type":"unicast","production_mode":"false","device_tokens":"b4c9dc51b3afc337fa89f0934f041b28ec45c523ceca315b22ecffaa1cab7510","timestamp":"1523005892"}"
+[DEBUG] [2018-04-06 17:11:33][org.apache.http.wire] << "HTTP/1.1 200 [\r][\n]"
+[DEBUG] [2018-04-06 17:11:33][org.apache.http.wire] << "Server: Tengine[\r][\n]"
+[DEBUG] [2018-04-06 17:11:33][org.apache.http.wire] << "Date: Fri, 06 Apr 2018 09:11:31 GMT[\r][\n]"
+[DEBUG] [2018-04-06 17:11:33][org.apache.http.wire] << "Content-Type: text/plain;charset=UTF-8[\r][\n]"
+[DEBUG] [2018-04-06 17:11:33][org.apache.http.wire] << "Content-Length: 60[\r][\n]"
+[DEBUG] [2018-04-06 17:11:33][org.apache.http.wire] << "Connection: keep-alive[\r][\n]"
+[DEBUG] [2018-04-06 17:11:33][org.apache.http.wire] << "X-Application-Context: api-server-java:production:7001[\r][\n]"
+[DEBUG] [2018-04-06 17:11:33][org.apache.http.wire] << "[\r][\n]"
+[DEBUG] [2018-04-06 17:11:33][org.apache.http.impl.conn.DefaultClientConnection]Receiving response: HTTP/1.1 200 
+[DEBUG] [2018-04-06 17:11:33][org.apache.http.headers]<< HTTP/1.1 200 
+[DEBUG] [2018-04-06 17:11:33][org.apache.http.headers]<< Server: Tengine
+[DEBUG] [2018-04-06 17:11:33][org.apache.http.headers]<< Date: Fri, 06 Apr 2018 09:11:31 GMT
+[DEBUG] [2018-04-06 17:11:33][org.apache.http.headers]<< Content-Type: text/plain;charset=UTF-8
+[DEBUG] [2018-04-06 17:11:33][org.apache.http.headers]<< Content-Length: 60
+[DEBUG] [2018-04-06 17:11:33][org.apache.http.headers]<< Connection: keep-alive
+[DEBUG] [2018-04-06 17:11:33][org.apache.http.headers]<< X-Application-Context: api-server-java:production:7001
+[DEBUG] [2018-04-06 17:11:33][org.apache.http.impl.client.DefaultHttpClient]Connection can be kept alive indefinitely
+[DEBUG] [2018-04-06 17:11:33][org.apache.http.wire] << "{"ret":"SUCCESS","data":{"msg_id":"uusum2v152300589140600"}}"
+[DEBUG] [2018-04-06 17:11:33][org.apache.http.impl.conn.BasicClientConnectionManager]Releasing connection org.apache.http.impl.conn.ManagedClientConnectionImpl@ac3dc3
+[DEBUG] [2018-04-06 17:11:33][org.apache.http.impl.conn.BasicClientConnectionManager]Connection can be kept alive indefinitely

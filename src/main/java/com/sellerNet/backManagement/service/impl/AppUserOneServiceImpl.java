@@ -206,7 +206,21 @@ public class AppUserOneServiceImpl extends BaseServiceImpl<UserOne, Integer> imp
       return jsonResult;
     }
     String usertoId;
-    //更新token和设备信息
+	//更新token和设备信息
+    //更新之前把原先绑定该设备的人设备信息清除
+    Map paramMap = new HashMap<>();
+    paramMap.put("deviceToken", deviceToken);
+    paramMap.put("equipmentOS", equipmentOS);
+    List<UserOne> selectParam = appUserOneMapper.selectParam(paramMap);
+    if(selectParam!=null&&!selectParam.isEmpty()){
+    	UserOne userOne = selectParam.get(0);
+    	//如果不是同一个人登录
+    	if(userOne.getUser_id()!=alreadyExist.getUser_id()){
+    		userOne.setDeviceToken(null);
+    		userOne.setEquipmentOS(null);
+    		appUserOneMapper.update(userOne);
+    	}
+    }
     User user3 = appUserMapper.byPhoneNumber(phoneNumber);
     usertoId=user3.getUserId().toString();
     String token=Md5Utils.encrypt(phoneNumber+password+new Date().getTime());
