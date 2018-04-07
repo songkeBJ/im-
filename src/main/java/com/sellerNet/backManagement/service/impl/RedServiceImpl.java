@@ -401,7 +401,7 @@ public class RedServiceImpl extends BaseServiceImpl<Red, Long> implements RedSer
 		redRecord.setRed_record_date(dateToStr);
 		redRecord.setRed_type("1");
 		redRecord.setRed_type_name("拼手气红包");
-		redRecord.setRed_user_id(red.getRed_user_id());
+		redRecord.setRed_user_id(grab_user_id);
 		//RedRecordThread redRecordThread = new RedRecordThread(redRecordMapper, redRecord);
 		//redThreadPool.executeJob(redRecordThread);
 		redRecordMapper.insert(redRecord);

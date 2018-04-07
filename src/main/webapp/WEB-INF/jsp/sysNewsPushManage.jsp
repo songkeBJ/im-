@@ -138,7 +138,6 @@ function addImageNews(){
         data-options="iconCls:'icon-save',modal:true"> 
         <div style="padding:10px 10px 10px 10px">
 	<form id="itemAddForm" class="itemForm" method="post">
-	                 <input type="hidden" name="userId" value="${currentUser.user_id }"/>
 	    <table cellpadding="5">
 	        <tr>
 	            <td style="width: 50px;">消息标题:</td>
