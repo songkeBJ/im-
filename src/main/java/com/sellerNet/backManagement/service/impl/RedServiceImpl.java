@@ -318,6 +318,12 @@ public class RedServiceImpl extends BaseServiceImpl<Red, Long> implements RedSer
 		//判断红包是否可抢
 		//判断红包是否过期或已被抢完或该用户已经抢过(红包发送记录为空为过期)
 		RedJsonResult apm = new RedJsonResult();
+		Red red = redMapper.get(red_id);
+		UserOne sendUser = appUserOneService.get(red.getRed_user_id().intValue());
+		JSONObject result = new JSONObject();
+		result.put("sendUser", sendUser);
+		result.put("red", red);
+		apm.setDataObject(result);
 		int canUpdateRed = canUpdateRed(red_id, "1",grab_user_id);
 		if(canUpdateRed==1){
 			apm.setCode("1");
@@ -340,7 +346,7 @@ public class RedServiceImpl extends BaseServiceImpl<Red, Long> implements RedSer
 		if(StringUtils.isBlank(money)){
 			//红包已经被抢完
 			//删除缓存中的信息  (过期时间为24h-红包创建时间)
-			Red red = redMapper.get(red_id);
+			red = redMapper.get(red_id);
 			String red_send_date = red.getRed_send_date();
 			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			try {
@@ -379,7 +385,7 @@ public class RedServiceImpl extends BaseServiceImpl<Red, Long> implements RedSer
 		jsonObject.put("isMax", isMax);
 		redisTemplate.opsForList().leftPush("RED_JSONLIST_"+red_id, jsonObject.toString());
 		//异步修改数据库中的红包发送的金额和json
-		Red red = redMapper.get(Long.valueOf(red_id));
+		red = redMapper.get(Long.valueOf(red_id));
 		red.setRed_has_count((red.getRed_has_count()-1));
 		red.setRed_has_money((red.getRed_has_money()-Double.valueOf(money)));
 		List<String> jsonList = redisTemplate.opsForList().range("RED_JSONLIST_"+red_id,0,redisTemplate.opsForList().size("RED_JSONLIST_"+red.getRed_id()));
@@ -433,6 +439,7 @@ public class RedServiceImpl extends BaseServiceImpl<Red, Long> implements RedSer
 		map.put("sender", userOne.getPhoneNumber());
 		map.put("msgType", "1");
 		redThreadPool.executeJob(new PushMsgThread(groupemplate, map ));
+		apm.setRed(red);
 		return apm;
 	}
 
