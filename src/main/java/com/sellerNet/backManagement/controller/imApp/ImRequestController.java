@@ -17,9 +17,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.JsonObject;
+import com.sellerNet.backManagement.config.PushConst;
 import com.sellerNet.backManagement.controller.BaseController;
 import com.sellerNet.backManagement.dto.im.ImRequestDTO;
 import com.sellerNet.backManagement.dto.im.PhoneAndName;
+import com.sellerNet.backManagement.entity.AppMessage;
 import com.sellerNet.backManagement.entity.ImRequestParam;
 import com.sellerNet.backManagement.entity.JsonResult;
 import com.sellerNet.backManagement.entity.NewStatus;
@@ -30,6 +32,7 @@ import com.sellerNet.backManagement.entity.im.ImFriend;
 import com.sellerNet.backManagement.entity.im.ImRequest;
 import com.sellerNet.backManagement.entity.im.ImRequestType;
 import com.sellerNet.backManagement.openapi.sdk.demo.Groupemplate;
+import com.sellerNet.backManagement.service.AppMessageService;
 import com.sellerNet.backManagement.service.AppUserOneService;
 import com.sellerNet.backManagement.service.AppUserService;
 import com.sellerNet.backManagement.service.NewStatusService;
@@ -83,6 +86,9 @@ public class ImRequestController extends BaseController{
   
   @Resource
   private NewStatusService newStatusService;
+  
+  @Resource
+  private AppMessageService appMessageService;
 
   /**
    * 添加好友
@@ -90,6 +96,7 @@ public class ImRequestController extends BaseController{
    * @param friendId
    * @param message
    * @return
+ * @throws Exception 
   */
   @SuppressWarnings("unchecked")
 @RequestMapping(value={"friends/apply.do"}, method={RequestMethod.GET,RequestMethod.POST})
@@ -99,7 +106,7 @@ public class ImRequestController extends BaseController{
 		  						    @RequestParam(value="lableName", required=false) String lableName, 
 		  						    @RequestParam(value="status", required=false)  String status,
 		  						  @RequestParam(value="sayHelloPay", required=false)  Integer sayHelloPay,
-		  						    @RequestParam(value="message", required=false, defaultValue="") String message){
+		  						    @RequestParam(value="message", required=false, defaultValue="") String message) throws Exception{
     JsonResult jsonResult = new JsonResult();
     
     //<editor-fold desc="step1 : 校验入参>
@@ -170,6 +177,16 @@ public class ImRequestController extends BaseController{
 		}
     
     jsonResult.setErrorDescription("好友申请发送成功!");
+    
+    UserOne userOne = appUserOneService.get(id.intValue());
+    AppMessage appMessage = new AppMessage();
+	  appMessage.setPushtime(new Date());
+	  appMessage.setIsread(0);
+	  appMessage.setUserid(friendId);
+    appMessage.setType(PushConst.FRIEND);
+	  appMessage.setTitle("好友申请");
+	  appMessage.setContent(userOne.getNickname()+"请求加你为好友");
+	  appMessageService.pushMessage(appMessage);
     
     // number5== 好友不需要验证时进行的处理
     Setparam record = new Setparam();

@@ -974,6 +974,7 @@ public JsonResult checkUser(String phoneNumber, JsonResult jsonResult) {
       return jsonResult;
     }
 
+    jsonResult.setCode(Constant.RESUT_SUCCESS);
     jsonResult.setErrorDescription("支付密码验证成功!");
     //<editor-fold >
     return jsonResult;
