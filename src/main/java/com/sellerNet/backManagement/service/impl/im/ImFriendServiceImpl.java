@@ -132,6 +132,7 @@ public class ImFriendServiceImpl extends BaseServiceImpl<ImFriend, Long> impleme
       return jsonResult;
     }
     this.imFriendMapper.delete(relation.getId());
+    
     return jsonResult;
   }
 

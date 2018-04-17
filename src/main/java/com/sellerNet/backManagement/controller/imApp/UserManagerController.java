@@ -1119,7 +1119,7 @@ public JsonResult checkUser(String phoneNumber, JsonResult jsonResult) {
        return jsonResult;
   }else{
   	 //好友备注
-	  exist.setRemark(exist.getRemark());
+	  exist.setRemark(remark);
 	  imFriendService.update(exist);
 	  jsonResult.setCode(Constant.RESUT_SUCCESS);
       jsonResult.setErrorDescription("修改备注成功!");

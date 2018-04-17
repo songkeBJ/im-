@@ -506,6 +506,8 @@ public class AppUserController extends BaseController{
 	public Map<String, Object> appUserCount(String year){
 		return appUserService.appUserCount(year);
 	}
-	
+	public static void main(String[] args) {
+		System.out.println(Md5Utils.encrypt("123123"));
+	}
 	
 }

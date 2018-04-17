@@ -194,7 +194,11 @@ private RechargeRecordService rechargeRecordService;
 
     UserOne sender = useroneService.get(Integer.parseInt(request.getCreator().toString()));
     UserOne receiver = useroneService.get(Integer.parseInt(userId.toString()));
-
+    if(action.equals("")){
+    	request.setStatus(ImRequestStatus.ACCEPTED.name());
+    }else{
+    	request.setStatus(ImRequestStatus.REJECTED.name());
+    }
     doHandleRequest(passAndAdd, friendsGroupId, operation, request, sender, receiver);
     return jsonResult;
   }
@@ -404,12 +408,12 @@ private RechargeRecordService rechargeRecordService;
 	String lableName = request.getLableName();
 	jsonResult.setErrorDescription("添加好友成功");
     JsonResult json2 = this.imFriendService.addFriendIfNotFriend(Long.valueOf(sender.getUser_id()), Long.valueOf(receiver.getUser_id()),remark,lableName);
-	  if (json2.equals("1")) {
+	  if (json2.getCode().equals("1")) {
 	    return json2;
 	  }
 	  if (passAndAdd.equals("true")) {
 	    JsonResult json3 = this.imFriendService.addFriendIfNotFriend(Long.valueOf(receiver.getUser_id()), Long.valueOf(sender.getUser_id()),remark,lableName);
-	    if (json2.equals("1")) {
+	    if (json2.getCode().equals("1")) {
 	      return json2;
 	    }
 	  }

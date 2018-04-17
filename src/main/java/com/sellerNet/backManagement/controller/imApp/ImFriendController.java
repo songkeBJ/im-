@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sellerNet.backManagement.controller.BaseController;
+import com.sellerNet.backManagement.dao.ImFriendMapper;
 import com.sellerNet.backManagement.dto.ImageDtoUrl;
 import com.sellerNet.backManagement.dto.LabelDto;
 import com.sellerNet.backManagement.dto.im.ImUserDTO;
@@ -76,6 +77,9 @@ public class ImFriendController extends BaseController{
   
   @Resource
   private UserRelationService userRelationService;
+  
+  @Resource
+  private ImFriendMapper imFriendMapper;
 
   @RequestMapping(value="getFriends.do", method={RequestMethod.GET,RequestMethod.POST})
   public JsonResult<List<ImUserDTO>> getFriends(@RequestParam("id") Long id){
@@ -110,28 +114,30 @@ public class ImFriendController extends BaseController{
   @RequestMapping(value="delete.do", method={RequestMethod.GET,RequestMethod.POST})
   public JsonResult deleteFriend(@ModelAttribute("UserRelation") UserRelation userRelation){
     JsonResult jsonResult = new JsonResult();
-    if (userRelation.getUserId() == null) {
+    Integer userId = userRelation.getUserId();
+    Integer friendId = userRelation.getBeUserId();
+    if (userId == null) {
       jsonResult.setCode("1");
       jsonResult.setErrorDescription("用户id不能为空");
       return jsonResult;
     }
-    if (userRelation.getBeUserId() == null) {
+    if (friendId == null) {
       jsonResult.setCode("1");
       jsonResult.setErrorDescription("删除好友id不能为空");
       return jsonResult;
     }
-    userRelation.setType(1);
-    //判断是否存在
-    Map map =new HashMap<>();
-    map.put("userId", userRelation.getUserId());
-    map.put("beUserId", userRelation.getBeUserId());
-    map.put("type", userRelation.getType());
-    map.put("status",0);
-    List<UserRelation> urList =  userRelationService.selectParam(map);
-    if(urList.size()>0){
-    	jsonResult.setErrorDescription("已经提交删除申请");
-    	 return jsonResult;
-    }
+//    userRelation.setType(1);
+//    //判断是否存在
+//    Map map =new HashMap<>();
+//    map.put("userId", userRelation.getUserId());
+//    map.put("beUserId", userRelation.getBeUserId());
+//    map.put("type", userRelation.getType());
+//    map.put("status",0);
+//    List<UserRelation> urList =  userRelationService.selectParam(map);
+//    if(urList.size()>0){
+//    	jsonResult.setErrorDescription("已经提交删除申请");
+//    	 return jsonResult;
+//    }
    // userRelation.setReason(userRelation.getReason());
     //userRelation.setOtherReason(userRelation.getOtherReason());
     
@@ -143,14 +149,18 @@ public class ImFriendController extends BaseController{
 //    		}
 //    	    userRelation.setImages(img);
 //    }
-    userRelationService.insert(userRelation);
+   // userRelationService.insert(userRelation);
     
 //    JsonResult delResult = this.imFriendService.deleteFriend(id, friendId);
 //    JsonResult delResult2 = this.imFriendService.deleteFriend(friendId, id);
 //    if ((delResult.equals("1")) || (delResult2.equals("1"))) {
 //      return delResult;
 //    }
-    jsonResult.setErrorDescription("删除好友申请成功!");
+    ImFriend relation = this.imFriendMapper.getByUserIdAndfriendId(userId.longValue(), friendId.longValue());
+    ImFriend relation2 = this.imFriendMapper.getByUserIdAndfriendId(friendId.longValue(), userId.longValue());
+    this.imFriendMapper.delete(relation.getId());
+    this.imFriendMapper.delete(relation2.getId());
+    jsonResult.setErrorDescription("删除好友成功!");
     return jsonResult;
   }
   
@@ -168,19 +178,19 @@ public class ImFriendController extends BaseController{
 	      return jsonResult;
 	    }
 	    if (userRelation.getBeUserId() == null) {
-	      jsonResult.setErrorDescription("删除好友id不能为空");
+	      jsonResult.setErrorDescription("拉黑好友id不能为空");
 	      return jsonResult;
 	    }
-	    Map map =new HashMap<>();
-	    map.put("userId", userRelation.getUserId());
-	    map.put("beUserId", userRelation.getBeUserId());
-	    map.put("type", 2);
-	    map.put("status",1);
-	    List<UserRelation> urList =  userRelationService.selectParam(map);
-	    if(urList.size()>0){
-	    	jsonResult.setErrorDescription("已经提出拉黑申请");
-	    	 return jsonResult;
-	    }
+//	    Map map =new HashMap<>();
+//	    map.put("userId", userRelation.getUserId());
+//	    map.put("beUserId", userRelation.getBeUserId());
+//	    map.put("type", 2);
+//	    map.put("status",1);
+//	    List<UserRelation> urList =  userRelationService.selectParam(map);
+//	    if(urList.size()>0){
+//	    	jsonResult.setErrorDescription("已经提出拉黑申请");
+//	    	 return jsonResult;
+//	    }
 	    //查询是否是好友，否则直接拉黑
 	  //ImFriend imFriend = imFriendService.findByUserIdAndFriendId((long)userRelation.getUserId(), (long)userRelation.getBeUserId());
 	 // if(imFriend==null){

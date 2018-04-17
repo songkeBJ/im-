@@ -194,7 +194,7 @@ public class PcUserController extends BaseController{
 	
 	
 	/**
-	 * yxin登陆页面
+	 * pc订阅号登陆页面
 	 * @return
 	 */
 	@RequestMapping(value="/login.do", method = RequestMethod.GET)
@@ -204,12 +204,7 @@ public class PcUserController extends BaseController{
 	
 	
 	/**
-	 * Y信后台登陆地址
-	 * @param userName
-	 * @param password
-	 * @param imageCode
-	 * @param modelMap
-	 * @param session
+	 * pc订阅号后台登陆地址
 	 * @return
 	 */
 	@RequestMapping(value="/login.do", method = RequestMethod.POST)
@@ -250,7 +245,7 @@ public class PcUserController extends BaseController{
 	}
 	
 	/**
-	 * 代理商用户退出
+	 * 会员用户退出
 	 * @param request
 	 * @return
 	 */
