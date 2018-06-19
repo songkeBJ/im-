@@ -194,7 +194,7 @@ private RechargeRecordService rechargeRecordService;
 
     UserOne sender = useroneService.get(Integer.parseInt(request.getCreator().toString()));
     UserOne receiver = useroneService.get(Integer.parseInt(userId.toString()));
-    if(action.equals("")){
+    if(action.equals("ACCEPT")){
     	request.setStatus(ImRequestStatus.ACCEPTED.name());
     }else{
     	request.setStatus(ImRequestStatus.REJECTED.name());

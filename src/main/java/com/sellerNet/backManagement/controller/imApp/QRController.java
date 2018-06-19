@@ -18,6 +18,7 @@ import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.sellerNet.backManagement.controller.BaseController;
+import com.sellerNet.backManagement.entity.UserOne;
 import com.sellerNet.backManagement.entity.VersionSys;
 import com.sellerNet.backManagement.service.AppUserOneService;
 import com.sellerNet.backManagement.service.VersionService;
@@ -68,6 +69,8 @@ public class QRController extends BaseController {
 		    Map map1 = new HashMap();
 		    map1.put("type","userType");
 			map1.put("userId",userId);
+			UserOne userOne = appUserOneService.get(userId);
+			map1.put("phone",userOne.getPhoneNumber());
 		    String jsonString = JsonUtils.toJson(map1);
 			MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
 			Map hints = new HashMap();

@@ -337,11 +337,11 @@ public class CircleFriendsController extends BaseController{
 	}
 	
 	/**
-	 * 买家网更新背景图片
+	 * 朋友圈更新背景图片
 	 * @param jsonString
 	 * @return
 	 */
-	@RequestMapping(value= "updateBack.do",method=RequestMethod.POST)
+	@RequestMapping(value= "updateBack.do",method={RequestMethod.GET,RequestMethod.POST})
 	public JsonResult updateBack(@RequestParam("id") Long userId,
 			                     @RequestParam("avatar") String avatar){
 		
@@ -359,9 +359,7 @@ public class CircleFriendsController extends BaseController{
 		}
 		//UserOne userone  = useroneService.get(Integer.parseInt(userId.toString()));
 		User user = userService.byUserId(userId);
-		if(user.getBackAvatar()!=null){
-			user.setBackAvatar(user.getBackAvatar());
-		}
+		user.setBackAvatar(avatar);
 		userService.update(user);
 		jsonResult.setErrorDescription("更新背景图片成功");
 		return jsonResult;
